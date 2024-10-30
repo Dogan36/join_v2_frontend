@@ -1,13 +1,13 @@
 <template>
     <main>
             <RouterView></RouterView>
-          </main>
+    </main>
   </template>
   
   
   <script>
-    export default {
-      name: 'StartView',
-    };
-    </script>
+export default {
+    name: 'StartView',
+};
+</script>
   

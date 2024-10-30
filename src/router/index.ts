@@ -11,16 +11,15 @@ import StartView from '../views/StartView.vue';
 
 const routes = [
   { path: '/', redirect: '/home' },
-  { path: '/start', component: StartView,
+  { path: '/start', component: StartView, redirect: '/start/login',
     children: [
-      {path: '/login', component: LoginView},
-      { path: '/', component: SummaryView },
+      {path: 'login', component: LoginView},
       { path: 'signUp', component: SignUpView},
       { path: 'forgotPassword', component: ForgotPasswordView},
           ]
    },
   {
-    path: '/home',
+    path: '/home', redirect: '/home/summary',
     component: HomeView,
     children: [
       { path: 'summary', component: SummaryView },

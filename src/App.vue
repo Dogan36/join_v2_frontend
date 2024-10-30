@@ -4,9 +4,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <template>
  <div class="wrapper">
-    <header>
-      <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-    </header>
+    
 
     <RouterView />
   </div>
@@ -55,11 +53,7 @@ nav a:first-of-type {
     margin: 0 2rem 0 0;
   }
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+
 
   nav {
     text-align: left;
