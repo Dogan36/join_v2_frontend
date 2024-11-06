@@ -1,33 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import LoginView from '../views/LoginView.vue';
-import SummaryView from '../views/SummaryView.vue';
 import HomeView from '../views/HomeView.vue';
-import BoardView from '../views/BoardView.vue';
-import ContactsView from '../views/ContactsView.vue';
-import AddTaskView from '../views/AddTaskView.vue';
-import SignUpView from '../views/SignUpView.vue';
-import ForgotPasswordView from '../views/forgotPasswordView.vue';
 import StartView from '../views/StartView.vue';
 
 const routes = [
-  { path: '/', redirect: '/home' },
-  { path: '/start', component: StartView, redirect: '/start/login',
-    children: [
-      {path: 'login', component: LoginView},
-      { path: 'signUp', component: SignUpView},
-      { path: 'forgotPassword', component: ForgotPasswordView},
-          ]
-   },
-  {
-    path: '/home', redirect: '/home/summary',
-    component: HomeView,
-    children: [
-      { path: 'summary', component: SummaryView },
-      { path: 'board', component: BoardView },
-      { path: 'addTask', component: AddTaskView},
-      { path: 'contacts', component: ContactsView}
-    ]
-  }
+  {path: '/', redirect: '/home' },
+  {path: '/start', component: StartView},
+  {path: '/home',component: HomeView,}
 ];
 
 const router = createRouter({

@@ -10,7 +10,7 @@
           <label for="password">Password:</label>
           <input type="password" v-model="password" id="password" required />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit">SignUp</button>
       </form>
     </div>
   </template>
@@ -38,7 +38,7 @@
     max-width: 300px;
     margin: 0 auto;
     padding: 1rem;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-border);
     border-radius: 4px;
   }
   </style>
