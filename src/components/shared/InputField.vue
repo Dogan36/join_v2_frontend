@@ -1,20 +1,32 @@
 <template>
   <div class="input-container" :class="{ 'input-error': error }">
     <input
-      :type="type"
+    :type="isPasswordVisible && type === 'password' ? 'text' : type"
       :placeholder="placeholder"
       :value="modelValue"
-      @input="$emit('update:modelValue', $event.target.value)"
-      />
-      <!-- Dynamische Fehlermeldung -->
-      <img :src="icon" alt="input icon" class="input-icon" />
+      @input="onInput"
+      :class="{'input-error': error}"
+    />
+    <img 
+      v-if="shouldShowToggleIcon" 
+      :src="currentIcon" 
+      alt="toggle password visibility" 
+      class="input-icon" 
+      @click="togglePasswordVisibility" 
+    />
+    <img 
+      v-else
+      :src="icon"
+      alt="input icon"
+      class="input-icon"
+    />
     </div>
-    <p v-if="error" class="error-message">{{ errorMessage }}</p>
+      <p v-if="error" class="error-message">{{ errorMessage }}</p>
 </template>
 
 <script setup>
 import { defineProps, computed } from 'vue';
-
+import { ref } from 'vue';
 const props = defineProps({
   modelValue: String,
   type: {
@@ -30,14 +42,40 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(['update:modelValue']);
+
+// Lokale Statusvariablen
+const isPasswordVisible = ref(false);
+const currentIcon = computed(() => {
+  return isPasswordVisible.value ? 'src/assets/img/icons/notVisibleIcon.svg' : 'src/assets/img/icons/visibleIcon.svg';
+});
+
+// Eingabeveränderung
+const onInput = (event) => {
+  emit('update:modelValue', event.target.value);
+};
+
+// Sichtbarkeit umschalten
+const togglePasswordVisibility = () => {
+  if (props.type === 'password') {
+    isPasswordVisible.value = !isPasswordVisible.value;
+  }
+};
+
+// Anzeige des Augensymbols nur bei Passworttyp
+const shouldShowToggleIcon = computed(() => {
+  return props.type === 'password' && props.modelValue;
+});
+
 // Berechnete Eigenschaft zur Auswahl der ersten verfügbaren Fehlermeldung
 const errorMessage = computed(() => {
-    return Object.values(props.errorMessages).find(msg => msg) || '';
+  return Object.values(props.errorMessages).find(msg => msg) || '';
 });
 </script>
 
 <style>
 @import './../../assets/base.css';
+
 .input-container {
   display: flex;
   align-items: center;

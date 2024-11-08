@@ -7,7 +7,7 @@
     v-model="loginEmail"
     type="email"
     placeholder="Enter your email"
-    icon="/path/to/email-icon.png"
+    icon="src/assets/img/icons/loginMail.svg"
     :error="emailError || emailFormatError || emailNotFoundError"
     :errorMessages="{
       emailError: emailError ? 'Email is required' : '',
@@ -19,7 +19,7 @@
     v-model="loginPassword"
     type="password"
     placeholder="Enter your password"
-    icon="/path/to/password-icon.png"
+    icon="src/assets/img/icons/loginPassword.svg"
     :error="passwordError || passwordLengthError || passwordIncorrectError"
     :errorMessages="{
       passwordError: passwordError ? 'Password is required' : '',

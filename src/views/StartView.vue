@@ -1,5 +1,4 @@
 <template>
-  
     <div v-if="isLogin">
       <Login />
     </div>
@@ -9,7 +8,6 @@
     <button @click="toggleForm">
       {{ isLogin ? 'Go to Signup' : 'Go to Login' }}
     </button>
-  
 </template>
 
 <script setup>
@@ -24,6 +22,7 @@ const isForgotPassword = ref(false);
 // Funktion zum Umschalten des Formulars
 const toggleForm = () => {
   isLogin.value = !isLogin.value;
+  isSignIn.value = !isSignIn.value;
 };
 </script>
 <style scoped>
