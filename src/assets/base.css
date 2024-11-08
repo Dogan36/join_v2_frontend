@@ -1,4 +1,7 @@
 :root {
+  --main-color: #2A3647;
+  --main-color-hover: #9747FF;
+  --main-color-active:#091931; 
   --color-background: #F6F7F8;
   --color-background-sec: #2A3647;
   --color-background-layout: #FFFFFF;

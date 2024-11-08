@@ -11,7 +11,7 @@
       v-if="shouldShowToggleIcon" 
       :src="currentIcon" 
       alt="toggle password visibility" 
-      class="input-icon" 
+      class="input-icon cursorPointer" 
       @click="togglePasswordVisibility" 
     />
     <img 
@@ -47,7 +47,7 @@ const emit = defineEmits(['update:modelValue']);
 // Lokale Statusvariablen
 const isPasswordVisible = ref(false);
 const currentIcon = computed(() => {
-  return isPasswordVisible.value ? 'src/assets/img/icons/notVisibleIcon.svg' : 'src/assets/img/icons/visibleIcon.svg';
+  return isPasswordVisible.value ? 'src/assets/img/notVisibleIcon.svg' : 'src/assets/img/visibleIcon.svg';
 });
 
 // Eingabeveränderung
@@ -102,6 +102,10 @@ const errorMessage = computed(() => {
   width: 20px;
   height: 20px;
   margin-left: 0.5em;
+}
+
+.cursorPointer{
+  cursor: pointer;
 }
 
 .error-message {

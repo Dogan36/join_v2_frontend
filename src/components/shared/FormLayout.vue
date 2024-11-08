@@ -16,7 +16,7 @@
     justify-content: space-around;
     align-items: center;
     padding: 3.41vh 0px;
-    background: var(--color-background-layout);
+    background-color: var(--color-background-layout);
     max-width: 600px;
     min-height: 513px;
     box-shadow: 0px 0px 14px 3px var(--color-border);

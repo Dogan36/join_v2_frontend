@@ -1,34 +1,55 @@
 <template>
   <FormLayout>
    <h2>Sign Up</h2>
-   <form @submit.prevent="login" novalidate>
+   <form @submit.prevent="signup" novalidate>
  <InputField
-   v-model="loginEmail"
-   type="email"
-   placeholder="Enter your email"
+   v-model="signupName"
+   type="string"
+   placeholder="Enter your name"
    icon="../"
-   :error="emailError || emailFormatError || emailNotFoundError"
+   :error="nameError"
    :errorMessages="{
-     emailError: emailError ? 'Email is required' : '',
-     emailFormatError: emailFormatError ? 'Invalid email format' : '',
-     emailNotFoundError: emailNotFoundError ? 'Email not found' : ''
-   }"
+     nameError: emailError ? 'Name is required' : '',
+        }"
  />
  <InputField
-   v-model="loginPassword"
+    v-model="signupEmail"
+    type="email"
+    placeholder="Enter your email"
+    icon="src/assets/img/loginMail.svg"
+    :error="emailError || emailFormatError || emailNotFoundError"
+    :errorMessages="{
+      emailError: emailError ? 'Email is required' : '',
+      emailFormatError: emailFormatError ? 'Invalid email format' : '',
+      emailNotFoundError: emailNotFoundError ? 'Email not found' : ''
+    }"
+  />
+ <InputField
+   v-model="signupPassword"
    type="password"
    placeholder="Enter your password"
-   icon="/path/to/password-icon.png"
+   icon="src/assets/img/loginPassword.svg"
    :error="passwordError || passwordLengthError || passwordIncorrectError"
    :errorMessages="{
      passwordError: passwordError ? 'Password is required' : '',
      passwordLengthError: passwordLengthError ? 'Password must be at least 6 characters' : '',
-     passwordIncorrectError: passwordIncorrectError ? 'Password is incorrect' : ''
+     
    }"
  />
- <button type="submit">Login</button>
- <button v-on:click="guestLogin">Guest Login</button>
- <button type="button" @click="showForgotPassword">Forgot password?</button>
+ <InputField
+   v-model="signupPasswordRepeat"
+   type="password"
+   placeholder="Enter your password"
+   icon="src/assets/img/loginPassword.svg"
+   :error="passwordMatchError"
+   :errorMessages="{
+     passwordMatchError: passwordError ? 'Passwords do not match' : '',
+     
+   }"
+ />
+ <button class="main-button-layout" type="submit">Sign Up</button>
+ 
+ 
 </form>
 
  </FormLayout>
@@ -42,17 +63,19 @@ import FormLayout from '../shared/FormLayout.vue';
 import InputField from '../shared/InputField.vue';
 
 const router = useRouter();
-const loginEmail = ref('');
-const loginPassword = ref('');
-const rememberMe = ref(false);
+const signupName = ref('');
+const signupEmail = ref('');
+const signupPassword = ref('');
+const signupPasswordRepeat = ref('');
+
 
 // Fehlerstatus
 const emailError = ref(false);
 const emailFormatError = ref(false);
-const emailNotFoundError = ref(false);
+const emailTakenError = ref(false);
 const passwordError = ref(false);
 const passwordLengthError = ref(false);
-const passwordIncorrectError = ref(false);
+const passwordMatchError = ref(false);
 
 const login = () => {
  resetErrors();

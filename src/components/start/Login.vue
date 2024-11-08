@@ -7,7 +7,7 @@
     v-model="loginEmail"
     type="email"
     placeholder="Enter your email"
-    icon="src/assets/img/icons/loginMail.svg"
+    icon="src/assets/img/loginMail.svg"
     :error="emailError || emailFormatError || emailNotFoundError"
     :errorMessages="{
       emailError: emailError ? 'Email is required' : '',
@@ -19,7 +19,7 @@
     v-model="loginPassword"
     type="password"
     placeholder="Enter your password"
-    icon="src/assets/img/icons/loginPassword.svg"
+    icon="src/assets/img/loginPassword.svg"
     :error="passwordError || passwordLengthError || passwordIncorrectError"
     :errorMessages="{
       passwordError: passwordError ? 'Password is required' : '',
@@ -27,9 +27,19 @@
       passwordIncorrectError: passwordIncorrectError ? 'Password is incorrect' : ''
     }"
   />
-  <button type="submit">Login</button>
-  <button v-on:click="guestLogin">Guest Login</button>
-  <button type="button" @click="showForgotPassword">Forgot password?</button>
+  <div class="loginOptions">
+  <label>
+    <input type="checkbox" v-model="rememberMe" />
+    Remember me
+    
+  </label>
+  <span type="button" @click="showForgotPassword">Forgot password?</span>
+</div>
+<div class="loginButtons">
+  <button class="main-button-layout"  type="submit">Log in </button>
+  <button class="secondary-button-layout" @click="guestLogin">Guest Login</button>
+  
+</div>
 </form>
 
   </FormLayout>
@@ -41,6 +51,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import FormLayout from '../shared/FormLayout.vue';
 import InputField from '../shared/InputField.vue';
+
 
 const router = useRouter();
 const loginEmail = ref('');
@@ -148,5 +159,12 @@ const guestLogin = () => {
 };
 </script>
 
-<style></style>
+<style>
+.buttonIcon {
+  width: 24px;
+  height: 24px;
+  margin-left: 0.5rem;
+  align-self: center;
+}
+</style>
 
