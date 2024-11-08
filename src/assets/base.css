@@ -1,26 +1,19 @@
-
-
-
 :root {
-  --color-background: yellow;
-
-  --color-border: blue;
+  --color-background: #F6F7F8;
+  --color-background-sec: #2A3647;
+  --color-background-layout: #FFFFFF;
+  --color-border: #0000001A;
   
 }
 
-/* '@media (prefers-color-scheme: dark) {
+/*@media (prefers-color-scheme: dark) {
   :root {
-    --color-background: var(yellow);
-    --color-background-soft: var(--vt-c-black-soft);
-    --color-background-mute: var(--vt-c-black-mute);
-    --color-border: blue;
-    --color-border: var(--vt-c-divider-dark-2);
-    --color-border-hover: var(--vt-c-divider-dark-1);
-
-    --color-heading: var(--vt-c-text-dark-1);
-    --color-text: var(--vt-c-text-dark-2);
+    --color-background: #2A3647;
+    --color-border: #FFFFFF;
+    --color-background-sec: #1E2533;
+    --color-background-layout: #353F50;
   }
-}' */
+}*/
 
 *,
 *::before,
