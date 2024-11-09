@@ -5,7 +5,8 @@
       :placeholder="placeholder"
       :value="modelValue"
       @input="onInput"
-      :class="{'input-error': error}"
+      :class="{ 'input-error': error }"
+      :autocomplete="autocomplete"
     />
     <img 
       v-if="shouldShowToggleIcon" 
@@ -21,7 +22,7 @@
       class="input-icon"
     />
     </div>
-      <p v-if="error" class="error-message">{{ errorMessage }}</p>
+      <p class="error-message">{{ errorMessage }}</p>
 </template>
 
 <script setup>
@@ -33,6 +34,7 @@ const props = defineProps({
     type: String,
     default: 'text'
   },
+  autocomplete: String,
   placeholder: String,
   icon: String,
   error: Boolean,
@@ -40,6 +42,7 @@ const props = defineProps({
     type: Object,
     default: () => []
   },
+
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -80,11 +83,10 @@ const errorMessage = computed(() => {
   display: flex;
   align-items: center;
   border: 1px solid #ccc;
-  padding: 0.5em;
+  padding: 10px;
+  height: 40px;
   border-radius: 4px;
-  margin-bottom: 0.5em;
   background-color: #f6f7f8;
-  margin: 5px;
 }
 
 .input-container.input-error {
@@ -104,13 +106,14 @@ const errorMessage = computed(() => {
   margin-left: 0.5em;
 }
 
-.cursorPointer{
+.cursorPointer {
   cursor: pointer;
 }
 
 .error-message {
   color: #f28b82;
   font-size: 0.9em;
-  margin-top: 0.25em;
+  margin-bottom: 0.4em;
+  height: 18px;
 }
 </style>

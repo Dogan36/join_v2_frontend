@@ -1,57 +1,59 @@
 <!-- src/views/LoginView.vue -->
 <template>
    <FormLayout>
-    <h2>Login</h2>
-    <form @submit.prevent="login" novalidate>
-  <InputField
-    v-model="loginEmail"
-    type="email"
-    placeholder="Enter your email"
-    icon="src/assets/img/loginMail.svg"
-    :error="emailError || emailFormatError || emailNotFoundError"
-    :errorMessages="{
-      emailError: emailError ? 'Email is required' : '',
-      emailFormatError: emailFormatError ? 'Invalid email format' : '',
-      emailNotFoundError: emailNotFoundError ? 'Email not found' : ''
-    }"
-  />
-  <InputField
-    v-model="loginPassword"
-    type="password"
-    placeholder="Enter your password"
-    icon="src/assets/img/loginPassword.svg"
-    :error="passwordError || passwordLengthError || passwordIncorrectError"
-    :errorMessages="{
-      passwordError: passwordError ? 'Password is required' : '',
-      passwordLengthError: passwordLengthError ? 'Password must be at least 6 characters' : '',
-      passwordIncorrectError: passwordIncorrectError ? 'Password is incorrect' : ''
-    }"
-  />
-  <div class="loginOptions">
-  <label>
-    <input type="checkbox" v-model="rememberMe" />
-    Remember me
-    
-  </label>
-  <span type="button" @click="showForgotPassword">Forgot password?</span>
-</div>
-<div class="loginButtons">
-  <button class="main-button-layout"  type="submit">Log in </button>
-  <button class="secondary-button-layout" @click="guestLogin">Guest Login</button>
-  
-</div>
-</form>
-
+    <div class="formHeader">
+      <h2>Login</h2>
+      <img class="seperator" src="../../assets/img/seperator.svg" alt="">
+    </div>
+    <form class="form" @submit.prevent="login" novalidate>
+      <InputField
+        v-model="loginEmail"
+        type="email"
+        placeholder="Enter your email"
+        autocomplete="current-email"
+        icon="src/assets/img/loginMail.svg"
+        :error="emailError || emailFormatError || emailNotFoundError"
+        :errorMessages="{
+        emailError: emailError ? 'Email is required' : '',
+        emailFormatError: emailFormatError ? 'Invalid email format' : '',
+        emailNotFoundError: emailNotFoundError ? 'Email not found' : ''
+        }"
+      />
+      <InputField
+        v-model="loginPassword"
+        type="password"
+        autocomplete="current-password"
+        placeholder="Enter your password"
+        icon="src/assets/img/loginPassword.svg"
+        :error="passwordError || passwordLengthError || passwordIncorrectError"
+        :errorMessages="{
+        passwordError: passwordError ? 'Password is required' : '',
+        passwordLengthError: passwordLengthError ? 'Password must be at least 6 characters' : '',
+        passwordIncorrectError: passwordIncorrectError ? 'Password is incorrect' : ''
+        }"
+      />
+      <div class="loginOptions">
+        <label>
+        <input type="checkbox" v-model="rememberMe" />Remember me</label>
+        <span type="button" @click="showForgotPassword">Forgot password?</span>
+        </div>
+      <div class="loginButtons">
+        <button class="main-button-layout"  type="submit">Log in </button>
+        <button class="secondary-button-layout" @click="guestLogin">Guest Login</button>  
+      </div>
+    </form>
   </FormLayout>
+
   
 </template>
-
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import FormLayout from '../shared/FormLayout.vue';
 import InputField from '../shared/InputField.vue';
+import { inject } from 'vue';
 
+  const toggleSignup = inject('toggleSignup');
 
 const router = useRouter();
 const loginEmail = ref('');
@@ -77,13 +79,12 @@ const login = () => {
 };
 
 const resetErrors = () => {
-
   emailError.value = false;
   emailFormatError.value = false;
   emailNotFoundError.value = false;
-  passwordError.value = true;
-  passwordLengthError.value = true;
-  passwordIncorrectError.value = true;
+  passwordError.value = false;
+  passwordLengthError.value = false;
+  passwordIncorrectError.value = false;
 };
 
 const checkForErrors = () => {
@@ -100,11 +101,11 @@ const checkForErrors = () => {
   }
 };
 
-
 const showForgotPassword = () => {
   // Logik zum Anzeigen der Passwort-vergessen-Seite
   console.log('Forgot password clicked');
 };
+
 
 const checkIfEmailEmpty = () => {
   if (!loginEmail.value) {
@@ -138,10 +139,10 @@ const checkEmailDatabase = () => {
 }
 
 const checkIfPasswordEmpty = () => {
-  
+
   if (!loginPassword.value) {
     passwordError.value = true;
-   
+
   }
 };
 
@@ -159,12 +160,48 @@ const guestLogin = () => {
 };
 </script>
 
-<style>
+<style scoped>
+@import './../../assets/base.css';
+
+.form{
+  width: 82%;
+}
 .buttonIcon {
   width: 24px;
   height: 24px;
   margin-left: 0.5rem;
   align-self: center;
+}
+
+.loginButtons{
+  display: flex;
+  justify-content: space-around
+}
+
+.seperator{
+  width: 150px;
+  margin: 1rem 0;
+}
+
+.loginOptions{
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem 0;
+}
+.loginOptions label{
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+.loginOptions span{
+  cursor: pointer;
+  color: var(--main-color-hover);
+}
+
+.loginOptions span:hover{
+  color: var(--main-color);
+  scale: 1.05;
 }
 </style>
 
