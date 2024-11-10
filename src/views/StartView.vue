@@ -2,7 +2,7 @@
   <div class="wrapper">
 
     <div class="logoContainer">
-      <img class="logo" src="@/assets/logo.svg" alt="">
+      <img class="logo" src="@/assets/img/logo.svg" alt="">
     </div>
 
     
@@ -25,8 +25,8 @@
     </div>
   </div>
   <div class="privacyLinks">
-    <a href="#">Privacy Policy</a>
-    <a href="#">Terms of Service</a>
+    <a target="_blank" href="/privacy?type=privacyPolicy">Privacy Policy</a>
+    <a target="_blank" href="/privacy?type=legalNotice">Legal Notice</a>
   </div>
 </template>
 
@@ -34,7 +34,7 @@
 import { ref } from 'vue';
 import Login from '.././components/start/Login.vue';
 import Signup from '.././components/start/SignUp.vue';
-import ForgotPassword from '@/components/start/forgotPassword.vue';
+import ForgotPassword from '.././components/start/ForgotPassword.vue';
 import { provide } from 'vue';
 
 // Reaktives Datenobjekt für den Login-Zustand
@@ -121,5 +121,11 @@ provide('toggleSignup', toggleSignup);
   align-items: start;
   gap: 20px;
   
+}
+
+.privacyLinks a {
+  font-size: 16px;
+  color: var(--main-color-hover);
+  text-decoration: none;
 }
 </style>

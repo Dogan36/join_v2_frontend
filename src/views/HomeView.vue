@@ -1,74 +1,57 @@
 <template>
 <div class="home">
-    <div class="menu">
-        <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-        <div class="menuMain">
-            <li>
-                <RouterLink to="/home/summary">Summary</RouterLink>
-            </li>
-            <li>
-                <RouterLink to="/home/board">Board</RouterLink>
-            </li>
-            <li>
-                <RouterLink to="/home/addTask">Add Task</RouterLink>
-            </li>
-            <li>
-                <RouterLink to="/home/contacts">Contacts</RouterLink>
-            </li>
-        </div>
-    </div>
-    <div class="aside">
+   
+    <MenuContainer/>
+        
+        <div class="content">
         <header>
             <h1>Kanban Projekt Management Tool</h1>
         </header>
 
         <main>
-            <RouterView></RouterView>
+            <h2>Willkommen</h2>
+            <p>Das Kanban Projekt Management Tool ist ein einfaches Tool zur Verwaltung von Projekten. Es ist für kleine Teams und Einzelpersonen gedacht, die ihre Projekte auf einfache Weise verwalten möchten.</p>
         </main>
     </div>
 </div>
 </template>
 
   
-<script>
-export default {
-    name: 'HomeView'
-};
+<script setup>
+import { useRoute } from 'vue-router';
+import MenuContainer from '@/components/shared/MenuContainer.vue';
+
 </script>
 
   
 <style scoped>
 .home {
     display: flex;
-    height: 100vh;
-}
-
-header {
-
-    line-height: 1.5;
-    max-width: 100%;
-}
-
-.menu {
-    width: 200px;
-    
-    padding: 1rem;
+    width: 100%;
+    height: 100svh;
 }
 
 .content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+  flex: 1; /* Nimmt die restliche Breite ein */
+  display: flex;
+  flex-direction: column;
 }
 
 .header {
-    background: #ddd;
-    padding: 1rem;
+    height: 60px; /* Feste Höhe für den Header */
+  background-color: #f6f7f8;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1); /* Optionaler Schatten für den Header */
 }
 
+
 main {
-    flex: 1;
-    padding: 1rem;
+    flex: 1; /* Füllt den verbleibenden Raum */
+  padding: 16px;
+  overflow-y: auto; /* Ermöglicht das Scrollen bei Überlauf */
+  background-color: #ffffff;
 }
 
 @media (min-width: 1024px) {

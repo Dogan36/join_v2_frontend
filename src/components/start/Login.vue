@@ -160,11 +160,12 @@ const guestLogin = () => {
 };
 </script>
 
-<style scoped>
+<style>
 @import './../../assets/base.css';
 
 .form{
   width: 82%;
+  min-width: fit-content;
 }
 .buttonIcon {
   width: 24px;
@@ -175,7 +176,9 @@ const guestLogin = () => {
 
 .loginButtons{
   display: flex;
-  justify-content: space-around
+  justify-content: space-around;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .seperator{
@@ -186,6 +189,8 @@ const guestLogin = () => {
 .loginOptions{
   display: flex;
   justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
   margin: 1rem 0;
 }
 .loginOptions label{

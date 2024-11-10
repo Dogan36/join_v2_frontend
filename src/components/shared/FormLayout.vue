@@ -12,8 +12,9 @@
 
 .form-layout {
   width: 470px;
+  min-width: fit-content;
     max-width: 100vw;
-    padding: 20px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;

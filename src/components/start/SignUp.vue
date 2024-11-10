@@ -205,9 +205,7 @@ const checkPasswordLength = () => {
   
 }
 
-.form{
-  width: 82%;
-}
+
 
 .formHeader {
   display: flex;

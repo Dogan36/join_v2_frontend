@@ -77,7 +77,7 @@ const errorMessage = computed(() => {
 </script>
 
 <style>
-@import './../../assets/base.css';
+@import '@/assets/base.css';
 
 .input-container {
   display: flex;
