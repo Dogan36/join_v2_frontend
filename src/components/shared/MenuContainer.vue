@@ -6,7 +6,7 @@
       src="@/assets/img/logoInvert.svg"
       alt=""
     />
-    <div v-if="route.path === 'home'" class="desktopTemplateMenu">
+    <div v-if="route.path === '/home'" class="desktopTemplateMenu">
       <div
         @click="changeView('summary')"
         :class="[
