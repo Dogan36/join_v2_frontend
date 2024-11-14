@@ -1,0 +1,81 @@
+<template>
+  <div class="header">
+    <img class="logoHeaderMobile" src="@/assets/img/logo.svg" alt="">
+    <p class="headerHeadline">Kanban Projekt Management Tool</p>
+    <div class="headerUserProfil">
+        <img class="headerUserProfilIcon" src="@/assets/img/questionmark.svg" alt="" onclick="showContent('helpContent')">
+        <div class="headerUserProfilInitials" onclick="toggleLogout()"></div>
+    </div>
+</div>
+</template>
+
+<style>
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 36px 20px 116px;
+    gap: 34px;
+    max-width: calc(100% - var(--mobileTemplate-width));
+    height: 89px;
+    background: #FFFFFF;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+}
+
+.headerHeadline {
+    width: 335px;
+    height: 25px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 21px;
+    line-height: 120%;
+    color: #000000;
+    flex: none;
+    order: 0;
+    flex-grow: 0
+}
+
+.headerUserProfil {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px;
+    gap: 26px;
+    width: 106px;
+    height: 49px;
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.headerUserProfilIcon {
+    cursor: pointer;
+}
+
+.headerUserProfilIcon:hover {
+    filter: invert(1);
+}
+
+.headerUserProfilInitials {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1px;
+    gap: 16px;
+    width: 49px;
+    height: 49px;
+    border-radius: 100%;
+    border: solid black 2px;
+    background-color: #CDCDCD;
+    font-size: 20px;
+    color: white;
+    cursor: pointer;
+}
+
+.logoHeaderMobile {
+    height: 100%;
+    display: none;
+}
+</style>

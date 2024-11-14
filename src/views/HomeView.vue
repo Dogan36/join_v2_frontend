@@ -1,34 +1,42 @@
 <template>
-<div class="home">
-   
-    <MenuContainer/>
-        
-        <div class="content">
-        <header>
-            <h1>Kanban Projekt Management Tool</h1>
-        </header>
-
-        <main>
-            <h2>Willkommen</h2>
-            <p>Das Kanban Projekt Management Tool ist ein einfaches Tool zur Verwaltung von Projekten. Es ist für kleine Teams und Einzelpersonen gedacht, die ihre Projekte auf einfache Weise verwalten möchten.</p>
-        </main>
+  <div class="home">
+    <MenuContainer />
+    <div class="content">
+      <Header />
+      <main>
+        <Summary v-if="currentView === 'summary'" />
+        <Board v-if="currentView === 'board'" />
+        <AddTask v-if="currentView === 'addTask'" />
+        <Contacts v-if="currentView === 'contacts'" />
+        <PrivacyPolicy v-if="currentView === 'privacy'" />
+        <LegalNotice v-if="currentView === 'legalNotice'" />
+      </main>
     </div>
-</div>
+  </div>
 </template>
 
-  
 <script setup>
-import { useRoute } from 'vue-router';
+import { ref } from 'vue';
+import { currentView } from '@/store/state';
 import MenuContainer from '@/components/shared/MenuContainer.vue';
+import Header from '@/components/shared/Header.vue';
+import Summary from '@/components/home/Summary.vue';
+import Board from '@/components/home/Board.vue';
+import AddTask from '@/components/home/AddTask.vue';
+import Contacts from '@/components/home/Contacts.vue';
+import PrivacyPolicy from '@/components/shared/PrivacyPolicy.vue';
+import LegalNotice from '@/components/shared/LegalNotice.vue';
+
+
 
 </script>
 
-  
-<style scoped>
+<style>
 .home {
-    display: flex;
-    width: 100%;
-    height: 100svh;
+  display: flex;
+  width: 100%;
+ height: 100%;
+ 
 }
 
 .content {
@@ -49,7 +57,7 @@ import MenuContainer from '@/components/shared/MenuContainer.vue';
 
 main {
     flex: 1; /* Füllt den verbleibenden Raum */
-  padding: 16px;
+  
   overflow-y: auto; /* Ermöglicht das Scrollen bei Überlauf */
   background-color: #ffffff;
 }

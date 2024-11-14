@@ -1,18 +1,37 @@
+
+
 <template>
-  <div v-if="privacy" class="<Privacy/>"><PrivacyPolicy/></div>
-  <div v-if="legalNotice" class="termsOfService"><LegalNotice/></div>
-  
-  </template>
+  <div class="home">
+    <MenuContainer />
+    <div class="content">
+      <Header />
+      <main>
+        <PrivacyPolicy v-if="currentView === 'privacy'" />
+        <LegalNotice v-if="currentView === 'legalNotice'" />
+      </main>
+    </div>
+  </div>
+</template>
   <script setup>
-  import { computed } from 'vue';
-  import { useRoute } from 'vue-router';
+  
   import LegalNotice from '@/components/shared/LegalNotice.vue';
   import PrivacyPolicy from '@/components/shared/PrivacyPolicy.vue';
+  import MenuContainer from '@/components/shared/MenuContainer.vue';
+  import Header from '@/components/shared/Header.vue';
+  import { currentView } from '@/store/state';
+  import { onMounted } from 'vue';
+  onMounted(() => {
+  setCurrentViewFromURL(); // Setze `currentView`, wenn die Komponente geladen wird
+});
+function setCurrentViewFromURL() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const type = urlParams.get('type');
 
-  const route = useRoute();
-  
-  const privacy = computed(() => route.query.type === 'privacyPolicy');
-  const legalNotice = computed(() => route.query.type === 'legalNotice');
-  console.log(route.query.type);
+  if (type === 'privacyPolicy') {
+    currentView.value = 'privacy';
+  } else if (type === 'legalNotice') {
+    currentView.value = 'legalNotice';
+  }
+}
   </script>
   <style scoped></style>
