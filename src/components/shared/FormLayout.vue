@@ -1,18 +1,18 @@
 <template>
-    <div class="form-layout">
-        <slot></slot>
-    </div>
+<div class="form-layout">
+    <slot></slot>
+</div>
 </template>
-  
-  <script setup>
+
+<script setup>
 </script>
-  
-  <style scoped>
+
+<style scoped>
 @import './../../assets/base.css';
 
 .form-layout {
-  width: 470px;
-  min-width: fit-content;
+    width: 470px;
+    min-width: fit-content;
     max-width: 100vw;
     padding: 10px;
     display: flex;
@@ -28,8 +28,6 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    
+
 }
-
-
 </style>
