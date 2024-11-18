@@ -112,30 +112,20 @@ function changeView(view) {
 @import "@/assets/base.css";
 
 .menu {
-  width: 250px;
-  /* Feste Breite des Menüs */
+  min-width: 250px;
   background-color: var(--main-color);
-  /* Menüfarbe */
   color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
+  padding: 20px;
+  gap: 30px;
   overflow: auto;
+  position: sticky;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1); 
 }
 
-.desktopTemplate {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 66px 20px;
-  width: 232px;
-  height: 100%;
-  background: #2a3647;
-  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 0px;
-  gap: 103px;
-}
 
 .logoContainer {
   width: 100.03px;
@@ -157,9 +147,8 @@ function changeView(view) {
   justify-content: center;
   align-items: flex-start;
   padding: 0px;
-  gap: 15px;
-  width: 232px;
-  height: 229px;
+  gap: 10px;
+  width: 100%;
   flex: none;
   order: 1;
   flex-grow: 0;
@@ -169,11 +158,12 @@ function changeView(view) {
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 8px 53px;
   gap: 20px;
-  width: 232px;
-  height: 46px;
+  width: 100%;
   cursor: pointer;
+  padding: 10px 0px 10px 30px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.5s ease;
 }
 
 .desktopTemplateIconContainer {
@@ -194,6 +184,7 @@ function changeView(view) {
   width: 22px;
   height: 26px;
   color: #cdcdcd;
+  
 }
 
 .desktopTemplateFont {
@@ -210,6 +201,7 @@ function changeView(view) {
 
 .desktopTemplateIconActive {
   background-color: #091931;
+  transition: background-color 0.5s ease;
 }
 
 .desktopTemplateIconActive p {

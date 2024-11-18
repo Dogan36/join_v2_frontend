@@ -15,26 +15,19 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 36px 20px 116px;
-    gap: 34px;
-    max-width: calc(100% - var(--mobileTemplate-width));
-    height: 89px;
-    background: #FFFFFF;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+    padding: 0px 50px;
+    height: 60px;
+    position: sticky;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1); 
+    background-color: #f6f7f8;
 }
 
 .headerHeadline {
-    width: 335px;
-    height: 25px;
+ 
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
     font-size: 21px;
-    line-height: 120%;
-    color: #000000;
-    flex: none;
-    order: 0;
-    flex-grow: 0
 }
 
 .headerUserProfil {
@@ -43,11 +36,6 @@
     align-items: center;
     padding: 0px;
     gap: 26px;
-    width: 106px;
-    height: 49px;
-    flex: none;
-    order: 1;
-    flex-grow: 0;
 }
 
 .headerUserProfilIcon {

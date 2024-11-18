@@ -6,7 +6,7 @@
   --color-background-sec: #2A3647;
   --color-background-layout: #FFFFFF;
   --color-border: #0000001A;
-  
+  --color-text: #2A3647;
 }
 
 /*@media (prefers-color-scheme: dark) {
@@ -26,14 +26,19 @@
   font-weight: normal;
 }
 
+html{
+  font-size: 10px;
+  font-size: 10px;
+  font-size: 10px;
+}
+
 body {
   height: 100svh;
-  color: var(--color-text);
   background: var(--color-background);
   transition:
     color 0.5s,
     background-color 0.5s;
-  line-height: 1.6;
+    
   font-family:
     Inter,
     -apple-system,
@@ -47,7 +52,6 @@ body {
     'Droid Sans',
     'Helvetica Neue',
     sans-serif;
-  font-size: 15px;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

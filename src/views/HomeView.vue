@@ -43,30 +43,19 @@ import LegalNotice from '@/components/shared/LegalNotice.vue';
   flex: 1; /* Nimmt die restliche Breite ein */
   display: flex;
   flex-direction: column;
+  max-width: calc(100% - 25rem); /* Abzug der Breite des Menüs */
 }
 
-.header {
-    height: 60px; /* Feste Höhe für den Header */
-  background-color: #f6f7f8;
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1); /* Optionaler Schatten für den Header */
-}
+
 
 
 main {
     flex: 1; /* Füllt den verbleibenden Raum */
-  
+  padding: 5rem;
   overflow-y: auto; /* Ermöglicht das Scrollen bei Überlauf */
-  background-color: #ffffff;
+
 }
 
-@media (min-width: 1024px) {
-    header {
-        display: flex;
-        place-items: center;
-        padding-right: calc(var(--section-gap) / 2);
-    }
-}
+
+
 </style>

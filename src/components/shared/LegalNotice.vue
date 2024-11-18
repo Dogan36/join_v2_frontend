@@ -56,8 +56,6 @@ For information on data protection, please refer to our Privacy Policy.</p>
     flex-direction: column;
     width: 100%;
     height: 100%;
-   
-    overflow-y: auto;
     position: relative;
     gap: 20px;
 }
