@@ -1,7 +1,7 @@
 <template>
-  <div class="summary">
+  
     <div class="headlineComponent">
-      <h1 class="headline">Board</h1>
+      <h1>Board</h1>
       <div class="boardHeadlineRight">
         <div class="findTask">
           <input placeholder="Find Task" type="text">
@@ -13,7 +13,7 @@
     </div>
   
 
-  <div class="contentBoard">
+  <div class="boardContent">
        <div class="boardElement">
         <div class="boardElementHeader">
           <span>To do</span>
@@ -39,7 +39,9 @@
           <span>Awaiting Feedback</span>
           <img src="@/assets/img/boardPlusIcon.svg" alt="">
         </div>
-        <div class="boardElementContent"></div>
+        <div class="boardElementContent">
+          <BoardCard/>
+        </div>
       </div>
        <div class="boardElement">
         <div class="boardElementHeader">
@@ -52,7 +54,7 @@
         </div>
       </div>
   </div>
-</div>
+
 </template>
 
 <style scoped>
@@ -96,7 +98,7 @@
   padding: 1rem 1.5rem;
 }
 
-.contentBoard {
+.boardContent {
   display: flex;
   flex-direction: row;
   justify-content: space-between;

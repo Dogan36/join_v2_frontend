@@ -1,7 +1,7 @@
 <template>
-  <div class="summary">
+  
       <div class="headlineComponent">
-        <h1 class="headline">Join 360</h1>
+        <h1>Join 360</h1>
         <img class="headlineSeperator" src="@/assets/img/headlineSeperator.svg" alt="">
         <h2>Key Metrics at a Glance</h2>
       </div>
@@ -72,7 +72,7 @@
           <span id="welcomeName">Dogan</span>
       </div>
       </div>
-    </div>
+    
   </template>
 
 <style scoped>
