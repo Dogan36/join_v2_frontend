@@ -1,6 +1,6 @@
 <template>
     <h1 class="headlineComponent">AddTask</h1>
-    <form id="addTaskForm0" novalidate onsubmit="checkMandatoryFields(); return false">
+    <form class="addTaskContent" id="addTaskForm" novalidate onsubmit="checkMandatoryFields(); return false">
     
       <div class="containerLeft">
         <div class="inputContainer">
@@ -22,36 +22,39 @@
                 v-model="description"
                 type="text"
                 placeholder="Enter description"
-               
             />
         </div>
         <div class="inputContainer">
             <label class="title">Category</label>
-            
-            <AddTaskSelectCategory v-if="!addingNewCategory" @toggle="toggleAddingNewCategory">></AddTaskSelectCategory>
-                        
+            <AddTaskSelectCategory
+            :error="requiredError"
+            :errorMessages="{
+                requiredError: requiredError ? 'This field is required' : '',
+                }"
+            v-if="!addingNewCategory" @toggle="toggleAddingNewCategory">></AddTaskSelectCategory>        
             <AddTaskAddingNewCategory v-if="addingNewCategory" @toggle="toggleAddingNewCategory" @add="addNewCategory"></AddTaskAddingNewCategory>
+            
         </div>
         <div class="inputContainer">
             <label class="title">Assigned to</label>
-          
             <AddTaskAssignContacts></AddTaskAssignContacts>
-          
         </div>
       </div>
-      <div class="containerCenter"></div>
+     
       <div class="containerRight">
-        <div class="titleContainer">
-          <p>
+        <div class="inputContainer">
             <label class="title">Due date</label>
-          </p>
-          <div id="dateButton0">
-            <input class="titleInput noOutline cursorPointer" type="date" id="dueDate0" required
-              oninput="checkMandatoryFieldDueDate()" />
-          </div>
-          <p id="requiredDueDate0" class="required hidden">
-            This field is required
-          </p>
+            <InputField
+                :isTextarea="false"
+                v-model="dueDate"
+                type="date"
+                :min="today"
+                :error="requiredError"
+                :errorMessages="{
+                requiredError: requiredError ? 'This field is required' : '',
+                }"
+            />
+          
         </div>
         <div class="prioContainer">
           <p>
@@ -116,6 +119,29 @@
 </template>
 
 <style>
+.addTaskContent {
+    display: flex;
+    
+    gap: 4rem;
+    max-width: 900px;
+   
+    
+}
+
+.containerLeft {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 50%;
+}
+
+.containerRight {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 50%;
+}
+
 .inputContainer {
   display: flex;
   flex-direction: column;  
@@ -185,10 +211,14 @@ import InputField from '../shared/InputField.vue';
 import AddTaskSelectCategory from '../shared/AddTaskSelectCategory.vue';
 import AddTaskAddingNewCategory from '../shared/AddTaskAddingNewCategory.vue';
 import AddTaskAssignContacts from '../shared/AddTaskAssignContacts.vue';
+import AssignedToAvatars from '../shared/AssignedToAvatars.vue';
 const addingNewCategory = ref(false);
 import { ref } from 'vue';
+
 const title = ref('');
+const today = new Date().toISOString().split('T')[0];
 const description = ref('');
+const dueDate = ref('');
 const requiredError = ref(false);
 
 const error = ref(false);
@@ -197,7 +227,7 @@ const errorMessage = ref('');
 
 
 const toggleAddingNewCategory = () => {
-    console.log(addingNewCategory);
+    console.log(today);
   addingNewCategory.value = !addingNewCategory.value
 };
 

@@ -1,5 +1,6 @@
 <template>
-    <div @click="toggleSelectCategory" class="inputField dropDown">
+    <div @click="toggleSelectCategory" class="inputField dropDown"
+    :class="{ 'input-error': error,}">
       <!-- Ausgewählte Kategorie anzeigen -->
       <div class="dropDownOption" v-if="selectedCategory">
         <div class="dropDownOptionContent">
@@ -27,6 +28,7 @@
         @click="selectCategory(category)"
         class="dropDownOption"
         v-if="selectingCategory"
+        
       >
         <div class="dropDownOptionContent">
           {{ category.name }}
@@ -37,11 +39,13 @@
         alt="Delete">
       </div>
     </div>
+    <p class="error-message">{{ errorMessage }}</p>
   </template>
   
 
 <script setup>
 
+import { defineProps, computed } from 'vue';
 import { ref } from 'vue';
 const selectingCategory = ref(false);
 const selectedCategory = ref(null);
@@ -49,8 +53,21 @@ const category = ref(null);
 const emit = defineEmits(['toggle']);
 const toggleSelectCategory = () => {
     selectingCategory.value = !selectingCategory.value
-    
 };
+
+const props = defineProps({
+  modelValue: String,
+    error: Boolean,
+    errorMessages: {
+        type: Object,
+        default: () => ({ requiredError: '' }),
+    },
+  });
+
+ 
+  const errorMessage = computed(() => {
+  return Object.values(props.errorMessages).find(msg => msg) || '';
+});
 
 const selectCategory = (category) => {
     selectedCategory.value = category;

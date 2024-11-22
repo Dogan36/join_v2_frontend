@@ -8,6 +8,7 @@
       @input="onInput"
       :class="{ 'input-error': error,}"
       :autocomplete="autocomplete"
+      :min="min"
     />
     <img 
       v-if="shouldShowToggleIcon" 
@@ -36,6 +37,7 @@ const props = defineProps({
     type: String,
     default: 'text'
   },
+  min: String,
   autocomplete: String,
   placeholder: String,
   icon: {

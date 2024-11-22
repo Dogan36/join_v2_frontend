@@ -10,17 +10,25 @@
             <div><span>1</span><span>/</span><span>2</span><span>Done</span></div>
         </div>
         <div class="cardBottomDiv">
-            <div class="assignedTo">
-                <div class="cardAvatar">AB</div>
-                <div class="cardAvatar">DC</div>
-                <div class="cardAvatar">DC</div>
-                <div class="cardAvatar">DC</div>
-            </div>
+           <AssignedToAvatars
+           :assignedTo="assignedTo"></AssignedToAvatars>
             <img src="@/assets/img/prioMediumIcon.svg" alt="">
         </div>
     </div>
 </template>
 
+<script setup>
+import { ref } from 'vue';
+import  AssignedToAvatars  from './AssignedToAvatars.vue';
+const assignedTo = ref([
+    { id: 1, name: 'John Doe', avatar: 'JD' },
+    { id: 2, name: 'Jane Doe', avatar: 'JD' },
+    { id: 3, name: 'Max Mustermann', avatar: 'MM' },
+    { id: 4, name: 'Maxine Mustermann', avatar: 'MM' },
+  
+]);
+
+</script>
 <style scoped>
 .boardCard {
     display: flex;
@@ -129,31 +137,7 @@
     align-items: center;
     width: 100%;
     
-    .assignedTo{
-        width: 50%;
-        height: 20px;
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        align-items: center;
-        .cardAvatar{
-            display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 10px 8px;
-    gap: 10px;
-    width: 35px;
-    height: 35px;
-    background: #0190E0;
-    border: 1px solid #FFFFFF;
-    border-radius: 58px;
-    flex: none;
-    order: 0;
-    flex-grow: 0;
-    margin: 0px -4px;
-        }
-    }
+    
     img{
         width: 20px;
         height: 20px;

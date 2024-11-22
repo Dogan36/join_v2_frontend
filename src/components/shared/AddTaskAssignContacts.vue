@@ -19,14 +19,16 @@
         <input 
           type="checkbox" 
           v-model="contact.selected"
+          
         />
       </label>
     </div>
+    <AssignedToAvatars :assignedTo="selectedContacts"></AssignedToAvatars>
   </template>
 
 <script setup>
-import { ref } from 'vue';
-
+import { ref, computed } from 'vue';
+import AssignedToAvatars from './AssignedToAvatars.vue';
 // Dropdown open/close state
 const selectingContacts = ref(false);
 
@@ -37,6 +39,9 @@ const contacts = ref([
   {id:3, name: 'Contact 3', selected: false },
 ]);
 
+const selectedContacts = computed(() => {
+  return contacts.value.filter(contact => contact.selected);
+});
 // Toggle dropdown visibility
 const toggleSelectContacts = () => {
   selectingContacts.value = !selectingContacts.value;
