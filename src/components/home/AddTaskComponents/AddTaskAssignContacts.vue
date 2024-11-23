@@ -28,7 +28,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import AssignedToAvatars from './AssignedToAvatars.vue';
+import AssignedToAvatars from '@/components/shared/AssignedToAvatars.vue';
 // Dropdown open/close state
 const selectingContacts = ref(false);
 

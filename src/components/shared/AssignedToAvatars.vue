@@ -16,7 +16,6 @@ const props = defineProps({
 <style scoped>
 .assignedTo {
   width: 50%;
-
   display: flex;
   flex-direction: row;
   justify-content: flex-start;

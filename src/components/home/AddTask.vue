@@ -54,32 +54,14 @@
                 requiredError: requiredError ? 'This field is required' : '',
                 }"
             />
-          
         </div>
-        <div class="prioContainer">
-          <p>
-            <label class="title">Prio</label>
-          </p>
-          <div class="prioBodyContainer">
-            <div id="prioRed0" class="prioButton" onclick="choosePrio('prioRed')">
 
-              <div class="prioButtonName">Urgent</div>
-              <img id="prioUrgentIcon0" class="prioIcon" src="./assets/img/prioUrgentIcon.svg" alt="" />
-            </div>
-            <div id="prioYellow0" class="prioButton" onclick="choosePrio('prioYellow')">
-              <div class="prioButtonName">Medium</div>
-              <img id="prioMediumIcon0" class="prioIcon" src="./assets/img/prioMediumIcon.svg" alt="" />
-            </div>
-            <div id="prioGreen0" class="prioButton" onclick="choosePrio('prioGreen')">
-              <div class="prioButtonName">Low</div>
-              <img id="prioLowIcon0" class="prioIcon" src="./assets/img/prioLowIcon.svg" alt="" />
-            </div>
-          </div>
-          <p id="requiredPrio0" class="required hidden">
-            This field is required
-          </p>
+        <div class="inputContainer">
+          <label class="title">Prio</label>
+          <AddTaskPrioButtons v-model="choosenPrio"></AddTaskPrioButtons>
         </div>
         <div>
+          
           <p>
             <label class="title">Subtasks</label>
           </p>
@@ -208,19 +190,20 @@
 
 <script setup>
 import InputField from '../shared/InputField.vue';
-import AddTaskSelectCategory from '../shared/AddTaskSelectCategory.vue';
-import AddTaskAddingNewCategory from '../shared/AddTaskAddingNewCategory.vue';
-import AddTaskAssignContacts from '../shared/AddTaskAssignContacts.vue';
-import AssignedToAvatars from '../shared/AssignedToAvatars.vue';
-const addingNewCategory = ref(false);
+import AddTaskSelectCategory from './AddTaskComponents/AddTaskSelectCategory.vue';
+import AddTaskAddingNewCategory from './AddTaskComponents/AddTaskAddingNewCategory.vue';
+import AddTaskAssignContacts from './AddTaskComponents/AddTaskAssignContacts.vue';
+import AddTaskPrioButtons from './AddTaskComponents/AddTaskPrioButtons.vue';
+
 import { ref } from 'vue';
 
 const title = ref('');
 const today = new Date().toISOString().split('T')[0];
 const description = ref('');
+const addingNewCategory = ref(false);
 const dueDate = ref('');
 const requiredError = ref(false);
-
+const choosenPrio = ref('');
 const error = ref(false);
 const errorMessage = ref('');
 
