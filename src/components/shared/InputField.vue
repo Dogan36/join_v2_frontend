@@ -1,89 +1,102 @@
 <template>
-  <div class="inputField" :class="{ 'input-error': error, 'textarea': isTextarea, }">
-    <component
-    :is="isTextarea ? 'textarea' : 'input'"
-    :type="isPasswordVisible && type === 'password' ? 'text' : type"
+  <div class="inputField" :class="{ 'input-error': error }">
+    <!-- Input Feld -->
+    <input
+      :type="isPasswordVisible ? 'text' : type"
+      :id="id"
       :placeholder="placeholder"
       :value="modelValue"
       @input="onInput"
-      :class="{ 'input-error': error,}"
+      :maxlength="maxlength"
       :autocomplete="autocomplete"
-      :min="min"
     />
-    <img 
-      v-if="shouldShowToggleIcon" 
-      :src="currentIcon" 
-      alt="toggle password visibility" 
-      class="input-icon cursorPointer" 
-      @click="togglePasswordVisibility" 
+
+    <!-- Dynamische Icons -->
+    <img
+      v-if="type === 'password'"
+      :src="passwordIconSrc"
+      :alt="passwordIconAlt"
+      :class="passwordIconClass"
+      @click="togglePasswordVisibility"
     />
-    
-    <img 
-       v-else-if="icon"
+
+    <img
+      v-else-if="icon"
       :src="icon"
-      alt="input icon"
+      :alt="iconAlt || 'Icon'"
       class="input-icon"
+      @click="emitIconClick"
     />
-    </div>
-      <p class="error-message">{{ errorMessage }}</p>
+  </div>
+
+  <!-- Fehlermeldung -->
+  <p class="error-message">{{ errorMessage }}</p>
 </template>
 
 <script setup>
-import { defineProps, computed } from 'vue';
-import { ref } from 'vue';
+
+import { ref, computed } from 'vue';
+import { defineProps, defineEmits } from 'vue';
+
+// Props definieren
 const props = defineProps({
   modelValue: String,
-  type: {
-    type: String,
-    default: 'text'
-  },
-  min: String,
-  autocomplete: String,
+  id: String,
+  type: { type: String, default: 'text' },
   placeholder: String,
-  icon: {
-      type: String,
-      default: null, // Standardmäßig kein Icon
-    },
+  maxlength: String,
+  autocomplete: String,
+  icon: { type: String, default: '' }, // Standardicon für Nicht-Passwortfelder
+  iconAlt: { type: String, default: '' },
   error: Boolean,
-  errorMessages: { // Akzeptiere mehrere Fehlernachrichten als Array oder Objekt
-    type: Object,
-    default: () => ({})
-  },
-  isTextarea: {
-      type: Boolean,
-      default: false, // Standardmäßig ein Input
-    },
+  errorMessages: {type: Object, default: () => ({})},
 });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'iconClick']);
 
-// Lokale Statusvariablen
+// Lokale Variablen
 const isPasswordVisible = ref(false);
-const currentIcon = computed(() => {
-  return isPasswordVisible.value ? 'src/assets/img/notVisibleIcon.svg' : 'src/assets/img/visibleIcon.svg';
+
+const errorMessage = computed(() => {
+  return Object.values(props.errorMessages).find((msg) => msg) || "";
 });
 
-// Eingabeveränderung
+const passwordIconSrc = computed(() => {
+  if (!props.modelValue) {
+    return 'src/assets/img/loginPassword.svg'; // Schloss-Icon
+  }
+  return isPasswordVisible.value
+    ? 'src/assets/img/notVisibleIcon.svg' // Durchgestrichenes Auge
+    : 'src/assets/img/visibleIcon.svg'; // Auge
+});
+
+const passwordIconAlt = computed(() => {
+  if (!props.modelValue) return 'Lock icon';
+  return isPasswordVisible.value
+    ? 'Hide password'
+    : 'Show password';
+});
+
+const passwordIconClass = computed(() => {
+  return passwordIconSrc.value.includes('loginPassword') // Passwortfeld
+    ? 'input-icon' // Standard-Stil für das Schloss-Icon
+    : 'input-icon cursorPointer'; // Stil für Auge-Icons
+});
+
+// Eingabe-Event
 const onInput = (event) => {
   emit('update:modelValue', event.target.value);
 };
 
-// Sichtbarkeit umschalten
+// Passwort-Sichtbarkeit umschalten
 const togglePasswordVisibility = () => {
-  if (props.type === 'password') {
-    isPasswordVisible.value = !isPasswordVisible.value;
-  }
+  isPasswordVisible.value = !isPasswordVisible.value;
 };
 
-// Anzeige des Augensymbols nur bei Passworttyp
-const shouldShowToggleIcon = computed(() => {
-  return props.type === 'password' && props.modelValue;
-});
-
-// Berechnete Eigenschaft zur Auswahl der ersten verfügbaren Fehlermeldung
-const errorMessage = computed(() => {
-  return Object.values(props.errorMessages).find(msg => msg) || '';
-});
+// Anderes Icon-Klick-Event
+const emitIconClick = () => {
+  emit('iconClick');
+};
 </script>
 
 <style>
@@ -129,13 +142,6 @@ const errorMessage = computed(() => {
 
 .cursorPointer {
   cursor: pointer;
-}
-
-.error-message {
-  color: #f28b82;
-  font-size: 0.9em;
-  margin-bottom: 0.4em;
-  height: 18px;
 }
 
 .inputField.textarea {

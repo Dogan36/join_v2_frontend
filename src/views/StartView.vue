@@ -7,13 +7,17 @@
 
     
       <div v-if="isLogin">
-        <Login />
+        <Login
+          :toggle="toggleSignup" 
+          :toggleForgotPassword="toggleForgotPassword" />
       </div>
-      <div v-if="issignup">
-        <Signup />
+      <div  v-if="isSignup">
+        <Signup
+          :toggle="toggleSignup"</Signup> />
       </div>
       <div v-if="isForgotPassword">
-        <ForgotPassword />
+        <ForgotPassword
+        :toggle="toggleForgotPassword"/>
       </div>
     
 
@@ -39,22 +43,20 @@ import { provide } from 'vue';
 
 // Reaktives Datenobjekt für den Login-Zustand
 const isLogin = ref(true);
-const issignup = ref(false);
+const isSignup = ref(false);
 const isForgotPassword = ref(false);
 // Funktion zum Umschalten des Formulars
 const toggleSignup = () => {
-  isLogin.value = false;
-  issignup.value = true;
-  isForgotPassword.value = false;
+  isLogin.value = !isLogin.value;
+  isSignup.value = !isSignup.value;
 };
 
 const toggleForgotPassword = () => {
-  isLogin.value = false;
-  issignup.value = false;
-  isForgotPassword.value = true;
+  isLogin.value = !isLogin.value;
+  isForgotPassword.value = !isForgotPassword.value
 };
 
-provide('toggleSignup', toggleSignup);
+
 </script>
 
 <style scoped>

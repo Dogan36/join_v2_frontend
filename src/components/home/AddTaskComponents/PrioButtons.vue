@@ -1,4 +1,8 @@
 <template>
+
+<div class="inputContainer">
+          <label class="title">Prio</label>
+        
     <div class="prioButtons">
         <div class="prioButton" 
         :style="currentPrio === 'High' ? { backgroundColor: '#ff3c00', color: 'white' } : { backgroundColor: 'unset', color: 'unset' }" 
@@ -33,6 +37,8 @@
                 alt="" />
         </div>
     </div>
+    
+        </div>
     <p class="error-message"></p>
 </template>
 
@@ -71,6 +77,7 @@ import { defineProps, computed, defineEmits } from 'vue';
 import { ref } from 'vue';
 import Prioicons from '@/utils/prioIcons';
 
+const choosenPrio = ref('Medium');
 const emit = defineEmits(['update:modelValue']);
 
 const props = defineProps({
@@ -91,4 +98,8 @@ function updatePrio(newPrio) {
     currentPrio.value = newPrio;
     emit('update:modelValue', newPrio);
 }
+
+defineExpose({
+    currentPrio
+});
 </script>

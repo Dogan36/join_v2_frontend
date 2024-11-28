@@ -35,7 +35,7 @@
       <div class="loginOptions">
         <label>
         <input type="checkbox" v-model="rememberMe" />Remember me</label>
-        <span type="button" @click="showForgotPassword">Forgot password?</span>
+        <span type="button" @click="toggleForgotPassword">Forgot password?</span>
         </div>
       <div class="loginButtons">
         <button class="main-button-layout"  type="submit">Log in </button>
@@ -51,9 +51,19 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import FormLayout from '../shared/FormLayout.vue';
 import InputField from '../shared/InputField.vue';
-import { inject } from 'vue';
 
-  const toggleSignup = inject('toggleSignup');
+import { defineProps } from 'vue';
+
+const props = defineProps({
+  toggle: {
+    type: Function,
+    required: true,
+  },
+  toggleForgotPassword: {
+    type: Function,
+    required: true,
+  },
+});
 
 const router = useRouter();
 const loginEmail = ref('');

@@ -1,4 +1,8 @@
 <template>
+  <div class="inputContainer">
+            <label class="title">Assigned to</label>
+            
+       
     <div class="inputField dropDown">
       <!-- Toggle Dropdown -->
       <div @click="toggleSelectContacts" class="dropDownOption">
@@ -11,8 +15,8 @@
         v-for="contact in contacts" 
         :key="contact.id" 
         v-if="selectingContacts"
-        
-      >
+        >
+
         <div class="dropDownOptionContent">
           {{ contact.name }}
         </div>
@@ -24,6 +28,7 @@
       </label>
     </div>
     <AssignedToAvatars :assignedTo="selectedContacts"></AssignedToAvatars>
+  </div>
   </template>
 
 <script setup>
@@ -34,9 +39,9 @@ const selectingContacts = ref(false);
 
 // Sample contact list
 const contacts = ref([
-  {id:1, name: 'Contact 1', selected: false },
-  {id:2, name: 'Contact 2', selected: false },
-  {id:3, name: 'Contact 3', selected: false },
+  {id:1, name: 'Contact 1', avatar: 'C1', selected: false },
+  {id:2, name: 'Contact 2', avatar: 'C2', selected: false },
+  {id:3, name: 'Contact 3', avatar: 'C3', selected: false },
 ]);
 
 const selectedContacts = computed(() => {
@@ -47,5 +52,8 @@ const toggleSelectContacts = () => {
   selectingContacts.value = !selectingContacts.value;
 };
 
+defineExpose({
+ selectedContacts,
+});
 
 </script>

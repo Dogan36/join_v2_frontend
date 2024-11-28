@@ -1,13 +1,13 @@
 <template>
   <div class="assignedTo">
-    <div class="cardAvatar" v-for="avatar in assignedTo" :key="name">
-      {{ avatar.name }}
+    <div class="cardAvatar" v-for="contact in assignedTo">
+      {{ contact.avatar }}
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { defineProps } from "vue";
 const props = defineProps({
     assignedTo: Array,
     });

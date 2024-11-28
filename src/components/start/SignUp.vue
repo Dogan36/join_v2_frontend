@@ -46,6 +46,7 @@
    icon="src/assets/img/loginPassword.svg"
    :error="passwordMatchError"
    :errorMessages="{
+    passwordError: passwordError ? 'Password is required' : '',
     passwordMatchError: passwordMatchError ? 'Passwords do not match' : '',
 
   }"
@@ -66,11 +67,10 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
 import FormLayout from '../shared/FormLayout.vue';
 import InputField from '../shared/InputField.vue';
 
-const router = useRouter();
+const readPrivacy = ref(false);
 const signupName = ref('');
 const signupEmail = ref('');
 const signupPassword = ref('');
