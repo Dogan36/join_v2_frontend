@@ -109,3 +109,9 @@ h2{
   background: #D1D1D1;
 }
 
+.error-message {
+  color: #f28b82;
+  font-size: 0.9em;
+  margin-bottom: 0.4em;
+  height: 1.8rem;
+}
