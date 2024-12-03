@@ -2,23 +2,45 @@
   <div class="contactslistCard" 
   :class="{ active: isActive }"
   @click="$emit('select', contact)">
-    <div class="avatar" :style="{ backgroundColor: contact.color }">
+    <div class="avatar" :style="{ backgroundColor: contact.color.code, color: textColor }">
       {{ contact.avatar }}
     </div>
     <div class="info">
-      <h3>{{ contact.firstName }} {{ contact.lastName }}</h3>
-      <p>{{ contact.email }}</p>
+      <h3>{{ contact.user.first_name }} {{ contact.user.last_name }}</h3>
+      <p>{{ contact.user.email }}</p>
     </div>
   </div>
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+import { defineProps, computed } from "vue";
 
 const props = defineProps({
   contact: Object,
   isActive: Boolean,
 });
+
+// Berechnung der Textfarbe abhängig von der Hintergrundfarbe
+const textColor = computed(() => {
+  return isDarkBackground.value ? '#fff' : '#000'; // Weiß bei dunklem Hintergrund, Schwarz bei hellem
+});
+
+// Berechnung, ob der Hintergrund dunkel oder hell ist
+const isDarkBackground = computed(() => {
+  const hex = props.contact.color.code;
+  const rgb = hexToRgb(hex);
+  const yiq = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+  return yiq < 128; // Dunkel: Textfarbe weiß, hell: Textfarbe schwarz
+});
+
+// Funktion zum Umwandeln von Hex in RGB
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return { r, g, b };
+}
+
 </script>
 
 <style scoped>
@@ -27,13 +49,13 @@ const props = defineProps({
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 10px 8px;
+  padding: 10px;
   gap: 10px;
   width: 35px;
   height: 35px;
-  background: #0190e0;
   border: 1px solid #ffffff;
-  border-radius: 58px;
+  border-radius: 100%;
+  font-size: 16px;
 }
 .contactslistCard {
   display: flex;
@@ -72,29 +94,15 @@ const props = defineProps({
   align-items: flex-start;
   padding: 0px;
   gap: 5px;
-  width: 300px;
-  height: 49px;
-  overflow: hidden;
-
   h3 {
-    font-weight: 400;
     font-size: 2.1rem;
-    line-height: 120%;
     white-space: nowrap;
     display: flex;
     align-items: center;
     color: #000000;
   }
-
-  p {
-    height: 19px;
-    font-family: "Inter";
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 120%;
-    display: flex;
-    align-items: center;
+  p { 
+    font-size: 1.6rem;
     color: #007cee;
   }
 }

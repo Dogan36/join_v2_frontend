@@ -188,13 +188,8 @@ function changeView(view) {
 }
 
 .desktopTemplateFont {
-  width: 53px;
-  height: 19px;
-  font-family: "Inter";
-  font-style: normal;
   font-weight: 400;
   font-size: 16px;
-  line-height: 120%;
   white-space: nowrap;
   color: #cdcdcd;
 }

@@ -9,17 +9,17 @@
       />
       <h2>Better with a Team</h2>
     </div>
-    <div class="contactCard">
+    <div v-if="selectedContact" class="contactCard">
       <div class="cardHeader">
         <div
           class="cardAvatar"
-          :style="{ backgroundColor: selectedContact.color }"
+          :style="{ backgroundColor: selectedContact.color.code, color: textColor }"
         >
           {{ selectedContact.avatar }}
         </div>
         <div class="cardHeaderContent">
           <span>{{
-            selectedContact.firstName + " " + selectedContact.lastName
+            selectedContact.user.first_name + " " + selectedContact.user.last_name
           }}</span>
 
           <div class="cardHeaderEdits">
@@ -38,11 +38,11 @@
       <div class="cardInfo">
         <div class="cardEmailContainer">
           <span>Email</span>
-          <a href="mailto:">{{ selectedContact.email }}</a>
+          <a href="mailto:">{{ selectedContact.user.email }}</a>
         </div>
         <div class="cardPhoneContainer">
           <span>Phone</span>
-          <a href="tel:">{{ selectedContact.phone }}</a>
+          <a href="tel:">{{ selectedContact.user.phone }}</a>
         </div>
       </div>
     </div>
@@ -54,6 +54,38 @@
     
   </div>
 </template>
+
+<script setup>
+import { defineProps, computed } from "vue";
+
+const props = defineProps({
+  selectedContact: {
+    type: Object,
+    // Sicherstellen, dass ein Contact übergeben wird
+  },
+});
+
+const textColor = computed(() => {
+  return isDarkBackground.value ? '#fff' : '#000'; // Weiß bei dunklem Hintergrund, Schwarz bei hellem
+});
+
+// Berechnung, ob der Hintergrund dunkel oder hell ist
+const isDarkBackground = computed(() => {
+  const hex = props.selectedContact.color.code;
+  const rgb = hexToRgb(hex);
+  const yiq = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+  return yiq < 128; // Dunkel: Textfarbe weiß, hell: Textfarbe schwarz
+});
+
+// Funktion zum Umwandeln von Hex in RGB
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return { r, g, b };
+}
+
+</script>
 
 <style scoped>
 .contactMainContent {
@@ -81,14 +113,13 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      width: 12rem;
-      height: 12rem;
+      min-width: 12rem;
+      min-height: 12rem;
       border: 1px solid #ffffff;
       border-radius: 100%;
       font-weight: 500;
       font-size: 47px;
       align-self: center;
-      color: #ffffff;
       line-height: 12rem;
     }
 
@@ -96,6 +127,7 @@
       span {
         font-weight: 500;
         font-size: 4.7rem;
+        text-wrap: nowrap;
       }
       .cardHeaderEdits {
         display: flex;
@@ -171,18 +203,4 @@
 }
 </style>
 
-<script setup>
-import { defineProps } from "vue";
 
-const props = defineProps({
-  contact: Object,
-});
-const selectedContact = {
-  firstName: "Anna",
-  lastName: "Meier",
-  email: "anna.meier@example.com",
-  phone: "123-456-7890",
-  avatar: "MM",
-  color: "#FF5733",
-};
-</script>

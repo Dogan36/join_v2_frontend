@@ -152,5 +152,5 @@
 </style>
 
 <script setup>
-import BoardCard from '../shared/BoardCard.vue';
+import BoardCard from './BoardComponents/BoardCard.vue';
 </script>

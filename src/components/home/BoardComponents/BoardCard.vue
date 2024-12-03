@@ -19,7 +19,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import  AssignedToAvatars  from './AssignedToAvatars.vue';
+import AssignedToAvatars from '@/components/shared/AssignedToAvatars.vue';
 const assignedTo = ref([
     { id: 1, name: 'John Doe', avatar: 'JD' },
     { id: 2, name: 'Jane Doe', avatar: 'JD' },

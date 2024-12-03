@@ -3,11 +3,11 @@
     <div v-for="(group, letter) in groupedContacts" :key="letter">
       <h2 class="letterSeparator">{{ letter }}</h2>
       <img src="@/assets/img/contactSeperator.svg" />
-      <div v-for="contact in group" :key="contact.email">
+      <div v-for="contact in group" :key="contact.id">
         <!-- Nur im Parent den Klick handhaben -->
         <ContactslistCard
           :contact="contact"
-          :isActive="contact.email === selectedContact?.email"
+          :isActive="contact.user.email === selectedContact?.user.email"
           @select="emitSelectedContact(contact)"
         />
       </div>
@@ -19,12 +19,11 @@
 import { ref, computed } from "vue";
 import ContactslistCard from "./ContactslistCard.vue";
 import { defineProps, defineEmits } from "vue";
-
+import { contacts } from "@/store/state";
 const props = defineProps({
-  contacts: Array,
-  selectedContact: Object,
+  selectedContact: Object || null,
 });
-const contacts = props.contacts;
+
 
 const emit = defineEmits(["updateContact"]); // Definiere ein Event für das Parent
 const emitSelectedContact = (contact) => {
@@ -32,12 +31,18 @@ const emitSelectedContact = (contact) => {
 };
 
 const groupedContacts = computed(() => {
-  return contacts.reduce((groups, contact) => {
-    const letter = contact.firstName[0].toUpperCase();
-    if (!groups[letter]) {
-      groups[letter] = [];
+  // Hier wird eine Gruppierung der Kontakte nach dem ersten Buchstaben des Vornamens erstellt
+  return contacts.value.reduce((groups, contact) => {
+    // Den ersten Buchstaben des Vornamens extrahieren und in Großbuchstaben umwandeln
+    const firstLetter = contact.user.first_name[0].toUpperCase();
+
+    // Überprüfen, ob es bereits eine Gruppe für diesen Buchstaben gibt
+    if (!groups[firstLetter]) {
+      groups[firstLetter] = [];
     }
-    groups[letter].push(contact);
+
+    // Den Kontakt der entsprechenden Gruppe hinzufügen
+    groups[firstLetter].push(contact);
     return groups;
   }, {});
 });
