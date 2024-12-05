@@ -7,7 +7,10 @@
     />
    
   
-    <ContactMainContent :selectedContact="selectedContact" />
+    <ContactMainContent  @openOverlay="openNewContactOverlay" :selectedContact="selectedContact" />
+    <DarkBackground v-if="isNewContactOverlayVisible" @close="closeNewContactOverlay">
+      <ContactOverlay></ContactOverlay>
+    </DarkBackground>
   </div>
 </template>
 
@@ -24,8 +27,8 @@ import { onMounted, ref } from "vue";
 import Contactslist from "./ContactsComponents/Contactslist.vue";
 import ContactMainContent from "./ContactsComponents/ContactMainContent.vue";
 import { useContacts } from "@/composables/useContacts";
-
-
+import DarkBackground from "../shared/DarkBackground.vue";
+import ContactOverlay from "./ContactsComponents/ContactOverlay.vue";
 
 const { contacts, fetchContacts } = useContacts();
 
@@ -44,6 +47,19 @@ const setActiveContact = (contact) => {
   // Update den aktiven Kontakt
 };
 
+const isNewContactOverlayVisible = ref(false);
 
+const openNewContactOverlay = () => {
+  isNewContactOverlayVisible.value = true;
+};
+
+const closeNewContactOverlay = () => {
+  isNewContactOverlayVisible.value = false;
+};
+
+const saveNewContact = () => {
+  console.log("Contact saved!");
+  closeNewContactOverlay();
+};
 
 </script>

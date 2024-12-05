@@ -28,4 +28,6 @@ const closeModal = () => {
     align-items: center;
     z-index: 100;
 }
+
+  
 </style>

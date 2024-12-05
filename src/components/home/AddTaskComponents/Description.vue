@@ -3,7 +3,7 @@
 <div class="inputContainer">
     <label class="title">Description</label>
     <div class="inputField">
-           <input type="textarea" placeholder="Enter description">
+           <textarea  type="text" placeholder="Enter description"></textarea>
     </div>
     <p class="error-message">{{ errorMessage }}</p>
 </div>
@@ -20,3 +20,11 @@ defineExpose({
     description,
 });
 </script>
+
+<style scoped>
+.inputField{
+    height: unset;
+    overflow-y: auto;
+    max-width: 100%;
+}
+</style>

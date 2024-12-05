@@ -110,6 +110,7 @@ const emitIconClick = () => {
   height: 45px;
   border-radius: 4px;
   background-color: white;
+  justify-content: center;
 }
 
 .inputField.input-error {

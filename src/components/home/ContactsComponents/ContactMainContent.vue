@@ -47,7 +47,7 @@
       </div>
     </div>
     <div class="buttonContainer">
-      <div class="main-button-layout">New Contact
+      <div @click="$emit('openOverlay')" class="main-button-layout">New Contact
         <img src="@/assets/img/addContactIcon.svg" alt="">
       </div>
     </div>
@@ -64,6 +64,8 @@ const props = defineProps({
     // Sicherstellen, dass ein Contact übergeben wird
   },
 });
+
+
 
 const textColor = computed(() => {
   return isDarkBackground.value ? '#fff' : '#000'; // Weiß bei dunklem Hintergrund, Schwarz bei hellem
