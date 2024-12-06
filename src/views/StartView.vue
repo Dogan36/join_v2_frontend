@@ -75,7 +75,6 @@ const toggleForgotPassword = () => {
   display: flex;
   justify-content: start;
   align-items: start;
-  background-color: yellow;
   width: 33%;
 }
 
@@ -90,7 +89,6 @@ const toggleForgotPassword = () => {
   display: flex;
   justify-content: end;
   align-items: start;
-  background-color: red;
   width: 33%;
 }
 
