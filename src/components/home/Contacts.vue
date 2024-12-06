@@ -1,15 +1,19 @@
 <template>
   <div class="contactsContent">
     <Contactslist
-      
       :selectedContact="selectedContact"
       @updateContact="setActiveContact"
     />
    
   
-    <ContactMainContent  @openOverlay="openNewContactOverlay" :selectedContact="selectedContact" />
-    <DarkBackground v-if="isNewContactOverlayVisible" @close="closeNewContactOverlay">
-      <ContactOverlay></ContactOverlay>
+    <ContactMainContent  @openOverlay="openOverlay" :selectedContact="selectedContact" />
+    <DarkBackground v-if="isOverlayVisible" @close="closeOverlay">
+      <ContactOverlay
+      v-if="isOverlayVisible"
+      :contact="selectedContact"
+      :isEditMode="overlayIsEditMode"
+      @close="closeOverlay"
+    />
     </DarkBackground>
   </div>
 </template>
@@ -31,35 +35,30 @@ import DarkBackground from "../shared/DarkBackground.vue";
 import ContactOverlay from "./ContactsComponents/ContactOverlay.vue";
 
 const { contacts, fetchContacts } = useContacts();
-
+const selectedContact = ref(null);
+const isOverlayVisible = ref(false);
+const overlayIsEditMode = ref(false);
 onMounted(() => {
   fetchContacts();
-  
- 
 });
 
-const selectedContact = ref(null);
-
 const setActiveContact = (contact) => {
-    console.log(contact);
+  console.log(contact);
   selectedContact.value = contact;
-
-  // Update den aktiven Kontakt
 };
 
-const isNewContactOverlayVisible = ref(false);
-
-const openNewContactOverlay = () => {
-  isNewContactOverlayVisible.value = true;
+const openOverlay = (isEditMode) => {
+  overlayIsEditMode.value = isEditMode; // Bearbeitungsmodus oder Neuanlage
+  isOverlayVisible.value = true;
 };
 
-const closeNewContactOverlay = () => {
-  isNewContactOverlayVisible.value = false;
+const closeOverlay = () => {
+  isOverlayVisible.value = false;
 };
 
 const saveNewContact = () => {
   console.log("Contact saved!");
-  closeNewContactOverlay();
+  closeOverlay();
 };
 
 </script>

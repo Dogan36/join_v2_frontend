@@ -23,7 +23,7 @@
           }}</span>
 
           <div class="cardHeaderEdits">
-            <div class="edit">
+            <div @click="$emit('openOverlay', true)" class="edit">
               <img src="@/assets/img/editIcon.svg" alt="" />
               <span>Edit</span>
             </div>
@@ -47,7 +47,7 @@
       </div>
     </div>
     <div class="buttonContainer">
-      <div @click="$emit('openOverlay')" class="main-button-layout">New Contact
+      <div @click="$emit('openOverlay', false)" class="main-button-layout">New Contact
         <img src="@/assets/img/addContactIcon.svg" alt="">
       </div>
     </div>
@@ -64,7 +64,6 @@ const props = defineProps({
     // Sicherstellen, dass ein Contact übergeben wird
   },
 });
-
 
 
 const textColor = computed(() => {
@@ -86,7 +85,6 @@ function hexToRgb(hex) {
   const b = parseInt(hex.slice(5, 7), 16);
   return { r, g, b };
 }
-
 </script>
 
 <style scoped>

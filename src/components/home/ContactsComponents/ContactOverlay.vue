@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, defineEmits } from "vue";
 import InputField from "@/components/shared/InputField.vue";
 
 const props = defineProps({
@@ -60,8 +60,15 @@ const props = defineProps({
     type: Object,
     default: null, // Kein Kontakt übergeben -> Add-Modus
   },
+    isEditMode: {
+        type: Boolean,
+        default: false,
+    },
 });
-const isEditMode = computed(() => !!props.contact);
+
+const emit = defineEmits(["close"]);
+
+const isEditMode = computed(() => props.isEditMode);
 
 const contactName = ref("");
 const contactEmail = ref("");
@@ -76,10 +83,11 @@ onMounted(() => {
 });
 
 const initializeForm = () => {
+    console.log(props.contact);
   if (props.contact) {
-    contactName.value = props.contact.name || "";
-    contactEmail.value = props.contact.email || "";
-    contactPhone.value = props.contact.phone || "";
+    contactName.value = props.contact.user.first_name + props.contact.user.last_name  || "";
+    contactEmail.value = props.contact.user.email || "";
+    contactPhone.value = props.contact.user.phone || "";
   }
 };
 
@@ -103,6 +111,8 @@ const save = () => {
   } else {
     console.log("Form validation failed");
   }
+ 
+
 };
 
 const resetErrors = () => {
@@ -120,6 +130,7 @@ const resetForm = () => {
 
 const cancel = () => {
   resetForm();
+    emit('close');
   // Event oder Callback, um das Overlay zu schließen
 };
 
