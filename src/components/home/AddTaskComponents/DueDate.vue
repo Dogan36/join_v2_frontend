@@ -20,7 +20,6 @@ const error = ref("");
 
 const today = new Date().toISOString().split("T")[0];
 const validate = () => {
-  console.log("validatedate");
   if (!dueDate.value.trim()) {
     error.value = 'Due date is required';
     return false; // ungültig

@@ -4,16 +4,18 @@
       :selectedContact="selectedContact"
       @updateContact="setActiveContact"
     />
-   
-  
-    <ContactMainContent  @openOverlay="openOverlay" :selectedContact="selectedContact" />
+
+    <ContactMainContent
+      @openOverlay="openOverlay"
+      :selectedContact="selectedContact"
+    />
     <DarkBackground v-if="isOverlayVisible" @close="closeOverlay">
       <ContactOverlay
-      v-if="isOverlayVisible"
-      :contact="selectedContact"
-      :isEditMode="overlayIsEditMode"
-      @close="closeOverlay"
-    />
+        v-if="isOverlayVisible"
+        :contact="selectedContact"
+        :isEditMode="overlayIsEditMode"
+        @close="closeOverlay"
+      />
     </DarkBackground>
   </div>
 </template>
@@ -60,5 +62,4 @@ const saveNewContact = () => {
   console.log("Contact saved!");
   closeOverlay();
 };
-
 </script>

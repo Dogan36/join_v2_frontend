@@ -107,7 +107,7 @@ const emitIconClick = () => {
   align-items: center;
   border: 1px solid #ccc;
   padding: 10px;
-  height: 45px;
+ gap: 10px;
   border-radius: 4px;
   background-color: white;
   justify-content: center;
@@ -123,8 +123,8 @@ const emitIconClick = () => {
   border: none;
   outline: none;
   background: transparent;
-  height: 100%;
   font-size: 2.1rem;
+  font-family: inherit;
 }
 
 .inputField input[type="checkbox"] {

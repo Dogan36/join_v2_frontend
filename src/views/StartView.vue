@@ -60,6 +60,12 @@ const toggleForgotPassword = () => {
 </script>
 
 <style scoped>
+
+h2 {
+  font-size: 60px;
+  font-weight: 400;
+  margin-top: 20px;
+}
 .wrapper {
   width: 100%;
   height: 90%;

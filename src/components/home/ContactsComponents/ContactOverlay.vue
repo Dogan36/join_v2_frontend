@@ -68,7 +68,7 @@ const props = defineProps({
 
 const emit = defineEmits(["close"]);
 
-const isEditMode = computed(() => props.isEditMode);
+const isEditMode =  props.isEditMode;
 
 const contactName = ref("");
 const contactEmail = ref("");
@@ -84,7 +84,7 @@ onMounted(() => {
 
 const initializeForm = () => {
     console.log(props.contact);
-  if (props.contact) {
+  if (isEditMode && props.contact) {
     contactName.value = props.contact.user.first_name + props.contact.user.last_name  || "";
     contactEmail.value = props.contact.user.email || "";
     contactPhone.value = props.contact.user.phone || "";

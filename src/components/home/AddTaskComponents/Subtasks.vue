@@ -32,16 +32,14 @@
   
 
 <script setup>
-import { ref } from 'vue';
+import { ref, defineExpose } from 'vue';
 
 const addingNewSubtask = ref(false);
 const newSubtask = ref('');
 const error = ref('');
 
 const subtasks = ref([
-  { id: 1, name: 'Subtask 1' },
-  { id: 2, name: 'Subtask 2',},
-  { id: 3, name: 'Subtask 3' },
+ 
 ]);
 
 const addNewSubtask = () => {
@@ -50,7 +48,8 @@ const addNewSubtask = () => {
         return;
     }
     console.log(newSubtask.value);
-    // Add logic to handle the new subtask here
+    subtasks.value.push({ name: newSubtask.value, completed: false });
+    console.log(subtasks.value);
     newSubtask.value = '';
     error.value = '';
     toggleAddingNewSubtask();
@@ -62,6 +61,12 @@ const toggleAddingNewSubtask = () => {
     addingNewSubtask.value = !addingNewSubtask.value;
 }
 
+const getSubtasks = () => {
+    return subtasks.value;
+};
+defineExpose({
+  getSubtasks
+});
 </script>
 
 <style>

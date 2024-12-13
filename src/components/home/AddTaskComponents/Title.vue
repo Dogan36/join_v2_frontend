@@ -18,7 +18,6 @@ const error = ref("");
 
 // Validierungslogik
 const validate = () => {
-  console.log("validatetitle");
   if (!title.value.trim()) {
     error.value = 'The title is required';
     return false; // ungültig

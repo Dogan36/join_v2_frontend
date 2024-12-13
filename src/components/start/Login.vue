@@ -2,7 +2,7 @@
 <template>
    <FormLayout>
     <div class="formHeader">
-      <h2>Login</h2>
+      <h1>Login</h1>
       <img class="seperator" src="../../assets/img/seperator.svg" alt="">
     </div>
     <form class="form" @submit.prevent="login" novalidate>
@@ -80,12 +80,15 @@ const passwordIncorrectError = ref(false);
 
 const login = () => {
   resetErrors();
-  checkForErrors();
 
-  console.log('Login attempted with:', loginEmail.value, loginPassword.value);
+  if (!checkForErrors()) {
+    console.log("Login attempted with:", loginEmail.value, loginPassword.value);
 
-  // Beispielhafte Navigation nach erfolgreichem Login
-  //router.push('/home');
+    // Beispielhafte Navigation nach erfolgreichem Login
+    //router.push('/home');
+  } else {
+    console.log("Form validation failed");
+  }
 };
 
 const resetErrors = () => {
@@ -98,69 +101,52 @@ const resetErrors = () => {
 };
 
 const checkForErrors = () => {
-  checkIfEmailEmpty(); // Zuerst auf leere E-Mail prüfen
-  if (!emailError.value) { // Nur weiter prüfen, wenn kein Fehler bei leerer E-Mail
-    checkEmailFormat();
-    if (!emailFormatError.value) { // Nur weitermachen, wenn kein Formatfehler
-      checkEmailDatabase();
-    }
-  }
-  checkIfPasswordEmpty();
-  if (!passwordError.value) { // Nur weiter prüfen, wenn kein Fehler bei leerem Passwort
-    checkPasswordLength();
-  }
-};
+  const isEmailValid = checkIfEmailEmpty();
+  const isEmailFormatValid = isEmailValid && checkEmailFormat(); // Nur prüfen, wenn E-Mail nicht leer
+  const isEmailFound = isEmailFormatValid && checkEmailDatabase(); // Nur prüfen, wenn Format korrekt
+  const isPasswordValid = checkIfPasswordEmpty();
+  const isPasswordLengthValid = isPasswordValid && checkPasswordLength(); // Nur prüfen, wenn Passwort nicht leer
 
-const showForgotPassword = () => {
-  // Logik zum Anzeigen der Passwort-vergessen-Seite
-  console.log('Forgot password clicked');
+  return (
+    !isEmailValid ||
+    !isEmailFormatValid ||
+    !isEmailFound ||
+    !isPasswordValid ||
+    !isPasswordLengthValid
+  );
 };
-
 
 const checkIfEmailEmpty = () => {
-  if (!loginEmail.value) {
-    emailError.value = true;
-
-  }
+  emailError.value = !loginEmail.value;
+  return !emailError.value; // Gibt true zurück, wenn kein Fehler vorliegt
 };
 
 const checkEmailFormat = () => {
-
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (loginEmail.value && !emailPattern.test(loginEmail.value)) {
-    console.log(loginEmail.value);
-    emailFormatError.value = true;
-    console.log(emailFormatError.value);
-
-  }
-  else {
-    emailFormatError.value = false;
-    console.log(emailFormatError.value);
-  }
+  emailFormatError.value =
+    loginEmail.value && !emailPattern.test(loginEmail.value);
+  return !emailFormatError.value;
 };
 
 const checkEmailDatabase = () => {
-  // Beispielhafte Logik zur Überprüfung der E-Mail-Adresse in der Datenbank
-  const emailDatabase = ['user@example.com', 'admin@example.com']; // Beispiel
-  if (!emailDatabase.includes(loginEmail.value)) {
-    emailNotFoundError.value = true;
-    return;
-  }
-}
+  const emailDatabase = ["user@example.com", "admin@example.com"]; // Beispielhafte Datenbank
+  emailNotFoundError.value = !emailDatabase.includes(loginEmail.value);
+  return !emailNotFoundError.value;
+};
 
 const checkIfPasswordEmpty = () => {
-
-  if (!loginPassword.value) {
-    passwordError.value = true;
-
-  }
+  passwordError.value = !loginPassword.value;
+  return !passwordError.value;
 };
 
 const checkPasswordLength = () => {
-  if (loginPassword.value && loginPassword.value.length < 6) {
-    passwordLengthError.value = true;
-    passwordError.value = false;
-  }
+  passwordLengthError.value =
+    loginPassword.value && loginPassword.value.length < 6;
+  return !passwordLengthError.value;
+};
+
+const showForgotPassword = () => {
+  console.log("Forgot password clicked");
 };
 
 const guestLogin = () => {

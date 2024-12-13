@@ -94,7 +94,6 @@ const categories = ref([
 ]);
 
 const validate = () => {
-  console.log("validatetitle");
   if (!selectedCategory.value) {
     error.value = 'The category is required';
     return false; // ungültig
@@ -129,8 +128,7 @@ defineExpose({
     align-items: center;
     width: 100%;
     font-size: 2.1rem;
-    height: 4.5rem;
-    padding: 10px;
+    height: 30px;
     .arrowIcon {
       height: 8px;
     }

@@ -1,14 +1,14 @@
 <template>
   <FormLayout>
     <div class="formHeader">
-      <h2>Sign Up</h2>
+      <h1>Sign Up</h1>
       <img class="seperator" src="../../assets/img/seperator.svg" alt="" />
     </div>
     <form class="form" @submit.prevent="signup" novalidate>
       <InputField
         v-model="signupName"
         type="string"
-        placeholder="Enter your name"
+        placeholder="Name"
         icon="src/assets/img/userIcon.svg"
         :error="nameError"
         :errorMessages="{
@@ -18,7 +18,7 @@
       <InputField
         v-model="signupEmail"
         type="email"
-        placeholder="Enter your email"
+        placeholder="E-Mail"
         icon="src/assets/img/loginMail.svg"
         :error="emailError || emailFormatError || emailTakenError"
         :errorMessages="{
@@ -30,7 +30,7 @@
       <InputField
         v-model="signupPassword"
         type="password"
-        placeholder="Enter your password"
+        placeholder="Password"
         icon="src/assets/img/loginPassword.svg"
         :error="passwordError || passwordLengthError"
         :errorMessages="{
@@ -43,11 +43,11 @@
       <InputField
         v-model="signupPasswordRepeat"
         type="password"
-        placeholder="Repeat your password"
+        placeholder="Confirm Password"
         icon="src/assets/img/loginPassword.svg"
         :error="passwordMatchError"
         :errorMessages="{
-          passwordError: passwordError ? 'Password is required' : '',
+          passwordError: passwordError ? 'Confirmation is required' : '',
           passwordMatchError: passwordMatchError
             ? 'Passwords do not match'
             : '',
@@ -90,30 +90,28 @@ const privacyError = ref(false);
 
 const signup = () => {
   resetErrors();
-  checkForErrors();
 
-  if (hasErrors()) {
+  if (!checkForErrors()) {
+    // Name aufteilen
+    const [firstName, ...rest] = signupName.value.split(" ");
+    const lastName = rest.join(" ") || ""; // Alle weiteren Namen als Nachname
+
+    const signupData = {
+      first_name: firstName,
+      last_name: lastName,
+      email: signupEmail.value,
+      password: signupPassword.value,
+    };
+
+    console.log("Signup data prepared:", signupData);
+
+    // Hier schickst du die Daten an dein Backend
+    // Beispiel: axios.post('/api/signup', signupData)
+    // .then(() => router.push('/welcome'))
+    // .catch((error) => console.error("Signup failed:", error));
+  } else {
     console.log("Errors detected. Sign up aborted.");
-    return;
   }
-
-  // Name aufteilen
-  const [firstName, ...rest] = signupName.value.split(" ");
-  const lastName = rest.join(" "); // Alle weiteren Namen als Nachname
-
-  const signupData = {
-    first_name: firstName,
-    last_name: lastName || "", // Falls kein Nachname vorhanden
-    email: signupEmail.value,
-    password: signupPassword.value,
-  };
-
-  console.log("Signup data prepared:", signupData);
-
-  // Hier schickst du die Daten an dein Backend
-  // Beispiel: axios.post('/api/signup', signupData)
-  // .then(() => router.push('/welcome'))
-  // .catch((error) => console.error("Signup failed:", error));
 };
 
 const resetErrors = () => {
@@ -124,90 +122,84 @@ const resetErrors = () => {
   passwordError.value = false;
   passwordLengthError.value = false;
   passwordMatchError.value = false;
+  privacyError.value = false;
 };
 
 const checkForErrors = () => {
-  checkIfNameEmpty();
-  checkIfEmailEmpty();
-  if (!emailError.value) {
-    checkEmailFormat();
-    if (!emailFormatError.value) {
-      checkEmailDatabase();
-    }
-  }
-  checkIfPasswordEmpty();
-  if (!passwordError.value) {
-    checkPasswordLength();
-  }
-  checkIfPasswordsMatch();
-  checkEmailDatabase();
-  checkPrivacyAccepted();
-};
+  const isNameValid = checkIfNameEmpty();
+  const isEmailValid = checkIfEmailEmpty();
+  const isEmailFormatValid = isEmailValid && checkEmailFormat();
+  const isEmailUnique = isEmailFormatValid && checkEmailDatabase();
+  const isPasswordValid = checkIfPasswordEmpty();
+  const isPasswordLengthValid = isPasswordValid && checkPasswordLength();
+  const isPasswordRepeatValid = checkIfPasswordRepeatEmpty();
+  const arePasswordsMatching =isPasswordRepeatValid &&  checkIfPasswordsMatch();
+  const isPrivacyAccepted = checkPrivacyAccepted();
 
-const checkIfPasswordsMatch = () => {
-  if (signupPassword.value !== signupPasswordRepeat.value) {
-    passwordMatchError.value = true;
-  } else {
-    passwordMatchError.value = false;
-  }
-};
-const showForgotPassword = () => {
-  // Logik zum Anzeigen der Passwort-vergessen-Seite
-  console.log("Forgot password clicked");
+  return (
+    !isNameValid ||
+    !isEmailValid ||
+    !isEmailFormatValid ||
+    !isEmailUnique ||
+    !isPasswordValid ||
+    !isPasswordLengthValid ||
+    !arePasswordsMatching ||
+    !isPrivacyAccepted
+  );
 };
 
 const checkIfNameEmpty = () => {
-  if (!signupName.value) {
-    console.log(signupName.value);
-    nameError.value = true;
-  }
+  nameError.value = !signupName.value;
+  return !nameError.value;
 };
 
 const checkIfEmailEmpty = () => {
-  if (!signupEmail.value) {
-    emailError.value = true;
-  }
+  emailError.value = !signupEmail.value;
+  return !emailError.value;
 };
 
 const checkEmailFormat = () => {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (signupEmail.value && !emailPattern.test(signupEmail.value)) {
-    console.log(signupEmail.value);
-    emailFormatError.value = true;
-    console.log(emailFormatError.value);
-  } else {
-    emailFormatError.value = false;
-    console.log(emailFormatError.value);
-  }
+  emailFormatError.value =
+    signupEmail.value && !emailPattern.test(signupEmail.value);
+  return !emailFormatError.value;
 };
 
 const checkEmailDatabase = () => {
-  // Beispielhafte Logik zur Überprüfung der E-Mail-Adresse in der Datenbank
-  const emailDatabase = ["user@example.com", "admin@example.com"]; // Beispiel
-  if (emailDatabase.includes(signupEmail.value)) {
-    emailTakenError.value = true;
-  }
+  const emailDatabase = ["user@example.com", "admin@example.com"]; // Beispielhafte Datenbank
+  emailTakenError.value = emailDatabase.includes(signupEmail.value);
+  return !emailTakenError.value;
 };
 
 const checkIfPasswordEmpty = () => {
-  if (!signupPassword.value) {
-    passwordError.value = true;
-  }
+  passwordError.value = !signupPassword.value;
+  return !passwordError.value;
 };
 
 const checkPasswordLength = () => {
-  if (signupPassword.value && signupPassword.value.length < 6) {
-    passwordLengthError.value = true;
-    passwordError.value = false;
-  }
+  passwordLengthError.value =
+    signupPassword.value && signupPassword.value.length < 6;
+  return !passwordLengthError.value;
+};
+
+const checkIfPasswordRepeatEmpty = () => {
+  passwordMatchError.value = !signupPasswordRepeat.value;
+  return !passwordError.value;
+};
+
+const checkIfPasswordsMatch = () => {
+  passwordMatchError.value = signupPassword.value !== signupPasswordRepeat.value;
+  console.log("Passwords match:", !passwordMatchError.value);
+  return !passwordMatchError.value;
 };
 
 const checkPrivacyAccepted = () => {
-  if (!readPrivacy.value) {
-    privacyError.value = true;
-  } else {
-    privacyError.value = false;
-  }
+  privacyError.value = !readPrivacy.value;
+  return !privacyError.value;
+};
+
+const showForgotPassword = () => {
+  console.log("Forgot password clicked");
 };
 </script>
 

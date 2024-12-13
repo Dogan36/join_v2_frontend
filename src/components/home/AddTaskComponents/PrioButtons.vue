@@ -89,10 +89,7 @@ const props = defineProps({
 
 // Debugging hinzufügen, um sicherzustellen, dass der Standardwert korrekt ist
 const currentPrio = ref(props.modelValue || 'Medium');
-console.log('Default modelValue:', props.modelValue);
 
-
-console.log('Current Prio on load:', currentPrio.value);
 
 function updatePrio(newPrio) {
     currentPrio.value = newPrio;
