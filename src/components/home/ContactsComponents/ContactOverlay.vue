@@ -164,7 +164,7 @@ const checkEmailDatabase = () => {
   const emailDatabase = ["user@example.com", "admin@example.com"];
 
   const isSameAsCurrentEmail =
-    isEditMode.value && props.contact?.email === contactEmail.value;
+    isEditMode && props.contact?.email === contactEmail.value;
   emailTakenError.value =
     !isSameAsCurrentEmail && emailDatabase.includes(contactEmail.value);
   return !emailTakenError.value;

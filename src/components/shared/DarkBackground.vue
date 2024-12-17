@@ -29,5 +29,6 @@ const closeModal = () => {
     z-index: 100;
 }
 
+
   
 </style>
