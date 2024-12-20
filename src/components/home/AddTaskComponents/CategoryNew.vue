@@ -1,19 +1,20 @@
 <template>
   <div class="inputField">
-    <input placeholder="Enter new category"></input>
+    <input v-model="newCategoryName" placeholder="Enter new category"></input>
+    <div :style="{ backgroundColor: newCategoryColor?.code }" class="newCategoryColor"></div>
     <div class="iconContainer">
       <img @click="closeAddTaskNewCategory" :src="blackXIcon" alt="" />
       <div class="graySeperator"></div>
-      <img @click="checkNewCategoryName" :src="blackCheckIcon" alt="" />
+      <img @click="addNewCategory" :src="blackCheckIcon" alt="" />
     </div>
   </div>
   
   <div id="colorContainer" class="colorContainer">
     <div
-      v-for="(color, index) in colors"
+      v-for="(color, index) in colors.slice(0, 5)"
       :key="index"
-      :style="{ backgroundColor: color }"
-      @click="colorButton(index, 0)"
+      :style="{ backgroundColor: color.code }"
+      @click="chooseColor(index)"
       class="colorCategoryButton colorCategoryButtonNew"
     ></div>
   </div>
@@ -21,36 +22,75 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, defineEmits, computed } from "vue";
 import blackXIcon from "@/assets/img/blackX.svg";
 import blackCheckIcon from "@/assets/img/blackCheck.svg";
+import { API_BASE_URL } from "@/config";
 
-const CategoryNew = ref("");
+const colors = ref([]);
+
+const newCategoryName = ref(null);
+const newCategoryColor = ref(null);
+
+
 const errorMessage = ref("");
-const error = ref(false);
-import { defineEmits, defineComponent } from "vue";
 
-const emit = defineEmits(["toggle", "add"]);
-const add = () => {
-  emit("add");
-};
+const emit = defineEmits(["toggle", "newCategory"]);
 
-const toggle = () => {
-  emit("toggle");
-};
-const closeAddTaskNewCategory = () => {
-  emit("toggle");
+const chooseColor = (index) => {
+  newCategoryColor.value = colors.value[index];
+  
 };
 
 const checkNewCategoryName = () => {
-  // Add your logic here
+  if (!newCategoryName.value) {
+    errorMessage.value = "Please enter a category name";
+    return false;
+  }
+  return true;
 };
 
-const colorButton = (colorIndex, buttonIndex) => {
-  // Add your logic here
-};
+const fetchColors = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/colors`, { method: 'GET' });
+    if (!response.ok) throw new Error('Failed to fetch colors');
 
-const colors = ["purple", "red", "green", "yellow", "pink", "blue"];
+    const data = await response.json();
+    colors.value = data;
+    newCategoryColor.value = colors.value[0];
+  } catch (error) {
+    console.error('Error fetching colors:', error.message);
+  }
+};
+onMounted(fetchColors);
+
+const addNewCategory = async () => {
+  if(!checkNewCategoryName()){
+    return;
+  }
+  const newCategory = {
+    name: newCategoryName.value,
+    color: newCategoryColor.value}
+  try {
+    console.log(JSON.stringify(newCategory))
+    const response = await fetch(`${API_BASE_URL}/categories/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newCategory),
+    });
+   
+    if (!response.ok) throw new Error('Failed to add new category');
+    const createdCategory = await response.json(); // Hole die vollständige Antwort inkl. ID
+      emit("newCategory", createdCategory); // Emitte die vollständige Kategorie
+      emit("toggle"); // Schließe ggf. das Modal oder die Ansicht
+  } catch (error) {
+    console.error('Error adding new category:', error.message);
+  }
+}
+
+
 </script>
 
 <style scoped>
@@ -67,6 +107,7 @@ const colors = ["purple", "red", "green", "yellow", "pink", "blue"];
   .colorCategoryButtonNew {
     margin: 1rem;
     cursor: pointer;
+    border: 1px solid black;
     &:hover {
       border: 2px solid white;
       box-shadow: silver 4px 3px 6px;
@@ -74,5 +115,12 @@ const colors = ["purple", "red", "green", "yellow", "pink", "blue"];
       transform: scale(1.8);
     }
   }
+}
+
+.newCategoryColor {
+  width: 12px;
+    height: 12px;
+    border-radius: 100%;
+    border: 1px solid black;
 }
 </style>

@@ -8,9 +8,9 @@
           <div class="graySeperator"></div>
           <img src="@/assets/img/searchIcon.svg" alt="" />
         </div>
-        <div class="main-button-layout">
+        <button @click="openAddTaskOverlay" class="main-button-layout">
           Add Task <img src="@/assets/img/plusIcon.svg" alt="" />
-        </div>
+        </button>
       </div>
     </div>
 
@@ -56,7 +56,9 @@
     </div>
 
     <DarkBackground v-if="isOverlayVisible" @close="closeOverlay">
-      <AddTaskMain @close="closeOverlay"></AddTaskMain>
+      <AddTaskMain
+      :task="exampleTask" 
+      @close="closeOverlay"></AddTaskMain>
     </DarkBackground>
   </div>
 </template>
@@ -67,8 +69,23 @@ import { ref } from "vue";
 import BoardCard from "./BoardComponents/BoardCard.vue";
 import AddTaskMain from "./AddTaskComponents/AddTaskMain.vue";
 import DarkBackground from "../shared/DarkBackground.vue";
-import FormLayout from "../shared/FormLayout.vue";
-const isOverlayVisible = ref(true);
+const isOverlayVisible = ref(false);
+
+const openAddTaskOverlay = () => {
+  isOverlayVisible.value = true;
+};
+
+const exampleTask = {
+  title: "Implement Scrollbar Fix",
+  description: "Adjust the scrollbar position to prevent overflow issues.",
+  category: "Bugfix",
+  selectedContacts: ["John Doe", "Jane Smith"], // Array von Kontakten
+  dueDate: "2024-06-20", // Beispiel-Datum im Format 'yyyy-mm-dd'
+  prio: "High", // Beispiel-Priorität: 'High', 'Medium', 'Low'
+  subtasksId: [101, 102, 103], // Beispiel-IDs für Subtasks
+};
+
+const choosenTask = exampleTask;
 
 const closeOverlay = () => {
   isOverlayVisible.value = false;
@@ -103,7 +120,6 @@ const closeOverlay = () => {
 .addTaskOverlay::-webkit-scrollbar {
     width: 10px; /* Breite des Scrollbars */
     max-height: 10px !important; /* Höhe des Scrollbars */
-    
     margin-left: -10px !important;
 }
 .addTaskOverlay::-webkit-scrollbar-track{
@@ -143,10 +159,6 @@ const closeOverlay = () => {
     height: 20px;
     background: #d1d1d1;
   }
-}
-
-.main-button-layout {
-  padding: 1rem 1.5rem;
 }
 
 .boardMainContent {

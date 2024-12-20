@@ -49,41 +49,27 @@ const props = defineProps({
     type: Object,
     default: null, // Kein Task übergeben -> Add-Modus
   },
-  isEditMode: {
-    type: Boolean,
-    default: false,
-  },
 });
+
+defineEmits(["close"]);
 
 onMounted(() => {
   initializeForm();
 });
 
-const isEditMode = props.isEditMode;
+const isEditMode = props.task !== null;
 const closeOverlay = () => {
-  isOverlayVisible.value = false;
+  emit("close");
 };
 
 const initializeForm = () => {
-  if (isEditMode && props.task) {
-    Task.value = {
-      title: props.task.title || "",
-      description: props.task.description || "",
-      category: props.task.category || "",
-      selectedContacts: props.task.selectedContacts || [],
-      dueDate: props.task.dueDate || "",
-      prio: props.task.prio || "",
-      subtasksId: props.task.subtasksId || null,
-    };
+  console.log(props.task);
 
-    // Optional: Komponenten initialisieren
-    title.value?.setTitle(Task.value.title);
-    description.value?.setDescription(Task.value.description);
-    category.value?.setSelectedCategory(Task.value.category);
-    assignContacts.value?.setSelectedContacts(Task.value.selectedContacts);
-    dueDate.value?.setDueDate(Task.value.dueDate);
-    prio.value?.setPrio(Task.value.prio);
-    subtasks.value?.setSubtasks(Task.value.subtasksId || []);
+  if (isEditMode) {
+    title.value?.setTitle(props.task.title || "");
+    description.value?.setDescription(props.task.description || "");
+ 
+
   }
 };
 

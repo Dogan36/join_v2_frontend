@@ -1,5 +1,4 @@
 <template>
-
 <div class="inputContainer">
   <label class="title">Category</label>
   <div v-if="!addingNewCategory" @click="toggleSelectCategory" class="inputField dropDown" :class="{ 'input-error': error}">
@@ -13,7 +12,7 @@
     <div class="dropDownOption" v-if="selectedCategory">
       <div class="dropDownOptionContent">
         {{ selectedCategory.name }}
-        <div class="colorCategoryButton" v-bind:style="{ backgroundColor: selectedCategory.color }"></div>
+        <div class="colorCategoryButton" v-bind:style="{ backgroundColor: selectedCategory.color.code }"></div>
       </div>
       <img class="arrowIcon" src="@/assets/img/arrowIcon.svg" :style="selectingCategory ? 'rotate: 180deg' : 'rotate:0deg'" alt="Delete" />
     </div>
@@ -34,7 +33,7 @@
       >
         <div class="dropDownOptionContent">
           {{ category.name }}
-          <div class="colorCategoryButton" v-bind:style="{ backgroundColor: category.color }"></div>
+          <div class="colorCategoryButton" v-bind:style="{ backgroundColor: category.color.code }"></div>
         </div>
         <img @click.stop="deleteCategory(category.id)"
         src="@/assets/img/delete.png"
@@ -42,35 +41,61 @@
       </div>
     </div>        
   </div>
-  <CategoryNew v-if="addingNewCategory" @toggle="toggleAddingNewCategory" @add="addNewCategory"></CategoryNew> 
+  <CategoryNew v-if="addingNewCategory" @toggle="toggleAddingNewCategory" @newCategory="addNewCategoryToList"></CategoryNew> 
   <p v-if="!addingNewCategory" class="error-message">{{ error }}</p> 
 </template>
   
 <script setup>
 
-import { defineProps, computed } from 'vue';
+
 import { ref } from 'vue';
 import CategoryNew from './CategoryNew.vue';
+import { API_BASE_URL } from '@/config';
+import { defineEmits, defineExpose, onMounted } from 'vue';
 const selectingCategory = ref(false);
 const selectedCategory = ref(null);
 const addingNewCategory = ref(false);
 const error = ref('');
+const categories = ref([]);
+// Fetch Categories from Backend
+const fetchCategories = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/categories/`, {
+      method: 'GET',
+     
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch categories');
+    }
+    const data = await response.json();
+    console.log(data);
+    categories.value = data; // Kategorien ins Array speichern
+  } catch (error) {
+    console.error('Error fetching categories:', error.message);
+  }
+};
 
+// Lade Kategorien, wenn die Komponente gemountet wird
+onMounted(fetchCategories);
+
+const setCategory = (category) => {
+  selectedCategory.value = category;
+};
 
 const emit = defineEmits(['toggle']);
 const toggleSelectCategory = () => {
     selectingCategory.value = !selectingCategory.value
 };
 
-
+const addNewCategoryToList = (createdCategory) => {
+  categories.value.push(createdCategory); // Fügt die neue Kategorie inkl. ID hinzu
+  selectedCategory.value = createdCategory; // Wählt die neue Kategorie aus
+};
 
 const selectCategory = (category) => {
     selectedCategory.value = category;
    
-};
-
-const addNewCategory = () => {
-  // Add your logic here
 };
 
 const deleteCategory = (categoryId) => {
@@ -87,11 +112,7 @@ const toggleAddingNewCategory = () => {
   addingNewCategory.value = !addingNewCategory.value
 };
 
-const categories = ref([
-  { id: 1, name: 'Work', color: '#ff0000' },
-  { id: 2, name: 'Personal', color: '#00ff00' },
-  { id: 3, name: 'Fitness', color: '#0000ff' },
-]);
+
 
 const validate = () => {
   if (!selectedCategory.value) {
@@ -104,6 +125,7 @@ const validate = () => {
 };
 
 defineExpose({
+  setCategory,
   validate,
   selectedCategory
 });

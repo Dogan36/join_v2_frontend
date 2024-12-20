@@ -15,6 +15,10 @@ import { ref } from "vue";
 const title = ref("");
 const error = ref("");
 
+// Methode, um den Titel zu setzen (z.B. aus Props)
+const setTitle = (value) => {
+  title.value = value;
+};
 
 // Validierungslogik
 const validate = () => {
@@ -28,6 +32,7 @@ const validate = () => {
 };
 
 defineExpose({
+  setTitle,
   validate,
   title,
 });
