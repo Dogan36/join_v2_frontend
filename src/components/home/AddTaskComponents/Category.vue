@@ -98,15 +98,31 @@ const selectCategory = (category) => {
    
 };
 
-const deleteCategory = (categoryId) => {
-  // Entferne die Kategorie aus der Liste
-  categories.value = categories.value.filter((category) => category.id !== categoryId);
+const deleteCategory = async (categoryId) => {
+  try {
+    // Sende die DELETE-Anfrage an das Backend
+    const response = await fetch(`${API_BASE_URL}/categories/${categoryId}/`, {
+      method: 'DELETE',
+    });
 
-  // Falls die gelöschte Kategorie die ausgewählte war, entferne die Auswahl
-  if (selectedCategory.value?.id === categoryId) {
-    selectedCategory.value = null;
+    if (!response.ok) {
+      throw new Error('Failed to delete category');
+    }
+
+    // Entferne die Kategorie aus der Liste nach erfolgreicher Löschung
+    categories.value = categories.value.filter((category) => category.id !== categoryId);
+
+    // Entferne die Auswahl, falls die gelöschte Kategorie ausgewählt war
+    if (selectedCategory.value?.id === categoryId) {
+      selectedCategory.value = null;
+    }
+
+    console.log(`Category with ID ${categoryId} deleted successfully`);
+  } catch (error) {
+    console.error('Error deleting category:', error.message);
   }
 };
+
 
 const toggleAddingNewCategory = () => {
   addingNewCategory.value = !addingNewCategory.value
