@@ -39,8 +39,12 @@ import { ref } from 'vue';
 import Login from '.././components/start/Login.vue';
 import Signup from '.././components/start/SignUp.vue';
 import ForgotPassword from '.././components/start/ForgotPassword.vue';
-import { provide } from 'vue';
+import { onMounted } from 'vue';
 
+
+onMounted(() => {
+  checkIfUserIsLoggedIn();
+});
 // Reaktives Datenobjekt für den Login-Zustand
 const isLogin = ref(true);
 const isSignup = ref(false);
@@ -56,7 +60,11 @@ const toggleForgotPassword = () => {
   isForgotPassword.value = !isForgotPassword.value
 };
 
-
+const checkIfUserIsLoggedIn = () => {
+  if (localStorage.getItem('join_token')) {
+    window.location.href = '/home';
+  }
+};
 </script>
 
 <style scoped>

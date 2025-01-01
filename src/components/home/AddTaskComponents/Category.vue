@@ -41,7 +41,7 @@
       </div>
     </div>        
   </div>
-  <CategoryNew v-if="addingNewCategory" @toggle="toggleAddingNewCategory" @newCategory="addNewCategoryToList"></CategoryNew> 
+  <CategoryNew :categories="categories" v-if="addingNewCategory" @toggle="toggleAddingNewCategory" @newCategory="addNewCategoryToList"></CategoryNew> 
   <p v-if="!addingNewCategory" class="error-message">{{ error }}</p> 
 </template>
   

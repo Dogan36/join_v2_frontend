@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, defineEmits, computed } from "vue";
+import { ref, onMounted, defineEmits, defineProps } from "vue";
 import blackXIcon from "@/assets/img/blackX.svg";
 import blackCheckIcon from "@/assets/img/blackCheck.svg";
 import { API_BASE_URL } from "@/config";
@@ -32,7 +32,13 @@ const colors = ref([]);
 const newCategoryName = ref(null);
 const newCategoryColor = ref(null);
 
-
+const categoriesData = ref([]);
+const props = defineProps({
+  categories: {
+    type: Array,
+    required: true,
+  },
+});
 const errorMessage = ref("");
 
 const emit = defineEmits(["toggle", "newCategory"]);
@@ -50,14 +56,40 @@ const checkNewCategoryName = () => {
   return true;
 };
 
+const checkCatgeoriesLength = () => {
+  console.log(categoriesData.value.length);
+  if (categoriesData.value.length === 20) {
+    errorMessage.value = "Reached maximum number of categories";
+    return false;
+  }
+  return true;
+};
+
 const fetchColors = async () => {
   try {
-    const response = await fetch(`${API_BASE_URL}/colors`, { method: 'GET' });
-    if (!response.ok) throw new Error('Failed to fetch colors');
+    // Alle Farben und Kategorien abrufen
+    const [colorsResponse, categoriesResponse] = await Promise.all([
+      fetch(`${API_BASE_URL}/colors`, { method: 'GET' }),
+      
+    ]);
 
-    const data = await response.json();
-    colors.value = data;
-    newCategoryColor.value = colors.value[0];
+    if (!colorsResponse.ok) {
+      throw new Error('Failed to fetch data');
+    }
+
+    const colorsData = await colorsResponse.json();
+    
+    
+
+    // IDs der genutzten Farben extrahieren
+    const usedColorIds = props.categories.map(category => category.color.id);
+
+    // Unbenutzte Farben filtern
+    const availableColors = colorsData.filter(color => !usedColorIds.includes(color.id));
+
+    // Die ersten 5 unbenutzten Farben auswählen
+    colors.value = availableColors.slice(0, 5);
+    newCategoryColor.value = colors.value[0] || null;
   } catch (error) {
     console.error('Error fetching colors:', error.message);
   }
@@ -65,7 +97,7 @@ const fetchColors = async () => {
 onMounted(fetchColors);
 
 const addNewCategory = async () => {
-  if(!checkNewCategoryName()){
+  if(!checkNewCategoryName() || !checkCatgeoriesLength()) {
     return;
   }
   const newCategory = {

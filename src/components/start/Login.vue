@@ -1,11 +1,11 @@
 <!-- src/views/LoginView.vue -->
 <template>
-   <FormLayout>
+  <FormLayout>
     <div class="formHeader">
       <h1>Login</h1>
-      <img class="seperator" src="../../assets/img/seperator.svg" alt="">
+      <img class="seperator" src="../../assets/img/seperator.svg" alt="" />
     </div>
-    <form class="form" @submit.prevent="login" novalidate>
+    <form class="form" @submit.prevent="tryLogin" novalidate>
       <InputField
         v-model="loginEmail"
         type="email"
@@ -14,9 +14,9 @@
         icon="src/assets/img/loginMail.svg"
         :error="emailError || emailFormatError || emailNotFoundError"
         :errorMessages="{
-        emailError: emailError ? 'Email is required' : '',
-        emailFormatError: emailFormatError ? 'Invalid email format' : '',
-        emailNotFoundError: emailNotFoundError ? 'Email not found' : ''
+          emailError: emailError ? 'Email is required' : '',
+          emailFormatError: emailFormatError ? 'Invalid email format' : '',
+          emailNotFoundError: emailNotFoundError ? 'Email not found' : '',
         }"
       />
       <InputField
@@ -27,33 +27,40 @@
         icon="src/assets/img/loginPassword.svg"
         :error="passwordError || passwordLengthError || passwordIncorrectError"
         :errorMessages="{
-        passwordError: passwordError ? 'Password is required' : '',
-        passwordLengthError: passwordLengthError ? 'Password must be at least 6 characters' : '',
-        passwordIncorrectError: passwordIncorrectError ? 'Password is incorrect' : ''
+          passwordError: passwordError ? 'Password is required' : '',
+          passwordLengthError: passwordLengthError
+            ? 'Password must be at least 6 characters'
+            : '',
+          passwordIncorrectError: passwordIncorrectError
+            ? 'Password is incorrect'
+            : '',
         }"
       />
       <div class="loginOptions">
         <label>
-        <input type="checkbox" v-model="rememberMe" />Remember me</label>
-        <span type="button" @click="toggleForgotPassword">Forgot password?</span>
-        </div>
+          <input type="checkbox" v-model="rememberMe" />Remember me</label
+        >
+        <span type="button" @click="toggleForgotPassword"
+          >Forgot password?</span
+        >
+      </div>
       <div class="loginButtons">
-        <button class="main-button-layout"  type="submit">Log in </button>
-        <button class="secondary-button-layout" @click="guestLogin">Guest Login</button>  
+        <button class="main-button-layout" type="submit">Log in</button>
+        <button class="secondary-button-layout" @click="guestLogin">
+          Guest Login
+        </button>
       </div>
     </form>
   </FormLayout>
-
-  
 </template>
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import FormLayout from '../shared/FormLayout.vue';
-import InputField from '../shared/InputField.vue';
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import FormLayout from "../shared/FormLayout.vue";
+import InputField from "../shared/InputField.vue";
 
-import { defineProps } from 'vue';
-
+import { defineProps } from "vue";
+import { API_BASE_URL } from "@/config";
 const props = defineProps({
   toggle: {
     type: Function,
@@ -66,8 +73,8 @@ const props = defineProps({
 });
 
 const router = useRouter();
-const loginEmail = ref('');
-const loginPassword = ref('');
+const loginEmail = ref("");
+const loginPassword = ref("");
 const rememberMe = ref(false);
 
 // Fehlerstatus
@@ -78,14 +85,41 @@ const passwordError = ref(false);
 const passwordLengthError = ref(false);
 const passwordIncorrectError = ref(false);
 
-const login = () => {
+async function login(email, password) {
+  let username = email;
+  console.log("Logging in with email:", email, "and password:", password);
+  try {
+    const response = await fetch(`${API_BASE_URL}/user/login/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      localStorage.setItem("join_token", data.token); // Speichert das Token
+      alert("Login erfolgreich!");
+      window.location.href = "/home"; // Beispiel: Weiterleitung
+    } else {
+      const errorData = await response.json();
+      console.error("Fehler bei der Registrierung:", errorData);
+      if (errorData.email) {
+        emailNotFoundError.value = true;
+      } else if (errorData.non_field_errors) {
+        passwordIncorrectError.value = true;
+        }
+      }
+    } catch (error) {
+      console.error("Fehler beim Login:", error);
+    }
+}
+
+const tryLogin = () => {
   resetErrors();
-
   if (!checkForErrors()) {
-    console.log("Login attempted with:", loginEmail.value, loginPassword.value);
-
-    // Beispielhafte Navigation nach erfolgreichem Login
-    //router.push('/home');
+    login(loginEmail.value, loginPassword.value);
   } else {
     console.log("Form validation failed");
   }
@@ -129,7 +163,11 @@ const checkEmailFormat = () => {
 };
 
 const checkEmailDatabase = () => {
-  const emailDatabase = ["user@example.com", "admin@example.com"]; // Beispielhafte Datenbank
+  const emailDatabase = [
+    "user@example.com",
+    "admin@example.com",
+    "dogancelik86@gmail.com",
+  ]; // Beispielhafte Datenbank
   emailNotFoundError.value = !emailDatabase.includes(loginEmail.value);
   return !emailNotFoundError.value;
 };
@@ -151,15 +189,15 @@ const showForgotPassword = () => {
 
 const guestLogin = () => {
   // Beispielhafte Logik für den Gast-Login
-  console.log('Logging in as Guest');
-  router.push('/home');
+  console.log("Logging in as Guest");
+  router.push("/home");
 };
 </script>
 
 <style>
-@import './../../assets/base.css';
+@import "./../../assets/base.css";
 
-.form{
+.form {
   width: 82%;
   min-width: fit-content;
 }
@@ -170,39 +208,38 @@ const guestLogin = () => {
   align-self: center;
 }
 
-.loginButtons{
+.loginButtons {
   display: flex;
   justify-content: space-around;
   gap: 10px;
   flex-wrap: wrap;
 }
 
-.seperator{
+.seperator {
   width: 150px;
   margin: 1rem 0;
 }
 
-.loginOptions{
+.loginOptions {
   display: flex;
   justify-content: space-between;
   gap: 10px;
   flex-wrap: wrap;
   margin: 1rem 0;
 }
-.loginOptions label{
+.loginOptions label {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
 }
-.loginOptions span{
+.loginOptions span {
   cursor: pointer;
   color: var(--main-color-hover);
 }
 
-.loginOptions span:hover{
+.loginOptions span:hover {
   color: var(--main-color);
   scale: 1.05;
 }
 </style>
-

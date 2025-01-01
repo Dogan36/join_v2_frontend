@@ -4,7 +4,7 @@
       <h1>Sign Up</h1>
       <img class="seperator" src="../../assets/img/seperator.svg" alt="" />
     </div>
-    <form class="form" @submit.prevent="signup" novalidate>
+    <form class="form" @submit.prevent="trySignup" novalidate>
       <InputField
         v-model="signupName"
         type="string"
@@ -72,6 +72,7 @@ import { ref } from "vue";
 import FormLayout from "../shared/FormLayout.vue";
 import InputField from "../shared/InputField.vue";
 
+
 const readPrivacy = ref(false);
 const signupName = ref("");
 const signupEmail = ref("");
@@ -88,27 +89,38 @@ const passwordLengthError = ref(false);
 const passwordMatchError = ref(false);
 const privacyError = ref(false);
 
-const signup = () => {
+async function signUp(name, email, password) {
+  
+  try {
+    const response = await fetch('http://localhost:8000/api/v1/user/register/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ name, email, password })
+     
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Registrierung erfolgreich:', data);
+      // Weiterleitung oder Anzeige einer Erfolgsnachricht
+    } else {
+      const errorData = await response.json();
+      console.error('Fehler bei der Registrierung:', errorData);
+      if (errorData.email) {
+        emailTakenError.value = true;
+      }
+    }
+  } catch (error) {
+    console.error('Netzwerkfehler:', error);
+  }
+}
+
+const trySignup = () => {
   resetErrors();
-
   if (!checkForErrors()) {
-    // Name aufteilen
-    const [firstName, ...rest] = signupName.value.split(" ");
-    const lastName = rest.join(" ") || ""; // Alle weiteren Namen als Nachname
-
-    const signupData = {
-      first_name: firstName,
-      last_name: lastName,
-      email: signupEmail.value,
-      password: signupPassword.value,
-    };
-
-    console.log("Signup data prepared:", signupData);
-
-    // Hier schickst du die Daten an dein Backend
-    // Beispiel: axios.post('/api/signup', signupData)
-    // .then(() => router.push('/welcome'))
-    // .catch((error) => console.error("Signup failed:", error));
+    signUp(signupName.value, signupEmail.value, signupPassword.value);
   } else {
     console.log("Errors detected. Sign up aborted.");
   }
