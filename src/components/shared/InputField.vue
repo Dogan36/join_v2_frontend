@@ -37,7 +37,9 @@
 
 import { ref, computed } from 'vue';
 import { defineProps, defineEmits } from 'vue';
-
+import loginPasswordSvg from '@/assets/img/loginPassword.svg';
+import visibleIconSvg from '@/assets/img/visibleIcon.svg';
+import notVisibleIconSvg from '@/assets/img/notVisibleIcon.svg';
 // Props definieren
 const props = defineProps({
   modelValue: String,
@@ -63,11 +65,10 @@ const errorMessage = computed(() => {
 
 const passwordIconSrc = computed(() => {
   if (!props.modelValue) {
-    return 'src/assets/img/loginPassword.svg'; // Schloss-Icon
+    return loginPasswordSvg;; // Schloss-Icon
   }
   return isPasswordVisible.value
-    ? 'src/assets/img/notVisibleIcon.svg' // Durchgestrichenes Auge
-    : 'src/assets/img/visibleIcon.svg'; // Auge
+    ? notVisibleIconSvg : visibleIconSvg;
 });
 
 const passwordIconAlt = computed(() => {
