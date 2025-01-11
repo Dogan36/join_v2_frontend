@@ -37,7 +37,7 @@
         }"
       />
       <div class="loginButtons">
-        <button class="main-button-layout" type="submit">Save</button>
+        <button class="main-button-layout" type="submit">Confirm</button>
       </div>
     </form>
   </FormLayout>
@@ -51,14 +51,15 @@ import { API_BASE_URL } from "@/config";
 import passwordIcon from '@/assets/img/loginPassword.svg'
 const resetPassword = ref("");
 const resetPasswordRepeat = ref("");
-
+const router = useRouter();
+const uid = router.currentRoute.value.params.uid
+const token = router.currentRoute.value.params.token
 // Fehlerstatus
 
 const passwordError = ref(false);
 const passwordLengthError = ref(false);
 const passwordMatchError = ref(false);
 
-const router = useRouter();
 
 const tryReset = () => {
   resetErrors();
@@ -70,22 +71,20 @@ const tryReset = () => {
 };
 
 // Reset password
-async function performResetPassword() {
+async function performResetPassword(password) {
+    console.log(`${API_BASE_URL}/user/password-reset/${uid}/${token}/`)
   try {
-    const response = await fetch(`${API_BASE_URL}/user/password-reset/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        password: resetPassword.value,
-        token: router.currentRoute.value.params.token,
-      }),
-    });
+    const response = await fetch(`${API_BASE_URL}/user/password-reset/${uid}/${token}/`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ password }),
+});
+    
     if (response.ok) {
-      router.push({ name: "Login" });
+        console.log("Password reset successful");
+      router.push({ name: "start" });
     } else {
-      console.log("Error resetting password");
+      console.log("Error resetting password", error);
     }
   } catch (error) {
     console.error("Error resetting password", error);
@@ -153,13 +152,6 @@ const checkIfPasswordsMatch = () => {
     gap: 0.5rem;
     cursor: pointer;
   }
-}
-
-.formHeader {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 20px;
 }
 
 .logoContainer {

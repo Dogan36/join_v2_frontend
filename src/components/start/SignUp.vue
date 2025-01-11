@@ -232,10 +232,4 @@ const showForgotPassword = () => {
   }
 }
 
-.formHeader {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 20px;
-}
 </style>

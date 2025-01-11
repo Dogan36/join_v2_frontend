@@ -6,7 +6,7 @@ import ResetPassword from '@/views/ResetPassword.vue';
 
 const routes = [
   {path: '/', redirect: '/home' },
-  {path: '/start', component: StartView},
+  {path: '/start', component: StartView, name: 'start'},
   {path: '/home',component: HomeView,},
   {path: '/privacy',component: AboutView,},
   {path: '/reset-password/:uid/:token', component: ResetPassword,},

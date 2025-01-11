@@ -10,11 +10,14 @@
 <style scoped>
 @import './../../assets/base.css';
 
+
+
+
 .form-layout {
     width: 470px;
     min-width: fit-content;
     max-width: 100vw;
-    padding: 10px;
+    padding: 30px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;

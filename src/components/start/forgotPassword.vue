@@ -129,10 +129,7 @@ const checkEmailFormat = () => {
 <style>
 @import "./../../assets/base.css";
 
-.form {
-  width: 82%;
-  min-width: fit-content;
-}
+
 .buttonIcon {
   width: 24px;
   height: 24px;
