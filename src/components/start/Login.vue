@@ -46,6 +46,7 @@
       </div>
       <div class="loginButtons">
         <button class="main-button-layout" type="submit">Log in</button>
+        <button v-on:click="showConfirmation('test')">tryRequest</button>
         <button class="secondary-button-layout" @click="guestLogin">
           Guest Login
         </button>
@@ -61,6 +62,10 @@ import InputField from "../shared/InputField.vue";
 
 import { defineProps } from "vue";
 import { API_BASE_URL } from "@/config";
+import { useLoadingOverlay } from '@/composables/useLoadingOverlay';
+import { useConfirmationOverlay } from "@/composables/useConfirmationOverlay";
+const { showOverlay, hideOverlay } = useLoadingOverlay();
+const { showConfirmation } = useConfirmationOverlay();
 const props = defineProps({
   toggle: {
     type: Function,
@@ -86,6 +91,7 @@ const passwordLengthError = ref(false);
 const passwordIncorrectError = ref(false);
 
 async function login(email, password) {
+  showOverlay();
   let username = email;
   console.log("Logging in with email:", email, "and password:", password);
   try {
@@ -100,11 +106,10 @@ async function login(email, password) {
     if (response.ok) {
       const data = await response.json();
       localStorage.setItem("join_token", data.token); // Speichert das Token
-      alert("Login erfolgreich!");
       window.location.href = "/home"; // Beispiel: Weiterleitung
     } else {
       const errorData = await response.json();
-      console.error("Fehler bei der Registrierung:", errorData);
+      console.error("Fehler bei Login:", errorData);
       if (errorData.email) {
         emailNotFoundError.value = true;
       } else if (errorData.non_field_errors) {
@@ -113,6 +118,8 @@ async function login(email, password) {
       }
     } catch (error) {
       console.error("Fehler beim Login:", error);
+    } finally {
+      hideOverlay();
     }
 }
 
@@ -120,8 +127,6 @@ const tryLogin = () => {
   resetErrors();
   if (!checkForErrors()) {
     login(loginEmail.value, loginPassword.value);
-  } else {
-    console.log("Form validation failed");
   }
 };
 

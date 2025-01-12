@@ -71,7 +71,10 @@
 import { ref } from "vue";
 import FormLayout from "../shared/FormLayout.vue";
 import InputField from "../shared/InputField.vue";
-
+import { useLoadingOverlay } from '@/composables/useLoadingOverlay';
+import { useConfirmationOverlay } from "@/composables/useConfirmationOverlay";
+const { showOverlay, hideOverlay } = useLoadingOverlay();
+const { showConfirmation } = useConfirmationOverlay();
 
 const readPrivacy = ref(false);
 const signupName = ref("");
@@ -90,7 +93,7 @@ const passwordMatchError = ref(false);
 const privacyError = ref(false);
 
 async function signUp(name, email, password) {
-  
+  showOverlay();
   try {
     const response = await fetch('http://localhost:8000/api/v1/user/register/', {
       method: 'POST',
@@ -103,7 +106,7 @@ async function signUp(name, email, password) {
 
     if (response.ok) {
       const data = await response.json();
-      console.log('Registrierung erfolgreich:', data);
+      showConfirmation('Registrierung erfolgreich:', data);
       // Weiterleitung oder Anzeige einer Erfolgsnachricht
     } else {
       const errorData = await response.json();
@@ -114,6 +117,9 @@ async function signUp(name, email, password) {
     }
   } catch (error) {
     console.error('Netzwerkfehler:', error);
+  }
+  finally {
+    hideOverlay();
   }
 }
 

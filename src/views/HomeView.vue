@@ -10,6 +10,7 @@
         <Contacts v-if="currentView === 'contacts'" />
         <PrivacyPolicy v-if="currentView === 'privacy'" />
         <LegalNotice v-if="currentView === 'legalNotice'" />
+        <Help v-if="currentView === 'help'" />
       </main>
     </div>
   </div>
@@ -26,6 +27,7 @@ import AddTask from '@/components/home/AddTask.vue';
 import Contacts from '@/components/home/Contacts.vue';
 import PrivacyPolicy from '@/components/shared/PrivacyPolicy.vue';
 import LegalNotice from '@/components/shared/LegalNotice.vue';
+import Help from '@/components/home/Help.vue';
 
 
 

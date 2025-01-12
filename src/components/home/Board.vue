@@ -96,8 +96,6 @@ const closeOverlay = () => {
   justify-content: space-between;
 }
 
-
-
 .addTaskOverlay {
   display: flex;
   flex-direction: column;
