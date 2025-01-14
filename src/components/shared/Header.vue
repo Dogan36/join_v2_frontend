@@ -15,6 +15,7 @@
     <div class="userMenuContent" v-if="showUserMenu">
       <p @click="changeView('privacy')">Privacy Policy</p>
       <p @click="changeView('legalNotice')">Legal Notice</p>
+      <p @click="openWorkspaceInfo">Workspace</p>
       <p @click="goToProfile">Profil</p>
       <p @click="logout">Logout</p>
     </div>
@@ -23,11 +24,15 @@
 
 <script setup>
 import { ref } from "vue";
-import { currentView } from "@/store/state";
+import { currentView, isWorkspaceOverlayVisible } from "@/store/state";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const showUserMenu = ref(false);
 
+
+function openWorkspaceInfo() {
+  isWorkspaceOverlayVisible.value = true;
+}
 function openUserMenu() {
   showUserMenu.value = true;
   setTimeout(() => {
