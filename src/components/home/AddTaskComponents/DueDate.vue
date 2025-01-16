@@ -1,8 +1,8 @@
 <template>
     <div class="inputContainer">
       <label class="title">Due date</label>
-      <div class="inputField">
-        <input
+      <div class="inputField"  :class="{ 'input-error': error }">
+        <input 
           v-model="dueDate"
           type="date"
           :min="today"

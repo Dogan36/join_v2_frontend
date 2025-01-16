@@ -26,7 +26,7 @@
   font-size: 2.1rem;
   font-weight: 700;
   white-space: nowrap;
-  
+  width: fit-content;
 }
 
 .main-button-layout:hover {
@@ -58,6 +58,7 @@
   font-size: 2.1rem;
   font-weight: 700;
   white-space: nowrap;
+  width: fit-content;
 }
 
 .secondary-button-layout:hover {
@@ -117,9 +118,10 @@ p{
   background: #D1D1D1;
 }
 
-.error-message {
+p.error-message {
   color: #f28b82;
-  font-size: 0.9em;
-  margin-bottom: 0.4em;
+  font-size: 1rem;
+  margin: 0;
+  margin-bottom: 0.4rem;
   height: 1.8rem;
 }

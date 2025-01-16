@@ -1,5 +1,5 @@
 <template>
-  <div class="inputField">
+  <div class="inputField" :class="{ 'input-error': error }">
     <input v-model="newCategoryName" placeholder="Enter new category"></input>
     <div :style="{ backgroundColor: newCategoryColor?.code }" class="newCategoryColor"></div>
     <div class="iconContainer">
@@ -18,7 +18,7 @@
       class="colorCategoryButton colorCategoryButtonNew"
     ></div>
   </div>
-  <p class="error-message">{{ errorMessage }}</p>
+  <p class="error-message">{{ error}}</p>
 </template>
 
 <script setup>
@@ -28,7 +28,7 @@ import blackCheckIcon from "@/assets/img/blackCheck.svg";
 import { API_BASE_URL } from "@/config";
 
 const colors = ref([]);
-
+const error = ref("");
 const newCategoryName = ref(null);
 const newCategoryColor = ref(null);
 
@@ -39,7 +39,7 @@ const props = defineProps({
     required: true,
   },
 });
-const errorMessage = ref("");
+
 
 const emit = defineEmits(["toggle", "newCategory"]);
 
@@ -50,7 +50,7 @@ const chooseColor = (index) => {
 
 const checkNewCategoryName = () => {
   if (!newCategoryName.value) {
-    errorMessage.value = "Please enter a category name";
+    error.value = "Please enter a category name";
     return false;
   }
   return true;
@@ -59,7 +59,7 @@ const checkNewCategoryName = () => {
 const checkCatgeoriesLength = () => {
   console.log(categoriesData.value.length);
   if (categoriesData.value.length === 20) {
-    errorMessage.value = "Reached maximum number of categories";
+    error.value = "Reached maximum number of categories";
     return false;
   }
   return true;
@@ -126,6 +126,7 @@ const addNewCategory = async () => {
 </script>
 
 <style scoped>
+
 .iconContainer {
   display: flex;
   gap: 0.5rem;

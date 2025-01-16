@@ -229,7 +229,6 @@ const createTask = async (taskData) => {
 .inputContainer {
   display: flex;
   flex-direction: column;
-  margin-bottom: 1rem;
   gap: 0.8rem;
 
   label {

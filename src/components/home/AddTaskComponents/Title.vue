@@ -1,7 +1,7 @@
 <template>
-  <div class="inputContainer" :class="{ 'input-error': error }">
+  <div class="inputContainer">
     <label class="title" for="title">Title</label>
-    <div class="inputField">
+    <div class="inputField"  :class="{ 'input-error': error }">
       <input id="title" v-model="title" type="text" placeholder="Enter task title"></input>
     </div>
   </div>

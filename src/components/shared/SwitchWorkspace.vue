@@ -1,0 +1,67 @@
+<template>
+  <div class="workspace-info-overlay">
+    <div class="workspace-info">
+    <div class="workspace-info-header">
+      <h2>Switch Workspace</h2>
+      <img @click="close" src="@/assets/img/blackX.svg" alt="">
+    </div>
+      <div v-if="filteredWorkspaces.length === 0">
+        <p>You are not a member of any <span v-if="workspaces.value === 0 ">&nbsp;other&nbsp;</span>workspaces.</p>
+        <p>Join a workspace or create a new one.</p>
+      </div>
+      <div v-else>
+        <p>Choose Workspace</p>
+        <select>
+          <option
+            v-for="workspace in filteredWorkspaces"
+            :key="workspace.id"
+            :value="workspace.id"
+          >
+            {{ workspace.name }}
+          </option>
+        </select>
+      </div>
+      <div class="buttonContainer">
+        <button v-if="filteredWorkspaces.length === 0"  class="secondary-button-layout" @click="setActiveModal('createWorkspace')">
+          Create New Workspace
+        </button>
+        <button v-if="filteredWorkspaces.length === 0" class="main-button-layout" @click="setActiveModal('joinWorkspace')">
+          Join Workspace
+        </button>
+        <button v-else class="main-button-layout" @click="confirmSwitch">
+          Switch Workspace
+        </button>
+      </div>
+      
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { defineEmits, computed } from "vue";
+import { currentWorkspace, workspaces } from "@/services/workspaceService";
+
+const emit = defineEmits(["close", "setActiveModal"]);
+
+const filteredWorkspaces = computed(() => {
+  return workspaces.value.filter(
+    (workspace) => workspace.id !== currentWorkspace.value.id
+  );
+});
+const confirmSwitch = () => {
+  console.log("Switching workspace");
+  setActiveModal('switchWorkspace');
+};
+
+const setActiveModal = (modalName) => {
+    console.log("Emitting modalName:", modalName);
+  emit("setActiveModal", modalName);
+};
+
+
+const close = () => {
+  emit("close");
+};
+</script>
+
+

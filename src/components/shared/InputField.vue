@@ -114,8 +114,9 @@ const emitIconClick = () => {
   justify-content: center;
 }
 
-.inputField.input-error {
-  border-color: #f28b82;
+.input-error {
+  border: 2px solid red;
+ 
 }
 
 .inputField input,

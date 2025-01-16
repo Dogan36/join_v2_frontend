@@ -1,11 +1,9 @@
 import { ref, computed } from 'vue';
 
 export const workspaces = ref([]);
-export const currentWorkspaceId = ref(null);
+export const currentWorkspace = ref(null);
 
-export const currentWorkspace = computed(() => {
-  return workspaces.value.find(workspace => workspace.id === currentWorkspaceId.value);
-});
+
 import { API_BASE_URL } from '@/config';
 
 export async function loadWorkspaces() {
@@ -40,17 +38,17 @@ export async function loadWorkspaces() {
 }
 
 export function loadCurrentWorkspace() {
-  const savedWorkspaceId = parseInt(localStorage.getItem('currentWorkspaceId'), 10); // String in Zahl umwandeln
-  if (savedWorkspaceId && workspaces.value.some(ws => ws.id === savedWorkspaceId)) {
-    currentWorkspaceId.value = savedWorkspaceId;
+  const savedWorkspace = parseInt(localStorage.getItem('currentWorkspace'));
+  if (savedWorkspace && workspaces.value.some(ws => ws.id === savedWorkspace)) {
+    currentWorkspace.value = savedWorkspace;
   } else if (workspaces.value.length > 0) {
-    currentWorkspaceId.value = workspaces.value[0].id;
-    console.log(currentWorkspaceId.value);
+    currentWorkspace.value = workspaces.value[0];
+    console.log(currentWorkspace.value);
   }
 }
 
 export function setCurrentWorkspace() {
-  localStorage.setItem('currentWorkspaceId', currentWorkspaceId.value);
+  localStorage.setItem('currentWorkspace', currentWorkspace.value);
 }
 
 export async function createWorkspace(name) {
@@ -73,7 +71,7 @@ export async function createWorkspace(name) {
 
     const newWorkspace = await response.json();
     workspaces.value.push(newWorkspace); // Neuen Workspace zur Liste hinzufügen
-    currentWorkspaceId.value = newWorkspace.id; // Direkt als aktuellen Workspace setzen
+    currentWorkspace.value = newWorkspace; // Direkt als aktuellen Workspace setzen
     setCurrentWorkspace();
     console.log("Workspace erstellt:", newWorkspace);
   } catch (err) {
