@@ -5,7 +5,7 @@ const confirmationMessage = ref('');
 let autoCloseTimer = null; // zum Merken des Timers
 
 // Zeit in Millisekunden, nach der das Overlay automatisch schließt
-const AUTO_CLOSE_DURATION = 1000;  
+const AUTO_CLOSE_DURATION = 2000;  
 
 export function useConfirmationOverlay() {
   function showConfirmation(message) {

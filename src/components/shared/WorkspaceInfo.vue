@@ -1,5 +1,6 @@
 <template>
   <div v-if="isWorkspaceDetailVisible" class="workspace-info-overlay">
+    <div v-if="currentWorkspace">
     <div class="workspace-info-header">
       <h2>Workspace Details</h2>
       <img @click="close" src="@/assets/img/blackX.svg" alt="" />
@@ -49,6 +50,35 @@
       </div>
     </div>
   </div>
+  <div v-else>
+
+    <div class="workspace-info-header">
+      <h2>Welcome</h2>
+    </div>
+    <p>Create or join workspace to get started</p>
+    <div class="workspace-info">
+      
+      <div class="buttonContainer">
+        <button
+          class="main-button-layout"
+          @click="setActiveModal('createWorkspace')"
+        >
+          Create New Workspace
+        </button>
+       
+        <button
+          class="main-button-layout"
+          @click="setActiveModal('joinWorkspace')"
+          @setActiveModal="setActiveModal"
+        >
+          Join Workspace
+        </button>
+        
+      
+      </div>
+    </div>
+  </div>
+</div>
   <CreateNewWorkspace
     v-if="activeModal === 'createWorkspace'"
     @close="setActiveModal(null)"
@@ -73,7 +103,7 @@
 </template>
 
 <script setup>
-import { currentWorkspace } from "@/services/workspaceService";
+import { currentWorkspace, loadWorkspaces } from "@/services/workspaceService";
 import { ref, onMounted } from "vue";
 
 import CreateNewWorkspace from "./CreateNewWorkspace.vue";
@@ -82,9 +112,7 @@ import InviteToWorkspace from "./InviteToWorkspace.vue";
 import LeaveWorkspaceConfirmation from "./LeaveWorkspaceConfirmation.vue";
 import JoinWorkspace from "./JoinWorkspace.vue";
 
-onMounted(() => {
-  console.log(currentWorkspace.value);
-});
+
 const isWorkspaceDetailVisible = ref(true);
 const activeModal = ref(null);
 

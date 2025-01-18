@@ -3,7 +3,9 @@
     <MenuContainer />
     <div class="content">
       <Header />
+      
       <main>
+        <div>{{currentWorkspace}}</div>
         <Summary v-if="currentView === 'summary'" />
         <Board v-if="currentView === 'board'" />
         <AddTask v-if="currentView === 'addTask'" />
@@ -15,6 +17,9 @@
     </div>
   </div>
   <DarkBackground v-if="isWorkspaceOverlayVisible" @close="closeOverlay">
+    <WorkspaceInfo @close="closeOverlay"></WorkspaceInfo>
+  </DarkBackground>
+  <DarkBackground v-if="!currentWorkspace" @close="closeOverlay">
     <WorkspaceInfo @close="closeOverlay"></WorkspaceInfo>
   </DarkBackground>
 </template>
@@ -33,23 +38,18 @@ import LegalNotice from "@/components/shared/LegalNotice.vue";
 import Help from "@/components/home/Help.vue";
 import WorkspaceInfo from "@/components/shared/WorkspaceInfo.vue";
 import DarkBackground from "@/components/shared/DarkBackground.vue";
-import { loadWorkspaces, setCurrentWorkspace } from "@/services/workspaceService";
+import { determineInitialWorkspace, currentWorkspace } from "@/services/workspaceService";
 
-const workspaces = ref([]);
 
 onMounted(async () => {
-  await loadWorkspaces();
-  determineInitialWorkspace();
+  try {
+    determineInitialWorkspace();
+  } catch (error) {
+    console.error("Error loading initial workspace:", error);
+    // Handle error appropriately, possibly setting an error state or showing a notification
+  }
 });
 
-function determineInitialWorkspace() {
-  const lastWorkspaceId = localStorage.getItem('lastWorkspaceId');
-  if (lastWorkspaceId) {
-    setCurrentWorkspace(lastWorkspaceId);
-  } else if (workspaces.value.length > 0) {
-    setCurrentWorkspace(workspaces.value[0].id);
-  }
-}
 
 function closeOverlay() {
   isWorkspaceOverlayVisible.value = false;

@@ -5,6 +5,7 @@
             <h2>Create New Workspace</h2>
             <img @click="close" src="@/assets/img/blackX.svg" alt="" />
         </div>
+        <p>Please enter a name for your new workspace</p>
         <div>
         <div class="inputContainer" >
             <div class="inputField" :class="{ 'input-error': error }">
@@ -14,7 +15,7 @@
     <p v-if="error" class="error-message">{{ error }}</p>
   </div>
     <div class="buttonContainer">
-      <button class="main-button-layout" @click="validate">
+      <button class="main-button-layout" @click="submitNewWorkspace">
         Create Workspace
       </button>
     </div>
@@ -26,28 +27,30 @@
 import { defineEmits, computed } from "vue";
 import { ref } from "vue";
 import { createWorkspace } from "@/services/workspaceService";
-const emit = defineEmits(["close", "setActiveModal"]);
-import { API_BASE_URL } from "@/config";
+const emit = defineEmits(["close"]);
 
 const newWorkspaceName = ref("");
 const error = ref("");
 
-const setActiveModal = (modalName) => {
-  console.log("Emitting modalName:", modalName);
-  emit("setActiveModal", modalName);
-};
 
 
-const validate = () => {
-  console.log(newWorkspaceName.value);
-  if (!newWorkspaceName.value.trim()) {
-    error.value = 'The workspace name is required';
-    return false; // ungültig
-  } else {
+
+const submitNewWorkspace = async () => {
+  if (newWorkspaceName.value.trim()) {
     error.value = "";
-    createWorkspace(newWorkspaceName.value);
+    try {
+      await createWorkspace(newWorkspaceName.value);
+      emit("close");
+    } catch (e) {
+      error.value = e.message;
+    }
+  } else {
+    error.value = 'The workspace name is required';
   }
 };
+
+
+
 const close = () => {
   emit("close");
 };

@@ -6,12 +6,14 @@
       <img @click="close" src="@/assets/img/blackX.svg" alt="">
     </div>
       <div v-if="filteredWorkspaces.length === 0">
-        <p>You are not a member of any <span v-if="workspaces.value === 0 ">&nbsp;other&nbsp;</span>workspaces.</p>
+        <p>You are not a member of any other workspaces.</p>
         <p>Join a workspace or create a new one.</p>
       </div>
       <div v-else>
         <p>Choose Workspace</p>
-        <select>
+      
+        <select id="workspaceSelect" class="inputField " v-model="selectedWorkspaceId">
+          <option  value="" selected>Bitte Workspace auswählen</option>
           <option
             v-for="workspace in filteredWorkspaces"
             :key="workspace.id"
@@ -38,11 +40,11 @@
 </template>
 
 <script setup>
-import { defineEmits, computed } from "vue";
+import { defineEmits, computed, ref } from "vue";
 import { currentWorkspace, workspaces } from "@/services/workspaceService";
 
 const emit = defineEmits(["close", "setActiveModal"]);
-
+const selectedWorkspaceId = ref('');
 const filteredWorkspaces = computed(() => {
   return workspaces.value.filter(
     (workspace) => workspace.id !== currentWorkspace.value.id
@@ -50,11 +52,11 @@ const filteredWorkspaces = computed(() => {
 });
 const confirmSwitch = () => {
   console.log("Switching workspace");
-  setActiveModal('switchWorkspace');
+  emit("close");
 };
 
 const setActiveModal = (modalName) => {
-    console.log("Emitting modalName:", modalName);
+  console.log("Emitting modalName:", modalName);
   emit("setActiveModal", modalName);
 };
 
