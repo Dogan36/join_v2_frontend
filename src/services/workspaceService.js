@@ -12,12 +12,20 @@ export const workspaces = ref([]);
 export const currentWorkspace = ref();
 
 export function determineInitialWorkspace() {
-  const currentWorkspaceId = localStorage.getItem('currentWorkspaceId');
-  if (currentWorkspaceId) {
-    console.log("Lade Workspace mit ID", currentWorkspaceId);
-    loadCurrentWorkspace(currentWorkspaceId);
+  const currentWorkspaceId =  Number(localStorage.getItem('currentWorkspaceId'));
+  if (currentWorkspaceId && workspaces.value.length > 0) {
+    console.log("Gespeicherte Workspace-ID gefunden:", currentWorkspaceId);
+      const foundWorkspace = workspaces.value.find(ws => ws.id === currentWorkspaceId);
+      console.log(workspaces.value)
+      if (foundWorkspace) {
+          console.log("Gefundener Workspace mit ID", currentWorkspaceId);
+          currentWorkspace.value = foundWorkspace;
+      } else {
+          console.warn("Kein Workspace mit der gespeicherten ID gefunden, lade ersten verfügbaren Workspace.");
+          loadFirstWorkspace()
+      }
   } else {
-    loadFirstWorkspace();
+    loadFirstWorkspace()
   }
 }
 
@@ -74,7 +82,8 @@ export async function loadFirstWorkspace() {
     const text = await response.text();  // Erst die Antwort als Text holen
     if (!text) {
       isWorkspaceOverlayVisible.value = true;
-      currentWorkspace.value = null;
+      
+      console.log(currentWorkspace.value)
       return;  // Frühzeitiger Rückkehr, wenn kein Inhalt vorhanden ist.
     }
 
@@ -109,12 +118,13 @@ export async function loadWorkspaces() {
     const data = await response.json();
     if (!data.length) {
       console.warn("Keine Workspaces gefunden");
+      currentWorkspace.value = null;
       return;
     }
 
     workspaces.value = data;
     console.log("Workspaces geladen:", workspaces.value);
-    
+    determineInitialWorkspace();
     
   } catch (err) {
     console.error("Fehler beim Laden der Workspaces:", err);
@@ -150,7 +160,8 @@ export async function createWorkspace(name) {
     const newWorkspace = await response.json();
     workspaces.value.push(newWorkspace); // Neuen Workspace zur Liste hinzufügen
     currentWorkspace.value = newWorkspace;
-    showConfirmation(`Workspace "${newWorkspace.name}" erfolgreich erstellt.`); // Direkt als aktuellen Workspace setzen
+    loadMainData(); // Daten für den neuen Workspace laden
+    showConfirmation(`Workspace "${newWorkspace.name}" created succesfully.`); // Direkt als aktuellen Workspace setzen
     setCurrentWorkspace();
   } catch (err) {
     console.error("Fehler beim Erstellen des Workspaces:", err);
@@ -191,6 +202,40 @@ export const changeWorkspace = (workspace) => {
   console.log("Workspace geändert:", workspace);
   setCurrentWorkspace();
   showConfirmation(`Switched to workspace "${workspace.name}"`);
+  loadMainData(); // Daten für den neuen Workspace laden
 }
 
+const loadMainData = () => {
+  console.log("Lade Daten für den Workspace...");
+  // Hier werden die Daten für den Workspace geladen
+}
+
+export const joinWorkspace = async (workspaceCode) => {
+  showOverlay();  // Aktiviert eine Ladeanzeige
+  try {
+    const token = localStorage.getItem('join_token');
+    const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/join-by-code/`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Token ${token}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ join_code: workspaceCode })
+    });
+
+    if (!response.ok) {
+      console.error("Fehler beim Beitreten des Workspaces: HTTP Status", response.status);
+      throw new Error(response.status.toString());  // Wirft den Statuscode als Fehler
+    }
+
+    const data = await response.json();
+    console.log('Erfolgreich beigetreten:', data);
+    return data;
+  } catch (err) {
+    console.error("Error joining workspace:", err.message);
+    throw err;  // Wirft den Fehler weiter
+  } finally {
+    hideOverlay();  // Deaktiviert die Ladeanzeige
+  }
+}
 

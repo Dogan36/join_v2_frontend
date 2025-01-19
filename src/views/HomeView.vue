@@ -19,7 +19,7 @@
   <DarkBackground v-if="isWorkspaceOverlayVisible" @close="closeOverlay">
     <WorkspaceInfo @close="closeOverlay"></WorkspaceInfo>
   </DarkBackground>
-  <DarkBackground v-if="currentWorkspace===null" @close="closeOverlay">
+  <DarkBackground v-if="currentWorkspace === null" @close="closeOverlay">
     <WorkspaceInfo @close="closeOverlay"></WorkspaceInfo>
   </DarkBackground>
 </template>
@@ -38,12 +38,13 @@ import LegalNotice from "@/components/shared/LegalNotice.vue";
 import Help from "@/components/home/Help.vue";
 import WorkspaceInfo from "@/components/shared/WorkspaceInfo.vue";
 import DarkBackground from "@/components/shared/DarkBackground.vue";
-import { determineInitialWorkspace, currentWorkspace } from "@/services/workspaceService";
+import { currentWorkspace, loadWorkspaces } from "@/services/workspaceService";
 
 
 onMounted(async () => {
   try {
-    determineInitialWorkspace();
+    loadWorkspaces();
+    console.log("currentWorkspace", currentWorkspace);
   } catch (error) {
     console.error("Error loading initial workspace:", error);
     // Handle error appropriately, possibly setting an error state or showing a notification
