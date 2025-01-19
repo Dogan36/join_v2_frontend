@@ -19,7 +19,7 @@
   <DarkBackground v-if="isWorkspaceOverlayVisible" @close="closeOverlay">
     <WorkspaceInfo @close="closeOverlay"></WorkspaceInfo>
   </DarkBackground>
-  <DarkBackground v-if="!currentWorkspace" @close="closeOverlay">
+  <DarkBackground v-if="currentWorkspace===null" @close="closeOverlay">
     <WorkspaceInfo @close="closeOverlay"></WorkspaceInfo>
   </DarkBackground>
 </template>

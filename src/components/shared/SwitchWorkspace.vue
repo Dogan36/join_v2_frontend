@@ -12,12 +12,12 @@
       <div v-else>
         <p>Choose Workspace</p>
       
-        <select id="workspaceSelect" class="inputField " v-model="selectedWorkspaceId">
+        <select id="workspaceSelect" class="inputField " v-model="selectedWorkspace">
           <option  value="" selected>Bitte Workspace auswählen</option>
           <option
             v-for="workspace in filteredWorkspaces"
             :key="workspace.id"
-            :value="workspace.id"
+            :value="workspace"
           >
             {{ workspace.name }}
           </option>
@@ -40,18 +40,28 @@
 </template>
 
 <script setup>
-import { defineEmits, computed, ref } from "vue";
-import { currentWorkspace, workspaces } from "@/services/workspaceService";
+import { defineEmits, computed, ref, onMounted } from "vue";
+import { currentWorkspace, workspaces, changeWorkspace, loadWorkspaces } from "@/services/workspaceService";
+
+
+onMounted(async () => {
+  try {
+    loadWorkspaces();
+  } catch (error) {
+    console.error("Error loading workspaces:", error);
+    // Handle error appropriately, possibly setting an error state or showing a notification
+  }
+});
 
 const emit = defineEmits(["close", "setActiveModal"]);
-const selectedWorkspaceId = ref('');
+const selectedWorkspace = ref('');
 const filteredWorkspaces = computed(() => {
   return workspaces.value.filter(
     (workspace) => workspace.id !== currentWorkspace.value.id
   );
 });
 const confirmSwitch = () => {
-  console.log("Switching workspace");
+  changeWorkspace(selectedWorkspace.value);
   emit("close");
 };
 

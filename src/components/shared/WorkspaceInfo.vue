@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isWorkspaceDetailVisible" class="workspace-info-overlay">
+  <div v-if="activeModal === 'workspaceInfo'" class="workspace-info-overlay">
     <div v-if="currentWorkspace">
     <div class="workspace-info-header">
       <h2>Workspace Details</h2>
@@ -81,30 +81,30 @@
 </div>
   <CreateNewWorkspace
     v-if="activeModal === 'createWorkspace'"
-    @close="setActiveModal(null)"
+    @close="setActiveModal('workspaceInfo')"
   />
   <SwitchWorkspace
     v-if="activeModal === 'switchWorkspace'"
-    @close="setActiveModal(null)"
+    @close="setActiveModal('workspaceInfo')"
     @setActiveModal="setActiveModal"
   />
   <JoinWorkspace
     v-if="activeModal === 'joinWorkspace'"
-    @close="setActiveModal(null)"
+    @close="setActiveModal('workspaceInfo')"
   />
   <InviteToWorkspace
     v-if="activeModal === 'sendInvitation'"
-    @close="setActiveModal(null)"
+    @close="setActiveModal('workspaceInfo')"
   />
   <LeaveWorkspaceConfirmation
     v-if="activeModal === 'leaveWorkspace'"
-    @close="setActiveModal(null)"
+    @close="setActiveModal('workspaceInfo')"
   />
 </template>
 
 <script setup>
-import { currentWorkspace, loadWorkspaces } from "@/services/workspaceService";
-import { ref, onMounted } from "vue";
+import { currentWorkspace} from "@/services/workspaceService";
+import { ref } from "vue";
 
 import CreateNewWorkspace from "./CreateNewWorkspace.vue";
 import SwitchWorkspace from "./SwitchWorkspace.vue";
@@ -113,19 +113,20 @@ import LeaveWorkspaceConfirmation from "./LeaveWorkspaceConfirmation.vue";
 import JoinWorkspace from "./JoinWorkspace.vue";
 
 
-const isWorkspaceDetailVisible = ref(true);
-const activeModal = ref(null);
+
+const activeModal = ref('workspaceInfo');
 
 const setActiveModal = (modalName) => {
   console.log("Received modal name:", modalName);
   activeModal.value = modalName;
-  isWorkspaceDetailVisible.value = !modalName; // Versteckt das Hauptoverlay, wenn ein Modal aktiv ist.
 };
 const emit = defineEmits(["close"]);
 
 const close = () => {
   emit("close");
 };
+
+
 </script>
 
 <style>

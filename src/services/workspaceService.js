@@ -9,7 +9,7 @@ const { showConfirmation } = useConfirmationOverlay();
 import { API_BASE_URL } from '@/config';
 
 export const workspaces = ref([]);
-export const currentWorkspace = ref(null);
+export const currentWorkspace = ref();
 
 export function determineInitialWorkspace() {
   const currentWorkspaceId = localStorage.getItem('currentWorkspaceId');
@@ -45,10 +45,10 @@ export async function loadCurrentWorkspace(currentWorkspaceId) {
       return;
     }
     currentWorkspace.value = data;
-    console.log("Workspaces geladen:", workspaces.value);
+    
     
   } catch (err) {
-    console.error("Fehler beim Laden der Workspaces:", err);
+    console.error("Fehler beim Laden de Workspaces:", err);
   }
 }
 
@@ -89,6 +89,7 @@ export async function loadFirstWorkspace() {
 }
 
 export async function loadWorkspaces() {
+  console.log("Lade Workspaces...");
   try {
     const token = localStorage.getItem('join_token');
     if (!token) throw new Error("Kein Token gefunden. Der Benutzer ist nicht authentifiziert.");
@@ -113,7 +114,7 @@ export async function loadWorkspaces() {
 
     workspaces.value = data;
     console.log("Workspaces geladen:", workspaces.value);
-    loadCurrentWorkspace();
+    
     
   } catch (err) {
     console.error("Fehler beim Laden der Workspaces:", err);
@@ -187,6 +188,9 @@ export async function deleteWorkspace(workspaceId) {
 
 export const changeWorkspace = (workspace) => {
   currentWorkspace.value = workspace;
+  console.log("Workspace geändert:", workspace);
   setCurrentWorkspace();
+  showConfirmation(`Switched to workspace "${workspace.name}"`);
 }
+
 

@@ -54,6 +54,8 @@ const submitNewWorkspace = async () => {
 const close = () => {
   emit("close");
 };
+
+
 </script>
 
 <style scoped>
