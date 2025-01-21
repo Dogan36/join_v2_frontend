@@ -67,14 +67,22 @@
           </div>
           </div>
         </div>
-        <div id="welcomeDesk" class="welcomeDesk">
+        <div @click="console.log(currentUser.value)" id="welcomeDesk" class="welcomeDesk">
           <span id="welcomeText">Good Morning</span>
-          <span id="welcomeName">Dogan</span>
+          <span id="welcomeName">{{ userName }}</span>
       </div>
       </div>
     
   </template>
+<script setup>
+import { currentUser } from '@/store/state';
+import { onMounted, ref, computed } from 'vue';
 
+const userName = computed(() => {
+  return currentUser.value.name ? currentUser.value.name.split(' ')[0] : '';
+});
+
+</script>
 <style scoped>
 .contentSummary {
   display: flex;

@@ -143,7 +143,7 @@ const close = () => {
   transform: translate(-50%, -50%);
   top: 50%;
   padding: 2rem;
-  max-width: 1000px;
+  max-width: 330px;
   overflow-y: auto;
   p {
     font-size: 2rem;

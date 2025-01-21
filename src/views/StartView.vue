@@ -40,7 +40,7 @@ import Login from '.././components/start/Login.vue';
 import Signup from '.././components/start/SignUp.vue';
 import ForgotPassword from '.././components/start/ForgotPassword.vue';
 import { onMounted } from 'vue';
-
+import { currentUser } from '@/store/state';
 
 onMounted(() => {
   checkIfUserIsLoggedIn();
@@ -62,6 +62,7 @@ const toggleForgotPassword = () => {
 
 const checkIfUserIsLoggedIn = () => {
   if (localStorage.getItem('join_token')) {
+    currentUser = JSON.parse(localStorage.getItem('join_user'));
     window.location.href = '/home';
   }
 };

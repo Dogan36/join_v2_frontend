@@ -3,12 +3,16 @@ import HomeView from '../views/HomeView.vue';
 import StartView from '../views/StartView.vue';
 import AboutView from '../views/AboutView.vue';
 import ResetPassword from '@/views/ResetPassword.vue';
+import { currentUser } from '@/store/state';
 
 // Beispiel: Token abrufen (z. B. aus localStorage oder composable)
 function getToken() {
   return localStorage.getItem('join_token');
 }
 
+function getUser() {
+  return localStorage.getItem('join_user') || null;
+}
 // Deine Routen
 const routes = [
   { path: '/', redirect: '/home' },
@@ -32,6 +36,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth) {
     const token = getToken();
+    currentUser.value = getUser() || '';
     if (!token) {
       return next({ name: 'start' });
     }

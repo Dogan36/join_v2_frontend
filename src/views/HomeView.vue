@@ -39,18 +39,23 @@ import Help from "@/components/home/Help.vue";
 import WorkspaceInfo from "@/components/shared/WorkspaceInfo.vue";
 import DarkBackground from "@/components/shared/DarkBackground.vue";
 import { currentWorkspace, loadWorkspaces } from "@/services/workspaceService";
-
+import { currentUser } from "@/store/state";
 
 onMounted(async () => {
+  getUser();
   try {
     loadWorkspaces();
-    console.log("currentWorkspace", currentWorkspace);
+   
   } catch (error) {
     console.error("Error loading initial workspace:", error);
     // Handle error appropriately, possibly setting an error state or showing a notification
   }
 });
 
+function getUser() { 
+    currentUser.value = JSON.parse(localStorage.getItem("join_user"));
+    console.log("Current User:", currentUser.value);
+}
 
 function closeOverlay() {
   isWorkspaceOverlayVisible.value = false;

@@ -106,8 +106,11 @@ async function signUp(name, email, password) {
 
     if (response.ok) {
       const data = await response.json();
-      showConfirmation('Registrierung erfolgreich:', data);
-      // Weiterleitung oder Anzeige einer Erfolgsnachricht
+      localStorage.setItem("join_token", data.token);
+      localStorage.setItem("join_user", JSON.stringify(data.user))
+      
+      showConfirmation('Sign up successful!');
+      
     } else {
       const errorData = await response.json();
       console.error('Fehler bei der Registrierung:', errorData);

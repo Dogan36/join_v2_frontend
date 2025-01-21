@@ -5,7 +5,7 @@
             <h2>Share Joining Code</h2>
             <img @click="close" src="@/assets/img/blackX.svg" alt="Close" />
         </div>
-        <p>Share the Joining Code to others to the workspace</p>
+        <p>Invite others to the workingspace by sharing the code</p>
         <div>
           <p>
             <span class="label">Code:</span>

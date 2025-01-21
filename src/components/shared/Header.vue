@@ -51,6 +51,7 @@ function goToProfile() {
 function logout() {
   closeUserMenu();
   localStorage.removeItem("join_token");
+  localStorage.removeItem("join_user");
   router.push("/start");
 }
 

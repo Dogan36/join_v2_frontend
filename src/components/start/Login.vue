@@ -59,7 +59,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import FormLayout from "../shared/FormLayout.vue";
 import InputField from "../shared/InputField.vue";
-
+import { currentUser } from "@/store/state";
 import { defineProps } from "vue";
 import { API_BASE_URL } from "@/config";
 import { useLoadingOverlay } from '@/composables/useLoadingOverlay';
@@ -105,7 +105,12 @@ async function login(email, password) {
 
     if (response.ok) {
       const data = await response.json();
-      localStorage.setItem("join_token", data.token); // Speichert das Token
+      console.log("Login successful:", data);
+      localStorage.setItem("join_token", data.token);
+      localStorage.setItem("join_user", JSON.stringify(data.user))
+     
+      console.log(currentUser.value)
+      showConfirmation('Login successful!');
       window.location.href = "/home"; // Beispiel: Weiterleitung
     } else {
       const errorData = await response.json();
