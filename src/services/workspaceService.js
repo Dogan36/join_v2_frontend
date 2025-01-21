@@ -224,7 +224,7 @@ export const joinWorkspace = async (workspaceCode) => {
     });
 
     if (!response.ok) {
-      console.error("Fehler beim Beitreten des Workspaces: HTTP Status", response.status);
+      
       throw new Error(response.status.toString());  // Wirft den Statuscode als Fehler
     }
 
@@ -232,10 +232,69 @@ export const joinWorkspace = async (workspaceCode) => {
     console.log('Erfolgreich beigetreten:', data);
     return data;
   } catch (err) {
-    console.error("Error joining workspace:", err.message);
+  
     throw err;  // Wirft den Fehler weiter
   } finally {
     hideOverlay();  // Deaktiviert die Ladeanzeige
+  }
+}
+
+export const leaveWorkspace = async (workspaceId) => {
+  showOverlay();
+  try {
+    const token = localStorage.getItem('join_token');
+    const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/leave/${workspaceId}/`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Token ${token}`,
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (!response.ok) {
+      throw new Error(response.status.toString());
+    }
+
+    const data = await response.json();
+    console.log('Erfolgreich verlassen:', data);
+    return data;
+  } catch (err) {
+    throw err;
+  } finally {
+    hideOverlay();
+  }
+}
+
+export async function invitePerEmail(email, join_code) {
+  showOverlay();
+  console.log("Sending invite with email:", email + " and join code:", join_code);
+  const token = localStorage.getItem("join_token");
+  console.log("Token:", token);
+  try {
+    const response = await fetch(`${API_BASE_URL}/workspaces/invite/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Token ${token}`,
+      },
+      body: JSON.stringify({ email, join_code }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log("Antwort vom Backend:", data);
+      showConfirmation("Invitation sent successfully.");
+    } else {
+      const errorData = await response.json();
+      console.error("Fehler beim Versenden der Einladung:", errorData);
+      alert("Fehler: " + (errorData.error || "Unbekannter Fehler beim Versenden der Einladung."));
+    }
+  } catch (error) {
+    console.error("Netzwerkfehler beim Versenden der Einladung:", error);
+    alert("Netzwerkfehler. Bitte später erneut versuchen.");
+  }
+  finally {
+    hideOverlay();
   }
 }
 
