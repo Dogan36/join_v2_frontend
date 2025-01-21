@@ -9,7 +9,12 @@
         <div>
           <p>
             <span class="label">Code:</span>
-            <span class="value">{{ currentWorkspace.join_code }}</span>
+            <div class="copyCode">
+              <div class="tooltip">
+                <img @click="copyToClipboard" class="clipboard" src="@/assets/img/clipboard.svg" alt="Clipboard Icon">
+                <span class="tooltiptext">{{ copyToClipboardText }}</span>
+              </div>
+              <span id="join_code" class="value"> {{ currentWorkspace.join_code }}</span></div>
           </p>
         </div>
         <p>Or send the code per e-mail</p>
@@ -34,7 +39,7 @@ import { currentWorkspace, invitePerEmail } from "@/services/workspaceService";
 const emit = defineEmits(["close"]);
 const shareCodeEmail = ref("");
 const error = ref("");
-
+const copyToClipboardText = ref("Copy to Clipboard");
 const trySend = async() => {
   resetErrors();
   if (checkForErrors()) {
@@ -72,9 +77,57 @@ const checkForErrors = () => {
 const close = () => {
   emit("close");
 };
+
+const  copyToClipboard = () => {
+
+  const textToCopy = document.getElementById("join_code").innerText;
+  navigator.clipboard.writeText(textToCopy).then(() => {
+  copyToClipboardText.value = "Copied!";
+  }).catch(err => {
+    console.error('Fehler beim Kopieren des Textes: ', err);
+  });
+}
 </script>
 
 <style scoped>
 @import "@/assets/base.css";
 @import "@/assets/main.css";
+
+.copyCode{
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  .clipboard{
+    height: 3rem;
+    width: 3rem;
+    cursor: pointer;
+  }
+}
+.tooltip {
+    position: relative;
+    display: inline-block;
+  }
+
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: var(--main-color);
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
+
 </style>
