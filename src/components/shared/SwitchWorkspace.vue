@@ -41,17 +41,10 @@
 
 <script setup>
 import { defineEmits, computed, ref, onMounted } from "vue";
-import { currentWorkspace, workspaces, changeWorkspace, loadWorkspaces } from "@/services/workspaceService";
+import useWorkspaces from "@/composables/useWorkspaces";
 
+const { workspaces, changeWorkspace, currentWorkspace } = useWorkspaces();
 
-onMounted(async () => {
-  try {
-    loadWorkspaces();
-  } catch (error) {
-    console.error("Error loading workspaces:", error);
-    // Handle error appropriately, possibly setting an error state or showing a notification
-  }
-});
 
 const emit = defineEmits(["close", "setActiveModal"]);
 const selectedWorkspace = ref('');

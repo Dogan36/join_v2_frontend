@@ -103,8 +103,8 @@
 </template>
 
 <script setup>
-import { currentWorkspace} from "@/services/workspaceService";
-import { ref } from "vue";
+import  useWorkspaces from "@/composables/useWorkspaces";
+import { onMounted, ref,  } from "vue";
 
 import CreateNewWorkspace from "./CreateNewWorkspace.vue";
 import SwitchWorkspace from "./SwitchWorkspace.vue";
@@ -112,8 +112,11 @@ import InviteToWorkspace from "./InviteToWorkspace.vue";
 import LeaveWorkspaceConfirmation from "./LeaveWorkspaceConfirmation.vue";
 import JoinWorkspace from "./JoinWorkspace.vue";
 
+const { currentWorkspace } = useWorkspaces()
 
-
+onMounted(() => {
+  console.log("Current Workspace:", currentWorkspace.value);
+});
 const activeModal = ref('workspaceInfo');
 
 const setActiveModal = (modalName) => {
@@ -191,15 +194,6 @@ const close = () => {
   gap: 2rem;
   img {
     cursor: pointer;
-  }
-}
-
-.button-red {
-  background-color: var(--color-warn);
-  color: white;
-
-  &:hover {
-    background-color: var(--color-warn-hover);
   }
 }
 

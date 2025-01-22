@@ -78,6 +78,15 @@
   cursor: not-allowed;
 }
 
+.button-red {
+  background-color: var(--color-warn);
+  color: white;
+
+  &:hover {
+    background-color: var(--color-warn-hover);
+  }
+}
+
 .formHeader{
   display: flex;
   flex-direction: column;

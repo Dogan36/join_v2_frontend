@@ -26,7 +26,8 @@
 <script setup>
 import { defineEmits, computed } from "vue";
 import { ref } from "vue";
-import { joinWorkspace } from "@/services/workspaceService";
+import useWorkspaces from "@/composables/useWorkspaces";
+const { joinWorkspace } = useWorkspaces();
 const emit = defineEmits(["close"]);
 
 const workspaceCode = ref("");

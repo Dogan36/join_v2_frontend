@@ -7,7 +7,7 @@
         </div>
         <p>Invite others to the workingspace by sharing the code</p>
         <div>
-          <p>
+          <div>
             <span class="label">Code:</span>
             <div class="copyCode">
               <div class="tooltip">
@@ -15,7 +15,7 @@
                 <span class="tooltiptext">{{ copyToClipboardText }}</span>
               </div>
               <span id="join_code" class="value"> {{ currentWorkspace.join_code }}</span></div>
-          </p>
+            </div>
         </div>
         <p>Or send the code per e-mail</p>
         <div class="inputContainer">
@@ -35,7 +35,8 @@
 
 <script setup>
 import { defineEmits, ref } from "vue";
-import { currentWorkspace, invitePerEmail } from "@/services/workspaceService";
+import useWorkspaces from "@/composables/useWorkspaces";
+const { currentWorkspace, invitePerEmail } = useWorkspaces();
 const emit = defineEmits(["close"]);
 const shareCodeEmail = ref("");
 const error = ref("");

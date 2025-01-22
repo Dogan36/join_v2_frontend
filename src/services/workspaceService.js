@@ -1,70 +1,25 @@
-import { ref, computed } from 'vue';
-
-import { useLoadingOverlay } from '@/composables/useLoadingOverlay';
-import { useConfirmationOverlay } from "@/composables/useConfirmationOverlay";
-import { isWorkspaceOverlayVisible } from '@/store/state';
-const { showOverlay, hideOverlay } = useLoadingOverlay();
-const { showConfirmation } = useConfirmationOverlay();
-
 import { API_BASE_URL } from '@/config';
+import { currentWorkspace } from '@/store/state';
 
-export const workspaces = ref([]);
-export const currentWorkspace = ref();
+const getToken = () => localStorage.getItem('join_token');
 
-export function determineInitialWorkspace() {
-  const currentWorkspaceId =  Number(localStorage.getItem('currentWorkspaceId'));
-  if (currentWorkspaceId && workspaces.value.length > 0) {
-    console.log("Gespeicherte Workspace-ID gefunden:", currentWorkspaceId);
-      const foundWorkspace = workspaces.value.find(ws => ws.id === currentWorkspaceId);
-      console.log(workspaces.value)
-      if (foundWorkspace) {
-          console.log("Gefundener Workspace mit ID", currentWorkspaceId);
-          currentWorkspace.value = foundWorkspace;
-      } else {
-          console.warn("Kein Workspace mit der gespeicherten ID gefunden, lade ersten verfügbaren Workspace.");
-          loadFirstWorkspace()
-      }
-  } else {
-    loadFirstWorkspace()
-  }
-}
-
-export async function loadCurrentWorkspace(currentWorkspaceId) {
-  try {
+async function fetchWorkspaceById(workspaceId) {
     const token = localStorage.getItem('join_token');
-    if (!token) throw new Error("Kein Token gefunden. Der Benutzer ist nicht authentifiziert.");
-
-    const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/${currentWorkspaceId}`, {
+    const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/${workspaceId}`, {
       method: 'GET',
       headers: {
         'Authorization': `Token ${token}`,
         'Content-Type': 'application/json',
       },
     });
-
     if (!response.ok) {
-      throw new Error(`Fehler beim Laden der Workspaces: ${response.statusText}`);
+      throw new Error(`Fehler beim Laden des Workspace: ${response.statusText}`);
     }
-
-    const data = await response.json();
-    console.log("Workspace geladen:", data);
-    if (!data) {
-      console.warn("Keine Workspaces gefunden");
-      return;
-    }
-    currentWorkspace.value = data;
-    
-    
-  } catch (err) {
-    console.error("Fehler beim Laden de Workspaces:", err);
+    return response.json();
   }
-}
-
-export async function loadFirstWorkspace() {
-  try {
+  
+  async function fetchFirstWorkspace() {
     const token = localStorage.getItem('join_token');
-    if (!token) throw new Error("Kein Token gefunden. Der Benutzer ist nicht authentifiziert.");
-
     const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/first_member_workspace/`, {
       method: 'GET',
       headers: {
@@ -73,228 +28,111 @@ export async function loadFirstWorkspace() {
       },
     });
 
-    // Prüfe zuerst, ob die Antwort erfolgreich war.
+    // Überprüfe den Statuscode der Antwort, nicht nur, ob er gleich 404 ist
     if (!response.ok) {
-      throw new Error(`Fehler beim Laden des Workspaces: ${response.statusText}`);
+      console.error('Failed to fetch the first workspace:', response.statusText);
+      return null; // oder eine angemessene Fehlerbehandlung durchführen
     }
 
-    // Prüfe, ob die Antwort Inhalt hat, bevor du versuchst, sie als JSON zu parsen.
-    const text = await response.text();  // Erst die Antwort als Text holen
+    // Prüfen, ob die Antwort leer ist
+    const text = await response.text(); // Erst den Text aus der Antwort holen
     if (!text) {
-      isWorkspaceOverlayVisible.value = true;
       
-      console.log(currentWorkspace.value)
-      return;  // Frühzeitiger Rückkehr, wenn kein Inhalt vorhanden ist.
+      return null; // Frühzeitig zurückkehren, wenn keine Daten vorhanden sind
     }
 
-    const data = JSON.parse(text);  // Parsen des Textes zu JSON, wenn Inhalt vorhanden ist
-    console.log('Workspace geladen:', data);
-    currentWorkspace.value = data;
-
-  } catch (err) {
-    console.error("Fehler beim Laden des ersten Workspaces:", err);
-    currentWorkspace.value = null;
-  }
+    // Parsen des Textes zu JSON, wenn Inhalt vorhanden ist
+    return JSON.parse(text);
 }
 
-export async function loadWorkspaces() {
-  console.log("Lade Workspaces...");
-  try {
-    const token = localStorage.getItem('join_token');
-    if (!token) throw new Error("Kein Token gefunden. Der Benutzer ist nicht authentifiziert.");
-
-    const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Token ${token}`,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Fehler beim Laden der Workspaces: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    if (!data.length) {
-      console.warn("Keine Workspaces gefunden");
-      currentWorkspace.value = null;
-      return;
-    }
-
-    workspaces.value = data;
-    console.log("Workspaces geladen:", workspaces.value);
-    determineInitialWorkspace();
-    
-  } catch (err) {
-    console.error("Fehler beim Laden der Workspaces:", err);
+async function fetchWorkspaces() {
+  console.log("fetchWorkspaces");
+  const token = getToken();
+  const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Token ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!response.ok) {
+    throw new Error(`Fehler beim Laden der Workspaces: ${response.statusText}`);
   }
+  return response.json();
+}
+
+async function createWorkspace(name) {
+  const token = getToken();
+  const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Token ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ name }),
+  });
+  if (!response.ok) {
+    throw new Error(`Fehler beim Erstellen des Workspaces: ${response.statusText}`);
+  }
+  return response.json();
 }
 
 
-export function setCurrentWorkspace() {
-  if (currentWorkspace.value && currentWorkspace.value.id) {
-    localStorage.setItem('currentWorkspaceId', currentWorkspace.value.id.toString());
-  }
-}
-
-export async function createWorkspace(name) {
-  showOverlay();
-  try {
-    const token = localStorage.getItem('join_token');
-    if (!token) throw new Error("Kein Token gefunden. Der Benutzer ist nicht authentifiziert.");
-
-    const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/`, {
+async function leaveWorkspace(token, workspaceId) {
+    const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/leave/`, {
       method: 'POST',
       headers: {
         'Authorization': `Token ${token}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name }),
+      body: JSON.stringify({ workspace_id: workspaceId })
     });
-
+  
     if (!response.ok) {
-      throw new Error(`Fehler beim Erstellen des Workspaces: ${response.statusText}`);
+      throw new Error(`Fehler beim Verlassen des Workspaces: ${response.status}`);
     }
-
-    const newWorkspace = await response.json();
-    workspaces.value.push(newWorkspace); // Neuen Workspace zur Liste hinzufügen
-    currentWorkspace.value = newWorkspace;
-    loadMainData(); // Daten für den neuen Workspace laden
-    showConfirmation(`Workspace "${newWorkspace.name}" created succesfully.`); // Direkt als aktuellen Workspace setzen
-    setCurrentWorkspace();
-  } catch (err) {
-    console.error("Fehler beim Erstellen des Workspaces:", err);
+    return response.json();
   }
-  finally {
-    hideOverlay();
-  }
-}
 
-export async function deleteWorkspace(workspaceId) {
-  try {
-    const token = localStorage.getItem('join_token');
-    if (!token) throw new Error("Kein Token gefunden. Der Benutzer ist nicht authentifiziert.");
-
-    const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/${workspaceId}/`, {
+async function deleteWorkspace(token, workspaceId) {
+    const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/delete-workspace/`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Token ${token}`,
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify({ workspace_id: workspaceId })
     });
-
+  
     if (!response.ok) {
       throw new Error(`Fehler beim Löschen des Workspaces: ${response.statusText}`);
     }
-
-    const deletedWorkspace = workspaces.value.find(ws => ws.id === workspaceId);
-    workspaces.value = workspaces.value.filter(ws => ws.id !== workspaceId); // Workspace aus der Liste entfernen
-    console.log("Workspace gelöscht:", deletedWorkspace);
-    return { success: true, workspace: deletedWorkspace };
-  } catch (err) {
-    console.error("Fehler beim Löschen des Workspaces:", err);
+    return response.json();
   }
-}
 
-export const changeWorkspace = (workspace) => {
-  currentWorkspace.value = workspace;
-  console.log("Workspace geändert:", workspace);
-  setCurrentWorkspace();
-  showConfirmation(`Switched to workspace "${workspace.name}"`);
-  loadMainData(); // Daten für den neuen Workspace laden
-}
-
-const loadMainData = () => {
-  console.log("Lade Daten für den Workspace...");
-  // Hier werden die Daten für den Workspace geladen
-}
-
-export const joinWorkspace = async (workspaceCode) => {
-  showOverlay();  // Aktiviert eine Ladeanzeige
-  try {
-    const token = localStorage.getItem('join_token');
-    const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/join-by-code/`, {
-        method: 'POST',
-        headers: {
-            'Authorization': `Token ${token}`,
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ join_code: workspaceCode })
-    });
-
-    if (!response.ok) {
-      
-      throw new Error(response.status.toString());  // Wirft den Statuscode als Fehler
-    }
-
-    const data = await response.json();
-    console.log('Erfolgreich beigetreten:', data);
-    return data;
-  } catch (err) {
-  
-    throw err;  // Wirft den Fehler weiter
-  } finally {
-    hideOverlay();  // Deaktiviert die Ladeanzeige
-  }
-}
-
-export const leaveWorkspace = async (workspaceId) => {
-  showOverlay();
-  try {
-    const token = localStorage.getItem('join_token');
-    const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/leave/${workspaceId}/`, {
-        method: 'POST',
-        headers: {
-            'Authorization': `Token ${token}`,
-            'Content-Type': 'application/json',
-        },
-    });
-
-    if (!response.ok) {
-      throw new Error(response.status.toString());
-    }
-
-    const data = await response.json();
-    console.log('Erfolgreich verlassen:', data);
-    return data;
-  } catch (err) {
-    throw err;
-  } finally {
-    hideOverlay();
-  }
-}
-
-export async function invitePerEmail(email, join_code) {
-  showOverlay();
-  console.log("Sending invite with email:", email + " and join code:", join_code);
-  const token = localStorage.getItem("join_token");
-  console.log("Token:", token);
-  try {
+  async function invitePerEmail(email, join_code) {
+    const token = getToken();
     const response = await fetch(`${API_BASE_URL}/workspaces/invite/`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Token ${token}`,
+        'Authorization': `Token ${token}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email, join_code }),
     });
-
-    if (response.ok) {
-      const data = await response.json();
-      console.log("Antwort vom Backend:", data);
-      showConfirmation("Invitation sent successfully.");
-    } else {
-      const errorData = await response.json();
-      console.error("Fehler beim Versenden der Einladung:", errorData);
-      alert("Fehler: " + (errorData.error || "Unbekannter Fehler beim Versenden der Einladung."));
+  
+    if (!response.ok) {
+      throw new Error(`Fehler beim Einladen des Benutzers: ${response.statusText}`);
     }
-  } catch (error) {
-    console.error("Netzwerkfehler beim Versenden der Einladung:", error);
-    alert("Netzwerkfehler. Bitte später erneut versuchen.");
+    return response.json();
   }
-  finally {
-    hideOverlay();
-  }
-}
+// Füge hier zusätzliche Funktionen hinzu wie joinWorkspace, leaveWorkspace, deleteWorkspace, usw.
 
+export { 
+  fetchWorkspaces, 
+  fetchWorkspaceById, 
+  fetchFirstWorkspace, 
+  createWorkspace, 
+  leaveWorkspace, 
+  deleteWorkspace, 
+  invitePerEmail };

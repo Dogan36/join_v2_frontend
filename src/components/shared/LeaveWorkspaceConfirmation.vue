@@ -10,28 +10,18 @@
         <p>Leaving it will delete it permanently!</p>
       </div>
       <div v-else>
-        <p>Choose Workspace</p>
-      
-        <select id="workspaceSelect" class="inputField " v-model="selectedWorkspace">
-          <option  value="" selected>Bitte Workspace auswählen</option>
-          <option
-            v-for="workspace in filteredWorkspaces"
-            :key="workspace.id"
-            :value="workspace"
-          >
-            {{ workspace.name }}
-          </option>
-        </select>
+        <p>You are about to leave the workspace</p>
+        <p>Are you sure?</p>
       </div>
       <div class="buttonContainer">
-        <button v-if="filteredWorkspaces.length === 0"  class="secondary-button-layout" @click="setActiveModal('createWorkspace')">
-          Create New Workspace
+        <button class="secondary-button-layout" @click="close">
+          Cancel
         </button>
-        <button v-if="filteredWorkspaces.length === 0" class="main-button-layout" @click="setActiveModal('joinWorkspace')">
-          Join Workspace
+        <button v-if="currentWorkspace.owner.id === currentUser.id" class="main-button-layout button-red" @click="confirmDelete">
+          Delete Workspace
         </button>
-        <button v-else class="main-button-layout" @click="confirmSwitch">
-          Switch Workspace
+        <button v-else class="main-button-layout button-red" @click="confirmLeave">
+          Leave Workspace
         </button>
       </div>
       
@@ -40,31 +30,32 @@
 </template>
 
 <script setup>
-import { defineEmits, computed, ref, onMounted } from "vue";
-import { currentWorkspace, workspaces, changeWorkspace } from "@/services/workspaceService";
+import { defineEmits, computed, ref } from "vue";
+import useWorkspaces from "@/composables/useWorkspaces";
 import { currentUser } from "@/store/state";
+const { currentWorkspace, deleteWorkspace, leaveWorkspace } = useWorkspaces();
 
 
 
 const emit = defineEmits(["close", "setActiveModal"]);
-const selectedWorkspace = ref('');
-const filteredWorkspaces = computed(() => {
-  return workspaces.value.filter(
-    (workspace) => workspace.id !== currentWorkspace.value.id
-  );
-});
-const confirmSwitch = () => {
-  changeWorkspace(selectedWorkspace.value);
+
+const confirmDelete = () => {
+  deleteWorkspace(currentWorkspace.id);
   emit("close");
 };
 
-const setActiveModal = (modalName) => {
-  console.log("Emitting modalName:", modalName);
-  emit("setActiveModal", modalName);
+const confirmLeave = () => {
+  leaveWorkspace(currentWorkspace.id);
+  emit("close");
 };
-
 
 const close = () => {
   emit("close");
 };
 </script>
+
+<style scoped>
+@import "@/assets/base.css";
+@import "@/assets/main.css";
+
+</style>

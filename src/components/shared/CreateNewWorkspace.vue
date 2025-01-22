@@ -24,9 +24,10 @@
 </template>
 
 <script setup>
-import { defineEmits, computed } from "vue";
+import { defineEmits,} from "vue";
 import { ref } from "vue";
-import { createWorkspace } from "@/services/workspaceService";
+import useWorkspaces from '@/composables/useWorkspaces';
+const { createWorkspace } = useWorkspaces();
 const emit = defineEmits(["close"]);
 
 const newWorkspaceName = ref("");

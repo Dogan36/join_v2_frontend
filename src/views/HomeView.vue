@@ -16,10 +16,8 @@
       </main>
     </div>
   </div>
-  <DarkBackground v-if="isWorkspaceOverlayVisible" @close="closeOverlay">
-    <WorkspaceInfo @close="closeOverlay"></WorkspaceInfo>
-  </DarkBackground>
-  <DarkBackground v-if="currentWorkspace === null" @close="closeOverlay">
+  
+  <DarkBackground v-if="currentWorkspace === null || isWorkspaceOverlayVisible" @close="closeOverlay">
     <WorkspaceInfo @close="closeOverlay"></WorkspaceInfo>
   </DarkBackground>
 </template>
@@ -38,18 +36,12 @@ import LegalNotice from "@/components/shared/LegalNotice.vue";
 import Help from "@/components/home/Help.vue";
 import WorkspaceInfo from "@/components/shared/WorkspaceInfo.vue";
 import DarkBackground from "@/components/shared/DarkBackground.vue";
-import { currentWorkspace, loadWorkspaces } from "@/services/workspaceService";
+import useWorkspaces from "@/composables/useWorkspaces";
 import { currentUser } from "@/store/state";
-
+const { currentWorkspace, loadWorkspaces } = useWorkspaces();
 onMounted(async () => {
   getUser();
-  try {
-    loadWorkspaces();
-   
-  } catch (error) {
-    console.error("Error loading initial workspace:", error);
-    // Handle error appropriately, possibly setting an error state or showing a notification
-  }
+  loadWorkspaces()
 });
 
 function getUser() { 
