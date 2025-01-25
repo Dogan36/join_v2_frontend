@@ -13,10 +13,8 @@ async function fetchTasks(workspaceId) {
     }
   });
   if (!response.ok) {
-    console.log(response);
     throw new Error(`Failed to fetch tasks: ${response.statusText}`);
   }
-  console.log(response);
   return response.json();
 }
 

@@ -2,19 +2,20 @@
   <div class="contactslistCard" 
   :class="{ active: isActive }"
   @click="$emit('select', contact)">
-    <div class="avatar" :style="{ backgroundColor: contact.color.code, color: textColor }">
+    <div class="avatar" :style="{ backgroundColor: colors[contact.color], color: textColor }">
       {{ contact.avatar }}
+      
     </div>
     <div class="info">
-      <h3>{{ contact.user.first_name }} {{ contact.user.last_name }}</h3>
-      <p>{{ contact.user.email }}</p>
+      <h3>{{ contact.name }} {{ contact.color }} {{ colors[1] }}</h3>
+      <p>{{ contact.email }}</p>
     </div>
   </div>
 </template>
 
 <script setup>
 import { defineProps, computed } from "vue";
-
+import { colors } from "@/utils/colors";
 const props = defineProps({
   contact: Object,
   isActive: Boolean,
@@ -27,6 +28,7 @@ const textColor = computed(() => {
 
 // Berechnung, ob der Hintergrund dunkel oder hell ist
 const isDarkBackground = computed(() => {
+  return
   const hex = props.contact.color.code;
   const rgb = hexToRgb(hex);
   const yiq = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;

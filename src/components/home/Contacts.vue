@@ -32,16 +32,16 @@
 import { onMounted, ref } from "vue";
 import Contactslist from "./ContactsComponents/Contactslist.vue";
 import ContactMainContent from "./ContactsComponents/ContactMainContent.vue";
-import { useContacts } from "@/composables/useContacts";
 import DarkBackground from "../shared/DarkBackground.vue";
 import ContactOverlay from "./ContactsComponents/ContactOverlay.vue";
+import { contacts } from "@/store/state";
 
-const { contacts, fetchContacts } = useContacts();
+
 const selectedContact = ref(null);
 const isOverlayVisible = ref(false);
 const overlayIsEditMode = ref(false);
 onMounted(() => {
-  fetchContacts();
+  console.log(contacts.value);
 });
 
 const setActiveContact = (contact) => {

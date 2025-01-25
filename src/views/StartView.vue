@@ -62,7 +62,7 @@ const toggleForgotPassword = () => {
 
 const checkIfUserIsLoggedIn = () => {
   if (localStorage.getItem('join_token')) {
-    currentUser = JSON.parse(localStorage.getItem('join_user'));
+    currentUser.value = JSON.parse(localStorage.getItem('join_user'));
     window.location.href = '/home';
   }
 };

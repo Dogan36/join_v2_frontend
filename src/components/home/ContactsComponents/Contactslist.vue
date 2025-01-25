@@ -7,7 +7,7 @@
         <!-- Nur im Parent den Klick handhaben -->
         <ContactslistCard
           :contact="contact"
-          :isActive="contact.user.email === selectedContact?.user.email"
+          :isActive="contact.email === selectedContact?.email"
           @select="emitSelectedContact(contact)"
         />
       </div>
@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import {computed } from "vue";
 import ContactslistCard from "./ContactslistCard.vue";
 import { defineProps, defineEmits } from "vue";
 import { contacts } from "@/store/state";
@@ -31,10 +31,11 @@ const emitSelectedContact = (contact) => {
 };
 
 const groupedContacts = computed(() => {
+  console.log(contacts.value);
   // Hier wird eine Gruppierung der Kontakte nach dem ersten Buchstaben des Vornamens erstellt
   return contacts.value.reduce((groups, contact) => {
     // Den ersten Buchstaben des Vornamens extrahieren und in Großbuchstaben umwandeln
-    const firstLetter = contact.user.first_name[0].toUpperCase();
+    const firstLetter = contact.name[0].toUpperCase();
 
     // Überprüfen, ob es bereits eine Gruppe für diesen Buchstaben gibt
     if (!groups[firstLetter]) {

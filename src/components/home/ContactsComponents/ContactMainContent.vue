@@ -13,13 +13,13 @@
       <div class="cardHeader">
         <div
           class="cardAvatar"
-          :style="{ backgroundColor: selectedContact.color.code, color: textColor }"
+          :style="{ backgroundColor: 'yellow', color: textColor }"
         >
           {{ selectedContact.avatar }}
         </div>
         <div class="cardHeaderContent">
           <span>{{
-            selectedContact.user.first_name + " " + selectedContact.user.last_name
+            selectedContact.name
           }}</span>
 
           <div class="cardHeaderEdits">
@@ -38,11 +38,11 @@
       <div class="cardInfo">
         <div class="cardEmailContainer">
           <span>Email</span>
-          <a href="mailto:">{{ selectedContact.user.email }}</a>
+          <a href="mailto:">{{ selectedContact.email }}</a>
         </div>
         <div class="cardPhoneContainer">
           <span>Phone</span>
-          <a href="tel:">{{ selectedContact.user.phone }}</a>
+          <a href="tel:">{{ selectedContact.phone }}</a>
         </div>
       </div>
     </div>
@@ -72,6 +72,7 @@ const textColor = computed(() => {
 
 // Berechnung, ob der Hintergrund dunkel oder hell ist
 const isDarkBackground = computed(() => {
+  return
   const hex = props.selectedContact.color.code;
   const rgb = hexToRgb(hex);
   const yiq = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;

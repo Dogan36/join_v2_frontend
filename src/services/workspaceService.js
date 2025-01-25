@@ -3,7 +3,6 @@ import { API_BASE_URL } from '@/config';
 const getToken = () => localStorage.getItem('join_token');
 
 async function fetchWorkspaceById(workspaceId) {
-    console.log("fetchWorkspaceById");
     const token = getToken();
     const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/${workspaceId}`, {
       method: 'GET',
@@ -46,7 +45,7 @@ async function fetchWorkspaceById(workspaceId) {
 }
 
 async function fetchWorkspaces() {
-  console.log("fetchWorkspaces");
+  
   const token = getToken();
   const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/`, {
     method: 'GET',
