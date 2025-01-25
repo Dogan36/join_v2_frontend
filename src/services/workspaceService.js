@@ -1,10 +1,10 @@
 import { API_BASE_URL } from '@/config';
-import { currentWorkspace } from '@/store/state';
 
 const getToken = () => localStorage.getItem('join_token');
 
 async function fetchWorkspaceById(workspaceId) {
-    const token = localStorage.getItem('join_token');
+    console.log("fetchWorkspaceById");
+    const token = getToken();
     const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/${workspaceId}`, {
       method: 'GET',
       headers: {

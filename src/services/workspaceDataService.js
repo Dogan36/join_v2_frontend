@@ -1,35 +1,36 @@
 import { API_BASE_URL } from '@/config';
 
-async function fetchTasks(workspaceId) {
-    const response = await fetch(`${API_BASE_URL}/workspaces/${workspaceId}/tasks`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch tasks: ${response.statusText}`);
-    }
-    return response.json();
-  }
-  
-async function fetchMembers(workspaceId) {
-    const response = await fetch(`${API_BASE_URL}/workspaces/${workspaceId}/members`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch members: ${response.statusText}`);
-    }
-    return response.json();
-  }
+const getToken = () => localStorage.getItem('join_token');
 
-async function fetchSubtasks(workspaceId) {
-    const response = await fetch(`${API_BASE_URL}/workspaces/${workspaceId}/subtasks`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch subtasks: ${response.statusText}`);
+async function fetchTasks(workspaceId) {
+  const token = getToken();
+  // Füge die workspaceId in die URL ein, um die Aufgaben dieses spezifischen Workspaces abzurufen
+  const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/${workspaceId}/tasks/`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Token ${token}`,
+      'Content-Type': 'application/json',
     }
-    return response.json();
+  });
+  if (!response.ok) {
+    console.log(response);
+    throw new Error(`Failed to fetch tasks: ${response.statusText}`);
   }
+  console.log(response);
+  return response.json();
+}
+
 
 async function fetchCategories(workspaceId) {
-    const response = await fetch(`${API_BASE_URL}/workspaces/${workspaceId}/categories`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch categories: ${response.statusText}`);
-    }
+    const token = getToken();
+    const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/${workspaceId}/categories/`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Token ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
     return response.json();
   }
 
-export { fetchTasks, fetchMembers, fetchSubtasks, fetchCategories };
+export { fetchTasks, fetchCategories };

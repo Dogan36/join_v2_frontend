@@ -1,26 +1,22 @@
 import { ref, watch } from 'vue';
-import { fetchTasks, fetchMembers, fetchSubtasks, fetchCategories } from '@/services/workspaceDataService'; // Pseudo-API-Aufrufe
-
-export default function useWorkspaceData(currentWorkspace) {
+import { fetchTasks, fetchCategories } from '@/services/workspaceDataService';
+import { currentWorkspace } from './useWorkspaces';
+export default function useWorkspaceData() {
     const tasks = ref([]);
     const members = ref([]);
     const subtasks = ref([]);
     const categories = ref([]);
 
     const loadWorkspaceData = async () => {
-        if (currentWorkspace.value) {
+        if (currentWorkspace.value !== null) {
             tasks.value = await fetchTasks(currentWorkspace.value.id);
-            members.value = await fetchMembers(currentWorkspace.value.id);
-            subtasks.value = await fetchSubtasks(currentWorkspace.value.id);
+            console.log(tasks.value)
+            members.value = currentWorkspace.value.members;
+            console.log(members.value)
             categories.value = await fetchCategories(currentWorkspace.value.id);
+            console.log(categories.value)
         }
     };
-
-    watch(currentWorkspace, (newVal, oldVal) => {
-        if (newVal !== oldVal) {
-            loadWorkspaceData();
-        }
-    }, { immediate: true });
 
     return {
         tasks,
