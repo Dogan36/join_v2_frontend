@@ -54,7 +54,8 @@
 <script setup>
 import { ref, onMounted, computed, defineEmits } from "vue";
 import InputField from "@/components/shared/InputField.vue";
-
+import useContacts from "@/composables/useContacts";
+const { addContact } = useContacts();
 const props = defineProps({
   contact: {
     type: Object,
@@ -95,7 +96,7 @@ const save = () => {
   resetErrors();
 
   if (checkForErrors()) {
-    if (isEditMode.value) {
+    if (isEditMode) {
       console.log("Updating contact:", {
         name: contactName.value,
         email: contactEmail.value,
@@ -103,6 +104,11 @@ const save = () => {
       });
     } else {
       console.log("Creating new contact:", {
+        name: contactName.value,
+        email: contactEmail.value,
+        phone: contactPhone.value,
+      });
+      addContact({
         name: contactName.value,
         email: contactEmail.value,
         phone: contactPhone.value,

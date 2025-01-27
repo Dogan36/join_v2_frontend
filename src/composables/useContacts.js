@@ -1,5 +1,5 @@
-import { ref } from "vue";
-import { fetchContacts } from "@/services/contactsService";
+
+import { fetchContacts, addNewContact } from "@/services/contactsService";
 const getToken = () => localStorage.getItem('join_token');
 import { contacts } from "@/store/state";
 
@@ -15,8 +15,20 @@ export default function useContacts() {
       }
     }
 
+    const addContact = async (contact) => {
+        if (token) {
+            try {
+            await addNewContact(contact);
+            await loadContacts();
+            } catch (error) {
+            console.error('Fehler beim Hinzufügen des Contacts:', error);
+            }
+        }
+    }
+
     return {
         contacts,
-        loadContacts
+        loadContacts,
+        addContact,
     }
 }

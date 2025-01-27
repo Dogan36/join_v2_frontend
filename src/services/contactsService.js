@@ -19,5 +19,24 @@ async function fetchContacts() {
     return response.json();
 }
 
+async function addNewContact(contact) {
+    const token = getToken();
+    const response = await fetch(`${API_BASE_URL}/user/contacts/`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Token ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(contact),
+    });
+    if (!response.ok) {
+      throw new Error(`Fehler beim Hinzufügen des Contacts: ${response.statusText}`);
+    }
+    return response.json();
+      
+}
+
 export { 
-    fetchContacts };
+    fetchContacts,
+    addNewContact
+  };
