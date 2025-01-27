@@ -2,20 +2,22 @@
   <div class="contactslistCard" 
   :class="{ active: isActive }"
   @click="$emit('select', contact)">
-    <div class="avatar" :style="{ backgroundColor: colors[contact.color], color: textColor }">
+    <div class="avatar" :style="{ backgroundColor: contact.color.hex_value, color: textColor }">
       {{ contact.avatar }}
-      
     </div>
     <div class="info">
-      <h3>{{ contact.name }} {{ contact.color }} {{ colors[1] }}</h3>
+      <h3>{{ contact.name }}</h3>
       <p>{{ contact.email }}</p>
+    </div>
+    <div v-if="contact.isMember" class="contact-image">
+      <img src="@/assets/img/logo.svg" alt="Join Logo" />
     </div>
   </div>
 </template>
 
 <script setup>
 import { defineProps, computed } from "vue";
-import { colors } from "@/utils/colors";
+
 const props = defineProps({
   contact: Object,
   isActive: Boolean,
@@ -28,8 +30,7 @@ const textColor = computed(() => {
 
 // Berechnung, ob der Hintergrund dunkel oder hell ist
 const isDarkBackground = computed(() => {
-  return
-  const hex = props.contact.color.code;
+  const hex = props.contact.color.hex_value;
   const rgb = hexToRgb(hex);
   const yiq = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
   return yiq < 128; // Dunkel: Textfarbe weiß, hell: Textfarbe schwarz
@@ -60,6 +61,7 @@ function hexToRgb(hex) {
   font-size: 16px;
 }
 .contactslistCard {
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -69,6 +71,16 @@ function hexToRgb(hex) {
   border-radius: 10px;
   margin-bottom: 1rem;
   transition: all 0.3s ease;
+  .contact-image{
+    position: absolute;
+    right: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      width: 2rem;
+    }
+  }
   &:hover {
     background: linear-gradient(180deg, #c9c9c9 0%, #d9d6d6 100%);
   }
@@ -86,7 +98,10 @@ function hexToRgb(hex) {
     color: #ffffff;
   }
   .avatar {
-    border: 2px solid #ffffff;
+    background-color: unset;
+  }
+  .contact-image img {
+    content: url('@/assets/img/logoInvert.svg');
   }
 }
 

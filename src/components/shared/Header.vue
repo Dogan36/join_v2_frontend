@@ -9,7 +9,7 @@
         alt=""
         @click="changeView('help')"
       />
-      <div class="headerUserProfilInitials" @click="openUserMenu"></div>
+      <div class="headerUserProfilInitials" @click="openUserMenu">{{ currentUser.avatar }}</div>
     </div>
 
     <div class="userMenuContent" v-if="showUserMenu">
@@ -24,7 +24,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { currentView, isWorkspaceOverlayVisible } from "@/store/state";
+import { currentUser, currentView, isWorkspaceOverlayVisible } from "@/store/state";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const showUserMenu = ref(false);

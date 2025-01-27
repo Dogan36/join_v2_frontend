@@ -10,16 +10,19 @@ import { fetchWorkspaces,
 import { useConfirmationOverlay } from './useConfirmationOverlay';
 import { useLoadingOverlay } from './useLoadingOverlay';
 import useWorkspaceData from './useWorkspaceData';
+import { getToken } from '@/store/state';
+const token = getToken();
 const { loadWorkspaceData } = useWorkspaceData();
 export const currentWorkspace = ref();
 const workspaces = ref([]);
-const token = localStorage.getItem('join_token');
+
 
 export default function useWorkspaces() {
   const { showConfirmation } = useConfirmationOverlay();  
   const { showOverlay, hideOverlay } = useLoadingOverlay();
 
   const determineInitialWorkspace = async () => {
+    if (token) {
     const currentWorkspaceId = Number(localStorage.getItem('currentWorkspaceId'));
     if (currentWorkspaceId) {
       const foundWorkspace = workspaces.value.find(ws => ws.id === currentWorkspaceId);
@@ -33,6 +36,7 @@ export default function useWorkspaces() {
     } else {
       currentWorkspace.value = await fetchFirstWorkspace();
     }
+  }
   };
 
   
@@ -99,7 +103,6 @@ export default function useWorkspaces() {
   const leaveWorkspace = async () => {
     showOverlay();
     try {
-      const token = localStorage.getItem('join_token');
       if (!token) {
         throw new Error("Kein Token gefunden. Der Benutzer ist nicht authentifiziert.");
       }
@@ -117,7 +120,6 @@ export default function useWorkspaces() {
   const deleteWorkspace = async () => {
     showOverlay();
     try {
-      const token = localStorage.getItem('join_token');
       if (!token) throw new Error("Kein Token gefunden. Der Benutzer ist nicht authentifiziert.");
       await deleteWorkspaceAPI(token, currentWorkspace.value.id);
       showConfirmation("Workspace erfolgreich gelöscht.");

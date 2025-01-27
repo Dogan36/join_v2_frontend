@@ -103,7 +103,7 @@ async function signUp(name, email, password) {
       body: JSON.stringify({ name, email, password })
      
     });
-
+    console.log(JSON.stringify({ name, email, password }))
     if (response.ok) {
       const data = await response.json();
       localStorage.setItem("join_token", data.token);

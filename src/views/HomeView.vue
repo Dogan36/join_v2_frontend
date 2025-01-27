@@ -5,7 +5,7 @@
       <Header />
       
       <main>
-        <div>{{currentWorkspace}}</div>
+        <div>{{contacts}}</div>
         <Summary v-if="currentView === 'summary'" />
         <Board v-if="currentView === 'board'" />
         <AddTask v-if="currentView === 'addTask'" />
@@ -24,7 +24,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { currentView, isWorkspaceOverlayVisible } from "@/store/state";
+import { contacts, currentView, isWorkspaceOverlayVisible } from "@/store/state";
 import MenuContainer from "@/components/shared/MenuContainer.vue";
 import Header from "@/components/shared/Header.vue";
 import Summary from "@/components/home/Summary.vue";
@@ -37,11 +37,15 @@ import Help from "@/components/home/Help.vue";
 import WorkspaceInfo from "@/components/shared/WorkspaceInfo.vue";
 import DarkBackground from "@/components/shared/DarkBackground.vue";
 import useWorkspaces from "@/composables/useWorkspaces";
+import useContacts from "@/composables/useContacts";
 import { currentUser } from "@/store/state";
+
 const { currentWorkspace, loadWorkspaces } = useWorkspaces();
+const { loadContacts } = useContacts();
 onMounted(async () => {
   getUser();
-  loadWorkspaces()
+  loadWorkspaces();
+  loadContacts();
 });
 
 function getUser() { 

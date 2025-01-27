@@ -13,7 +13,7 @@
       <div class="cardHeader">
         <div
           class="cardAvatar"
-          :style="{ backgroundColor: 'yellow', color: textColor }"
+          :style="{ backgroundColor: selectedContact.color.hex_value, color: textColor }"
         >
           {{ selectedContact.avatar }}
         </div>
@@ -22,7 +22,7 @@
             selectedContact.name
           }}</span>
 
-          <div class="cardHeaderEdits">
+          <div v-if="!selectedContact.isMember" class="cardHeaderEdits">
             <div @click="$emit('openOverlay', true)" class="edit">
               <img src="@/assets/img/editIcon.svg" alt="" />
               <span>Edit</span>
@@ -72,8 +72,7 @@ const textColor = computed(() => {
 
 // Berechnung, ob der Hintergrund dunkel oder hell ist
 const isDarkBackground = computed(() => {
-  return
-  const hex = props.selectedContact.color.code;
+  const hex = props.selectedContact.color.hex_value;
   const rgb = hexToRgb(hex);
   const yiq = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
   return yiq < 128; // Dunkel: Textfarbe weiß, hell: Textfarbe schwarz
