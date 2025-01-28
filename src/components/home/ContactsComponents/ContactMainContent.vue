@@ -27,7 +27,7 @@
               <img src="@/assets/img/editIcon.svg" alt="" />
               <span>Edit</span>
             </div>
-            <div class="edit">
+            <div @click="deleteContact" class="edit">
               <img src="@/assets/img/delete.svg" alt="" />
               <span>Delete</span>
             </div>
@@ -56,23 +56,22 @@
 </template>
 
 <script setup>
-import { defineProps, computed } from "vue";
-
-const props = defineProps({
-  selectedContact: {
-    type: Object,
-    // Sicherstellen, dass ein Contact übergeben wird
-  },
-});
-
+import { computed } from "vue";
+import { selectedContact } from "@/store/state";
+import { defineEmits } from "vue";
+import  useContacts  from "@/composables/useContacts";
+const { deleteContact } = useContacts();
+const emit = defineEmits(["openOverlay"]); // Definiere ein Event für das Parent
 
 const textColor = computed(() => {
-  return isDarkBackground.value ? '#fff' : '#000'; // Weiß bei dunklem Hintergrund, Schwarz bei hellem
+  return isDarkBackground.value ? '#fff' : '#000';
 });
 
 // Berechnung, ob der Hintergrund dunkel oder hell ist
 const isDarkBackground = computed(() => {
-  const hex = props.selectedContact.color.hex_value;
+  if(selectedContact === null) return false;
+  console.log(selectedContact.value);
+  const hex = selectedContact.value.color.hex_value;
   const rgb = hexToRgb(hex);
   const yiq = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
   return yiq < 128; // Dunkel: Textfarbe weiß, hell: Textfarbe schwarz

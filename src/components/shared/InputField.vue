@@ -173,4 +173,16 @@ const emitIconClick = () => {
   font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; /* Übernimmt die Schriftart */
   opacity: 1; /* Sichtbarkeit des Platzhalters */
 }
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Spinner in Firefox ausblenden */
+input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
 </style>

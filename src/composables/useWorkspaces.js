@@ -169,8 +169,6 @@ watch(currentWorkspace, async (newWorkspace, oldWorkspace) => {
   }
 });
 
-
-
 const setCurrentWorkspace = () => {
   if (currentWorkspace.value && currentWorkspace.value.id) {
     localStorage.setItem('currentWorkspaceId', currentWorkspace.value.id.toString());

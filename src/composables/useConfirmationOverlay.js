@@ -3,13 +3,14 @@ import { ref } from 'vue';
 const isConfirmationVisible = ref(false);
 const confirmationMessage = ref('');
 let autoCloseTimer = null; // zum Merken des Timers
-
+import { useLoadingOverlay } from './useLoadingOverlay';
 // Zeit in Millisekunden, nach der das Overlay automatisch schließt
 const AUTO_CLOSE_DURATION = 2000;  
 
 export function useConfirmationOverlay() {
+  const { hideOverlay } = useLoadingOverlay();
   function showConfirmation(message) {
-    // Falls schon ein Timer läuft, abbrechen
+    hideOverlay();
     if (autoCloseTimer) {
       clearTimeout(autoCloseTimer);
       autoCloseTimer = null;

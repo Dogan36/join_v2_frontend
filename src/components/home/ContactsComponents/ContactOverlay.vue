@@ -3,13 +3,19 @@
     <div class="overlayHeader">
       <img src="@/assets/img/logoInvert.svg" alt="" />
       <div class="overlayHeaderText">
-        <h1>{{ isEditMode ? "Edit Contact" : "Add Contact" }}</h1>
+        <h1>{{ contactOverlayIsEditMode ? "Edit Contact" : "Add Contact" }}</h1>
         <h2>Tasks are better with a team!</h2>
         <img src="@/assets/img/headlineSeperator.svg" alt="" />
       </div>
     </div>
     <div class="overLayContent">
-      <img src="@/assets/img/newContactIcon.svg" alt="" />
+      <img v-if="!contactOverlayIsEditMode" src="@/assets/img/newContactIcon.svg" alt="Contact Icon" />
+      <div v-else
+          class="cardAvatar"
+          :style="{ backgroundColor: selectedContact.color?.hex_value || '#ffffff', color: textColor }"
+        >
+          {{ selectedContact.avatar }}
+        </div>
       <form class="inputContainer" @submit.prevent="save" novalidate>
         <InputField
           v-model="contactName"
@@ -35,7 +41,7 @@
         />
         <InputField
           v-model="contactPhone"
-          type="phone"
+          type="number"
           placeholder="Phone"
           icon="src/assets/img/phone.svg"
         />
@@ -43,7 +49,7 @@
         <div class="formButtons">
           <div class="secondary-button-layout" @click="cancel">Cancel</div>
           <div class="main-button-layout" @click="save">
-            {{ isEditMode ? "Save Changes" : "Create Contact" }}
+            {{ contactOverlayIsEditMode ? "Save Changes" : "Create Contact" }}
           </div>
         </div>
       </form>
@@ -55,21 +61,13 @@
 import { ref, onMounted, computed, defineEmits } from "vue";
 import InputField from "@/components/shared/InputField.vue";
 import useContacts from "@/composables/useContacts";
-const { addContact } = useContacts();
-const props = defineProps({
-  contact: {
-    type: Object,
-    default: null, // Kein Kontakt übergeben -> Add-Modus
-  },
-    isEditMode: {
-        type: Boolean,
-        default: false,
-    },
-});
+const { saveContact } = useContacts();
+import { selectedContact, contactOverlayIsEditMode } from "@/store/state";
+
 
 const emit = defineEmits(["close"]);
 
-const isEditMode =  props.isEditMode;
+
 
 const contactName = ref("");
 const contactEmail = ref("");
@@ -80,40 +78,29 @@ const emailFormatError = ref(false);
 const emailTakenError = ref(false);
 
 onMounted(() => {
+  console.log(contactOverlayIsEditMode.value)
   initializeForm();
 });
 
 const initializeForm = () => {
-    console.log(props.contact);
-  if (isEditMode && props.contact) {
-    contactName.value = props.contact.user.first_name + props.contact.user.last_name  || "";
-    contactEmail.value = props.contact.user.email || "";
-    contactPhone.value = props.contact.user.phone || "";
+  console.log(contactOverlayIsEditMode.value)
+  if (contactOverlayIsEditMode.value) {
+    contactName.value = selectedContact.value.name;
+    contactEmail.value = selectedContact.value.email;
+    contactPhone.value = selectedContact.value.phone || "";
   }
 };
 
 const save = () => {
   resetErrors();
-
   if (checkForErrors()) {
-    if (isEditMode) {
-      console.log("Updating contact:", {
-        name: contactName.value,
-        email: contactEmail.value,
-        phone: contactPhone.value,
-      });
-    } else {
-      console.log("Creating new contact:", {
-        name: contactName.value,
-        email: contactEmail.value,
-        phone: contactPhone.value,
-      });
-      addContact({
-        name: contactName.value,
-        email: contactEmail.value,
-        phone: contactPhone.value,
-      });
-    }
+    const contact = {
+      name: contactName.value,
+      email: contactEmail.value,
+      phone: contactPhone.value,
+    };
+    saveContact(contact, selectedContact.id);
+    resetForm();
   } else {
     console.log("Form validation failed");
   }
@@ -167,14 +154,28 @@ const checkEmailFormat = () => {
 };
 
 const checkEmailDatabase = () => {
-  const emailDatabase = ["user@example.com", "admin@example.com"];
-
-  const isSameAsCurrentEmail =
-    isEditMode && props.contact?.email === contactEmail.value;
-  emailTakenError.value =
-    !isSameAsCurrentEmail && emailDatabase.includes(contactEmail.value);
-  return !emailTakenError.value;
+  return true; // Hier müsste die Überprüfung in der Datenbank erfolgen
 };
+
+const textColor = computed(() => {
+  return isDarkBackground.value ? '#fff' : '#000'; // Weiß bei dunklem Hintergrund, Schwarz bei hellem
+});
+
+// Berechnung, ob der Hintergrund dunkel oder hell ist
+const isDarkBackground = computed(() => {
+  const hex = selectedContact.value.color.hex_value;
+  const rgb = hexToRgb(hex);
+  const yiq = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+  return yiq < 128; // Dunkel: Textfarbe weiß, hell: Textfarbe schwarz
+});
+
+// Funktion zum Umwandeln von Hex in RGB
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return { r, g, b };
+}
 </script>
 
 <style scoped>
@@ -237,4 +238,21 @@ const checkEmailDatabase = () => {
     width: 120px;
   }
 }
+
+.cardAvatar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      min-width: 12rem;
+      min-height: 12rem;
+      border: 1px solid #ffffff;
+      border-radius: 100%;
+      font-weight: 500;
+      font-size: 47px;
+      align-self: center;
+      line-height: 12rem;
+    }
+
+
 </style>

@@ -27,13 +27,11 @@
 <script setup>
 import {computed, ref } from "vue";
 import ContactslistCard from "./ContactslistCard.vue";
-import { defineProps, defineEmits } from "vue";
+import { defineEmits } from "vue";
 import { contacts } from "@/store/state";
 import { members } from "@/store/state";
-import { currentUser } from "@/store/state";
-const props = defineProps({
-  selectedContact: Object || null,
-});
+import { currentUser, selectedContact } from "@/store/state";
+import useContacts from "@/composables/useContacts";
 const selectedFilter = ref('all');
 
 const emit = defineEmits(["updateContact"]); // Definiere ein Event für das Parent
@@ -58,18 +56,11 @@ const combinedContacts = computed(() => {
 });
 
 const groupedContacts = computed(() => {
-  console.log(contacts.value);
-  // Hier wird eine Gruppierung der Kontakte nach dem ersten Buchstaben des Vornamens erstellt
   return combinedContacts.value.reduce((groups, contact) => {
-    // Den ersten Buchstaben des Vornamens extrahieren und in Großbuchstaben umwandeln
     const firstLetter = contact.name[0].toUpperCase();
-
-    // Überprüfen, ob es bereits eine Gruppe für diesen Buchstaben gibt
     if (!groups[firstLetter]) {
       groups[firstLetter] = [];
     }
-
-    // Den Kontakt der entsprechenden Gruppe hinzufügen
     groups[firstLetter].push(contact);
     return groups;
   }, {});
