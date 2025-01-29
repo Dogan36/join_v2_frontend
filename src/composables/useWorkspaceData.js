@@ -1,6 +1,5 @@
 import { fetchTasks, fetchCategories } from '@/services/workspaceDataService';
-import { currentWorkspace } from './useWorkspaces';
-import { members, tasks, categories } from '@/store/state';
+import { members, tasks, categories, currentWorkspace } from '@/store/state';
 
 export default function useWorkspaceData() {
     
@@ -9,6 +8,7 @@ export default function useWorkspaceData() {
             tasks.value = await fetchTasks(currentWorkspace.value.id);
             members.value = currentWorkspace.value.members;
             categories.value = await fetchCategories(currentWorkspace.value.id);
+            console.log(categories.value);
         }
     };
 

@@ -43,8 +43,8 @@
 import { defineEmits, computed, ref, onMounted } from "vue";
 import useWorkspaces from "@/composables/useWorkspaces";
 
-const { workspaces, changeWorkspace, currentWorkspace } = useWorkspaces();
-
+const { changeWorkspace } = useWorkspaces();
+import {currentWorkspace, workspaces } from '@/store/state';
 
 const emit = defineEmits(["close", "setActiveModal"]);
 const selectedWorkspace = ref('');

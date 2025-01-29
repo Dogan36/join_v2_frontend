@@ -103,7 +103,6 @@
 </template>
 
 <script setup>
-import  useWorkspaces from "@/composables/useWorkspaces";
 import { onMounted, ref,  } from "vue";
 
 import CreateNewWorkspace from "./CreateNewWorkspace.vue";
@@ -112,7 +111,7 @@ import InviteToWorkspace from "./InviteToWorkspace.vue";
 import LeaveWorkspaceConfirmation from "./LeaveWorkspaceConfirmation.vue";
 import JoinWorkspace from "./JoinWorkspace.vue";
 
-const { currentWorkspace } = useWorkspaces()
+import {currentWorkspace } from '@/store/state';
 
 onMounted(() => {
   console.log("Current Workspace:", currentWorkspace.value);

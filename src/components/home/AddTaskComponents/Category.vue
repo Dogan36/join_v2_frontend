@@ -12,7 +12,7 @@
     <div class="dropDownOption" v-if="selectedCategory">
       <div class="dropDownOptionContent">
         {{ selectedCategory.name }}
-        <div class="colorCategoryButton" v-bind:style="{ backgroundColor: selectedCategory.color.code }"></div>
+        <div class="colorCategoryButton" v-bind:style="{ backgroundColor: selectedCategory.color.hex_value }"></div>
       </div>
       <img class="arrowIcon" src="@/assets/img/arrowIcon.svg" :style="selectingCategory ? 'rotate: 180deg' : 'rotate:0deg'" alt="Delete" />
     </div>
@@ -33,7 +33,7 @@
       >
         <div class="dropDownOptionContent">
           {{ category.name }}
-          <div class="colorCategoryButton" v-bind:style="{ backgroundColor: category.color.code }"></div>
+          <div class="colorCategoryButton" v-bind:style="{ backgroundColor: category.color.hex_value }"></div>
         </div>
         <img @click.stop="deleteCategory(category.id)"
         src="@/assets/img/delete.png"
@@ -41,7 +41,7 @@
       </div>
     </div>        
   </div>
-  <CategoryNew :categories="categories" v-if="addingNewCategory" @toggle="toggleAddingNewCategory" @newCategory="addNewCategoryToList"></CategoryNew> 
+  <CategoryNew v-if="addingNewCategory" @toggle="toggleAddingNewCategory"></CategoryNew> 
   <p v-if="!addingNewCategory" class="error-message">{{ error }}</p> 
 </template>
   
@@ -51,33 +51,19 @@
 import { ref } from 'vue';
 import CategoryNew from './CategoryNew.vue';
 import { API_BASE_URL } from '@/config';
-import { defineEmits, defineExpose, onMounted } from 'vue';
+import { defineEmits, defineExpose} from 'vue';
+import { categories, getToken, currentWorkspace, selectedCategory } from '@/store/state';
+import { useConfirmationOverlay } from '@/composables/useConfirmationOverlay';
+import { useLoadingOverlay } from '@/composables/useLoadingOverlay';
+const { showConfirmation } = useConfirmationOverlay();
+const { showOverlay, hideOverlay } = useLoadingOverlay();
 const selectingCategory = ref(false);
-const selectedCategory = ref(null);
 const addingNewCategory = ref(false);
-const error = ref('');
-const categories = ref([]);
-// Fetch Categories from Backend
-const fetchCategories = async () => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/categories/`, {
-      method: 'GET',
-     
-    });
-    
-    if (!response.ok) {
-      throw new Error('Failed to fetch categories');
-    }
-    const data = await response.json();
-    console.log(data);
-    categories.value = data; // Kategorien ins Array speichern
-  } catch (error) {
-    console.error('Error fetching categories:', error.message);
-  }
-};
 
-// Lade Kategorien, wenn die Komponente gemountet wird
-onMounted(fetchCategories);
+const workspaceId = currentWorkspace.value.id;
+const error = ref('');
+const token = getToken();
+
 
 const setCategory = (category) => {
   selectedCategory.value = category;
@@ -88,10 +74,6 @@ const toggleSelectCategory = () => {
     selectingCategory.value = !selectingCategory.value
 };
 
-const addNewCategoryToList = (createdCategory) => {
-  categories.value.push(createdCategory); // Fügt die neue Kategorie inkl. ID hinzu
-  selectedCategory.value = createdCategory; // Wählt die neue Kategorie aus
-};
 
 const selectCategory = (category) => {
     selectedCategory.value = category;
@@ -99,28 +81,27 @@ const selectCategory = (category) => {
 };
 
 const deleteCategory = async (categoryId) => {
+  showOverlay();
   try {
-    // Sende die DELETE-Anfrage an das Backend
-    const response = await fetch(`${API_BASE_URL}/categories/${categoryId}/`, {
+    const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/${workspaceId}/categories/${categoryId}/`, {
       method: 'DELETE',
+      headers: {
+        'Authorization': `Token ${token}`,
+        'Content-Type': 'application/json',
+      }
     });
-
     if (!response.ok) {
       throw new Error('Failed to delete category');
     }
-
-    // Entferne die Kategorie aus der Liste nach erfolgreicher Löschung
     categories.value = categories.value.filter((category) => category.id !== categoryId);
-
-    // Entferne die Auswahl, falls die gelöschte Kategorie ausgewählt war
     if (selectedCategory.value?.id === categoryId) {
       selectedCategory.value = null;
     }
-
-    console.log(`Category with ID ${categoryId} deleted successfully`);
+    showConfirmation('Category deleted successfully');
   } catch (error) {
     console.error('Error deleting category:', error.message);
   }
+  hideOverlay();
 };
 
 

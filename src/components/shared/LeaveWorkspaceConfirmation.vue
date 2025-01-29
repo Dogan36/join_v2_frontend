@@ -32,8 +32,8 @@
 <script setup>
 import { defineEmits, computed, ref } from "vue";
 import useWorkspaces from "@/composables/useWorkspaces";
-import { currentUser } from "@/store/state";
-const { currentWorkspace, deleteWorkspace, leaveWorkspace } = useWorkspaces();
+import { currentUser, currentWorkspace } from "@/store/state";
+const { deleteWorkspace, leaveWorkspace } = useWorkspaces();
 
 
 

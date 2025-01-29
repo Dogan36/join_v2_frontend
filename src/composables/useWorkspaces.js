@@ -10,11 +10,11 @@ import { fetchWorkspaces,
 import { useConfirmationOverlay } from './useConfirmationOverlay';
 import { useLoadingOverlay } from './useLoadingOverlay';
 import useWorkspaceData from './useWorkspaceData';
-import { getToken } from '@/store/state';
+import { getToken, currentWorkspace, workspaces } from '@/store/state';
 const token = getToken();
 const { loadWorkspaceData } = useWorkspaceData();
-export const currentWorkspace = ref();
-const workspaces = ref([]);
+
+
 
 
 export default function useWorkspaces() {
@@ -148,8 +148,7 @@ export default function useWorkspaces() {
   }
 
   return {
-    workspaces,
-    currentWorkspace,
+   
     loadCurrentWorkspace,
     loadWorkspaces,
     addWorkspace,

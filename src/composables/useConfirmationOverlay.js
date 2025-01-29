@@ -10,6 +10,7 @@ const AUTO_CLOSE_DURATION = 2000;
 export function useConfirmationOverlay() {
   const { hideOverlay } = useLoadingOverlay();
   function showConfirmation(message) {
+    console.log('showConfirmation');
     hideOverlay();
     if (autoCloseTimer) {
       clearTimeout(autoCloseTimer);

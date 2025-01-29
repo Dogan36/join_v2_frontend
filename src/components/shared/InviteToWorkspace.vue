@@ -36,7 +36,8 @@
 <script setup>
 import { defineEmits, ref } from "vue";
 import useWorkspaces from "@/composables/useWorkspaces";
-const { currentWorkspace, invitePerEmail } = useWorkspaces();
+const { invitePerEmail } = useWorkspaces();
+import { currentWorkspace } from "@/store/state";
 const emit = defineEmits(["close"]);
 const shareCodeEmail = ref("");
 const error = ref("");
