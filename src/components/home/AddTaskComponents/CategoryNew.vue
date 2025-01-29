@@ -3,7 +3,7 @@
     <input v-model="newCategoryName" placeholder="Enter new category"></input>
     <div :style="{ backgroundColor: newCategoryColor?.hex_value }" class="newCategoryColor"></div>
     <div class="iconContainer">
-      <img @click="closeAddTaskNewCategory" :src="blackXIcon" alt="" />
+      <img @click="emit('toggle')" :src="blackXIcon" alt="" />
       <div class="graySeperator"></div>
       <img @click="addNewCategory" :src="blackCheckIcon" alt="" />
     </div>
@@ -70,12 +70,12 @@ const checkCatgeoriesNameTaken = () => {
 
 
 const loadColors = async () => {
-  console.log("fetchColors");
   try {
     const colorsData = await fetchColors();
     const usedColorIds = categories.value.map(category => category.color.id);
     const availableColors = colorsData.filter(color => !usedColorIds.includes(color.id));
-    colors.value = availableColors.slice(0, 5);
+    const shuffledColors = availableColors.sort(() => Math.random() - 0.5);
+    colors.value = shuffledColors.slice(0, 5);
     newCategoryColor.value = colors.value[0] || null;
   } catch (error) {
     console.error('Error fetching colors:', error.message);
@@ -95,12 +95,13 @@ const fetchColors = async () => {
   }
 };
 onMounted(loadColors);
+
 const addNewCategoryToList = (createdCategory) => {
   categories.value.push(createdCategory); // Fügt die neue Kategorie inkl. ID hinzu
   selectedCategory.value = createdCategory; // Wählt die neue Kategorie aus
 };
 const addNewCategory = async () => {
-  console.log(newCategoryColor.value.id)
+
   if (!checkNewCategoryName() || !checkCatgeoriesLength() || !checkCatgeoriesNameTaken()) {
     return;
   }
