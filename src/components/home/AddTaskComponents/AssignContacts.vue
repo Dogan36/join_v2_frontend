@@ -34,15 +34,14 @@
 <script setup>
 import { ref, computed } from 'vue';
 import AssignedToAvatars from '@/components/shared/AssignedToAvatars.vue';
-// Dropdown open/close state
+import { members } from "@/store/state";
 const selectingContacts = ref(false);
 
 // Sample contact list
-const contacts = ref([
-  {id:1, name: 'Contact 1', avatar: 'C1', selected: false },
-  {id:2, name: 'Contact 2', avatar: 'C2', selected: false },
-  {id:3, name: 'Contact 3', avatar: 'C3', selected: false },
-]);
+const contacts = ref(members.value.map(member => ({
+  ...member,
+  selected: false,
+})));
 
 const selectedContacts = computed(() => {
   return contacts.value.filter(contact => contact.selected);

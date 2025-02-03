@@ -23,7 +23,7 @@
         <div v-for="subtask in subtasks" :key="subtask.id" class="subTask">
             <div class="subTaskContent">{{ subtask.name }}</div>
             <div class="iconContainerSubtask">
-                <img @click="deleteSubtask" class="deleteIcon" src="@/assets/img/delete.svg" alt="Delete" />
+                <img @click="deleteSubtask(subtask.id)" class="deleteIcon" src="@/assets/img/delete.svg" alt="Delete" />
             </div>
             
         </div>
@@ -32,26 +32,25 @@
   
 
 <script setup>
-import { ref, defineExpose } from 'vue';
+import { ref, watch, defineEmits } from 'vue';
 
+
+const emit = defineEmits(["update:subtasks"]);
 const addingNewSubtask = ref(false);
 const newSubtask = ref('');
 const error = ref('');
 
-const subtasks = ref([
- 
-]);
+const subtasks = ref([]);
 
 const addNewSubtask = () => {
     if (!newSubtask.value.trim()) {
         error.value = 'New subtask cannot be empty';
         return;
     }
-    console.log(newSubtask.value);
     subtasks.value.push({ name: newSubtask.value, completed: false });
-    console.log(subtasks.value);
     newSubtask.value = '';
     error.value = '';
+    emit("update:subtasks", subtasks.value);
     toggleAddingNewSubtask();
 };
 
@@ -61,11 +60,14 @@ const toggleAddingNewSubtask = () => {
     addingNewSubtask.value = !addingNewSubtask.value;
 }
 
-const getSubtasks = () => {
-    return subtasks.value;
+
+const deleteSubtask = (index) => {
+  subtasks.value.splice(index, 1);
+  emit("update:subtasks", subtasks.value);
 };
-defineExpose({
-  getSubtasks
+
+watch(subtasks, (newSubtasks) => {
+  emit("update:subtasks", newSubtasks);
 });
 </script>
 

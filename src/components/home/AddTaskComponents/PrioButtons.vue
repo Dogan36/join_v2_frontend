@@ -5,33 +5,33 @@
         
     <div class="prioButtons">
         <div class="prioButton" 
-        :style="currentPrio === 'High' ? { backgroundColor: '#ff3c00', color: 'white' } : { backgroundColor: 'unset', color: 'unset' }" 
-        @click="updatePrio('High')">
+        :style="currentPrio === 'high' ? { backgroundColor: '#ff3c00', color: 'white' } : { backgroundColor: 'unset', color: 'unset' }" 
+        @click="updatePrio('high')">
             <span>Urgent</span>
             <img
-                :src="currentPrio === 'High' ? 
+                :src="currentPrio === 'high' ? 
                 Prioicons.urgentWhite:  
                 Prioicons.urgent"
                 alt="" />
         </div>
 
         <div class="prioButton"
-        :style="currentPrio === 'Medium' ? { backgroundColor: '#ffa800', color: 'white' } : { backgroundColor: 'unset', color: 'unset' }"
-        @click="updatePrio('Medium')">
+        :style="currentPrio === 'medium' ? { backgroundColor: '#ffa800', color: 'white' } : { backgroundColor: 'unset', color: 'unset' }"
+        @click="updatePrio('medium')">
             <span>Medium</span>
             <img
-                :src="currentPrio === 'Medium' ? 
+                :src="currentPrio === 'medium' ? 
                 Prioicons.mediumWhite:  
                 Prioicons.medium"
                 alt="" />
         </div>
 
         <div class="prioButton"
-        :style="currentPrio === 'Low' ? { backgroundColor: '#7ae229', color: 'white' } : { backgroundColor: 'unset', color: 'unset' }"
-        @click="updatePrio('Low')">
+        :style="currentPrio === 'low' ? { backgroundColor: '#7ae229', color: 'white' } : { backgroundColor: 'unset', color: 'unset' }"
+        @click="updatePrio('low')">
             <span>Low</span>
             <img
-            :src="currentPrio === 'Low' ? 
+            :src="currentPrio === 'low' ? 
                 Prioicons.lowWhite:  
                 Prioicons.low"
                 alt="" />
@@ -77,18 +77,18 @@ import { defineProps, computed, defineEmits } from 'vue';
 import { ref } from 'vue';
 import Prioicons from '@/utils/prioIcons';
 
-const choosenPrio = ref('Medium');
+const choosenPrio = ref('medium');
 const emit = defineEmits(['update:modelValue']);
 
 const props = defineProps({
     modelValue: {
         type: String,
-        default: 'Medium'
+        default: 'medium'
     }
 });
 
 // Debugging hinzufügen, um sicherzustellen, dass der Standardwert korrekt ist
-const currentPrio = ref(props.modelValue || 'Medium');
+const currentPrio = ref(props.modelValue || 'medium');
 
 
 function updatePrio(newPrio) {

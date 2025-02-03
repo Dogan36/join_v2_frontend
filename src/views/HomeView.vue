@@ -5,7 +5,7 @@
       <Header />
       
       <main>
-        <div>{{contacts}}</div>
+        <div>{{members}}</div>
         <Summary v-if="currentView === 'summary'" />
         <Board v-if="currentView === 'board'" />
         <AddTask v-if="currentView === 'addTask'" />
@@ -24,7 +24,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { contacts, currentView, isWorkspaceOverlayVisible } from "@/store/state";
+import { members, currentView, isWorkspaceOverlayVisible } from "@/store/state";
 import MenuContainer from "@/components/shared/MenuContainer.vue";
 import Header from "@/components/shared/Header.vue";
 import Summary from "@/components/home/Summary.vue";

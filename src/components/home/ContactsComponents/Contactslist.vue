@@ -31,7 +31,7 @@ import { defineEmits } from "vue";
 import { contacts } from "@/store/state";
 import { members } from "@/store/state";
 import { currentUser, selectedContact } from "@/store/state";
-import useContacts from "@/composables/useContacts";
+
 const selectedFilter = ref('all');
 
 const emit = defineEmits(["updateContact"]); // Definiere ein Event für das Parent
