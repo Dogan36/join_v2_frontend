@@ -21,9 +21,9 @@
           <img src="@/assets/img/boardPlusIcon.svg" alt="" />
         </div>
         <div class="boardElementContent">
-          
-          <BoardCard v-for="task in tasks.filter(task => task.status === 'todo')" :key="task.id" :task="task" />
-          <div class="boardElementEmpty">No Task To Do</div>
+          <BoardCard v-for="task in todoTasks" :key="task.id" :task="task" />
+         
+          <div v-if="todoTasks.length === 0" class="boardElementEmpty">No Task To Do</div> 
         </div>
       </div>
       <div class="boardElement">
@@ -32,9 +32,8 @@
           <img src="@/assets/img/boardPlusIcon.svg" alt="" />
         </div>
         <div class="boardElementContent">
-          <BoardCard />
-          <BoardCard />
-          <BoardCard />
+          <BoardCard v-for="task in inProgressTasks" :key="task.id" :task="task" />
+          <div v-if="inProgressTasks.length === 0" class="boardElementEmpty">No Task In Progress</div>     
         </div>
       </div>
       <div class="boardElement">
@@ -43,7 +42,8 @@
           <img src="@/assets/img/boardPlusIcon.svg" alt="" />
         </div>
         <div class="boardElementContent">
-          <BoardCard />
+          <BoardCard v-for="task in awaitingFeedbackTasks" :key="task.id" :task="task" />
+          <div v-if="awaitingFeedbackTasks.length === 0" class="boardElementEmpty">No Task Awaiting Feedback</div>
         </div>
       </div>
       <div class="boardElement">
@@ -52,7 +52,8 @@
           <img src="@/assets/img/boardPlusIcon.svg" alt="" />
         </div>
         <div class="boardElementContent">
-          <div class="boardElementEmpty">No Task To Do</div>
+          <BoardCard v-for="task in doneTasks" :key="task.id" :task="task" />
+          <div v-if="doneTasks.length === 0" class="boardElementEmpty">No Task Done</div>
         </div>
       </div>
     </div>
@@ -66,7 +67,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 import BoardCard from "./BoardComponents/BoardCard.vue";
 import AddTaskMain from "./AddTaskComponents/AddTaskMain.vue";
@@ -74,11 +75,14 @@ import DarkBackground from "../shared/DarkBackground.vue";
 import { tasks } from "@/store/state";
 const isOverlayVisible = ref(false);
 
+const todoTasks = computed(() => tasks.value.filter(task => task.status === 'todo'));
+const inProgressTasks = computed(() => tasks.value.filter(task => task.status === 'inprogress'));
+const awaitingFeedbackTasks = computed(() => tasks.value.filter(task => task.status === 'awaiting_feedback'));
+const doneTasks = computed(() => tasks.value.filter(task => task.status === 'done'));
+
 const openAddTaskOverlay = () => {
   isOverlayVisible.value = true;
 };
-
-
 
 const choosenTask = ref(null);
 

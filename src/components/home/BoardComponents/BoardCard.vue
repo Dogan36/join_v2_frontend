@@ -5,9 +5,9 @@
             <div class="cardTitle">{{ title }}</div>
             <div class="cardDescription">{{ description }}</div>
         </div>
-        <div class="cardProgress">
-            <progress max="200" value="100"></progress>
-            <div><span>1</span><span>/</span><span>2</span><span>Done</span></div>
+        <div v-if="subtasks.length > 0" class="cardProgress">
+            <progress :max="subtasks.length" :value="subtasksDone"></progress>
+            <div><span>{{subtasksDone}}</span><span>/</span><span>{{subtasks.length}}</span><span>Done</span></div>
         </div>
         <div class="cardBottomDiv">
             <!-- Übergabe des assignedTo Werts an das AssignedToAvatars-Component -->
@@ -33,20 +33,17 @@ const category = computed(() => {
   return categories.value.find(category => category.id === props.task.category) || null;
 });
 
-const progress = computed(() => {
-    const subtasks = props.task.subtasks || [];
-    const doneSubtasks = subtasks.filter(subtask => subtask.done);
-    return doneSubtasks.length / subtasks.length * 100;
-});
+const subtasks = computed(() => props.task.subtasks);
+const subtasksDone = computed(() => subtasks.value.filter(subtask => subtask.is_completed).length);
+
+
+
+
+
 
 
 const assignedTo = computed(() => props.task.selected_contacts || []);
-onMounted(() => {
-    if(assignedTo){
-        console.log(assignedTo);
-    }
-    
-});
+
 function hexToRgb(hex) {
     const r = parseInt(hex.slice(1, 3), 16);
     const g = parseInt(hex.slice(3, 5), 16);

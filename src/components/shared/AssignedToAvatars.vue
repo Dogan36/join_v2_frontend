@@ -24,7 +24,6 @@ import { members } from '@/store/state';
 import { defineProps, computed, onMounted, watch } from 'vue';
 
 
-// Deine 'assignedTo' Daten, die du von der übergeordneten Komponente erhältst
 const props = defineProps({
   assignedTo: {
     type: Array,
