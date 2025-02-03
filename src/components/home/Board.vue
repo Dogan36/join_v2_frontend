@@ -21,6 +21,8 @@
           <img src="@/assets/img/boardPlusIcon.svg" alt="" />
         </div>
         <div class="boardElementContent">
+          
+          <BoardCard v-for="task in tasks.filter(task => task.status === 'todo')" :key="task.id" :task="task" />
           <div class="boardElementEmpty">No Task To Do</div>
         </div>
       </div>
@@ -57,7 +59,7 @@
 
     <DarkBackground v-if="isOverlayVisible" @close="closeOverlay">
       <AddTaskMain
-      :task="exampleTask" 
+      :task="choosenTask" 
       @close="closeOverlay"></AddTaskMain>
     </DarkBackground>
   </div>
@@ -69,23 +71,16 @@ import { ref } from "vue";
 import BoardCard from "./BoardComponents/BoardCard.vue";
 import AddTaskMain from "./AddTaskComponents/AddTaskMain.vue";
 import DarkBackground from "../shared/DarkBackground.vue";
+import { tasks } from "@/store/state";
 const isOverlayVisible = ref(false);
 
 const openAddTaskOverlay = () => {
   isOverlayVisible.value = true;
 };
 
-const exampleTask = {
-  title: "Implement Scrollbar Fix",
-  description: "Adjust the scrollbar position to prevent overflow issues.",
-  category: "Bugfix",
-  selectedContacts: ["John Doe", "Jane Smith"], // Array von Kontakten
-  dueDate: "2024-06-20", // Beispiel-Datum im Format 'yyyy-mm-dd'
-  prio: "High", // Beispiel-Priorität: 'High', 'Medium', 'Low'
-  subtasksId: [101, 102, 103], // Beispiel-IDs für Subtasks
-};
 
-const choosenTask = exampleTask;
+
+const choosenTask = ref(null);
 
 const closeOverlay = () => {
   isOverlayVisible.value = false;

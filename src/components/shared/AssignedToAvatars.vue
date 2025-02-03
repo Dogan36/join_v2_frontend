@@ -2,18 +2,26 @@
   <div class="assignedTo">
     <div
       class="cardAvatar"
-      :key="contact.avatar"
+      :key="contact.id"
       :style="{ background: contact.color.hex_value, color: isDarkBackground(contact.color.hex_value) ? '#fff' : '#000' }"
-      v-for="contact in assignedTo" 
+      v-for="contact in assignedToReduced"
     >
+    
       {{ contact.avatar }}
-      
     </div>
+    <div
+      class="cardAvatar"
+      v-if="remainingContacts > 0"
+    >
+    +{{ remainingContacts }}
+    </div>
+
   </div>
 </template>
 
 <script setup>
-import { defineProps, computed } from 'vue';
+import { members } from '@/store/state';
+import { defineProps, computed, onMounted, watch } from 'vue';
 
 
 // Deine 'assignedTo' Daten, die du von der übergeordneten Komponente erhältst
@@ -22,6 +30,17 @@ const props = defineProps({
     type: Array,
     required: true
   }
+});
+const assignedTo = computed(() => {
+  return members.value.filter(member => props.assignedTo.includes(member.id));
+});
+
+const assignedToReduced = computed(() => {
+  return assignedTo.value.slice(0, 4); // Nimmt nur die ersten 4 Kontakte
+});
+
+const remainingContacts = computed(() => {
+  return assignedTo.value.length - 4; // Gibt die Anzahl der verbleibenden Kontakte zurück
 });
 
 function hexToRgb(hex) {
@@ -57,13 +76,15 @@ function hexToRgb(hex) {
     gap: 10px;
     width: 35px;
     height: 35px;
-    background:rgb(88, 160, 201);
+    background:black;
+    color: white;
     border: 1px solid #ffffff;
     border-radius: 58px;
     flex: none;
     order: 0;
     flex-grow: 0;
     margin: 0px -4px;
+    font-size: 1.2rem;
   }
 }
 </style>

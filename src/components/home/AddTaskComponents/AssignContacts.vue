@@ -44,8 +44,9 @@ const contacts = ref(members.value.map(member => ({
 })));
 
 const selectedContacts = computed(() => {
-  return contacts.value.filter(contact => contact.selected);
+  return contacts.value.filter(contact => contact.selected).map(contact => contact.id);
 });
+
 // Toggle dropdown visibility
 const toggleSelectContacts = () => {
   selectingContacts.value = !selectingContacts.value;

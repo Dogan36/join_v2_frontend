@@ -1,34 +1,70 @@
 <template>
-    <div draggable="true" class="boardCard">
-        <div class="cardCategory">Programming</div>
+    <div v-if="props.task" draggable="true" class="boardCard">
+        <div class="cardCategory" :style="{ background: category.color.hex_value, color: isDarkBackground(category.color.hex_value) ? '#fff' : '#000'  }">{{category.name}}</div>
         <div class="cardContent">
-            <div class="cardTitle">Test Test Test Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor ullam libero animi ducimus vel, earum deserunt ut nesciunt quisquam, eos odio suscipit beatae voluptas nisi illum nulla aliquam? Dolor, ex.</div>
-            <div class="cardDescription">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Illo nihil necessitatibus, nesciunt pariatur dolorem expedita ipsam odit temporibus, error, possimus eius consectetur explicabo? Est quae dolorem corporis similique. Nemo, explicabo. </div>
+            <div class="cardTitle">{{ title }}</div>
+            <div class="cardDescription">{{ description }}</div>
         </div>
         <div class="cardProgress">
             <progress max="200" value="100"></progress>
             <div><span>1</span><span>/</span><span>2</span><span>Done</span></div>
         </div>
         <div class="cardBottomDiv">
-           <AssignedToAvatars
-           :assignedTo="assignedTo"></AssignedToAvatars>
+            <!-- Übergabe des assignedTo Werts an das AssignedToAvatars-Component -->
+           <AssignedToAvatars :assignedTo="assignedTo"></AssignedToAvatars>
             <img src="@/assets/img/prioMediumIcon.svg" alt="">
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { defineProps, computed, onMounted } from 'vue';
 import AssignedToAvatars from '@/components/shared/AssignedToAvatars.vue';
-const assignedTo = ref([
-    { id: 1, name: 'John Doe', avatar: 'JD' },
-    { id: 2, name: 'Jane Doe', avatar: 'JD' },
-    { id: 3, name: 'Max Mustermann', avatar: 'MM' },
-    { id: 4, name: 'Maxine Mustermann', avatar: 'MM' },
-  
-]);
+import { categories } from '@/store/state';
+const props = defineProps({
+    task: {
+        type: Object
+    }
+});
 
+const title = computed(() => props.task.name);
+const description = computed(() => props.task.description);
+const category = computed(() => {
+  return categories.value.find(category => category.id === props.task.category) || null;
+});
+
+const progress = computed(() => {
+    const subtasks = props.task.subtasks || [];
+    const doneSubtasks = subtasks.filter(subtask => subtask.done);
+    return doneSubtasks.length / subtasks.length * 100;
+});
+
+
+const assignedTo = computed(() => props.task.selected_contacts || []);
+onMounted(() => {
+    if(assignedTo){
+        console.log(assignedTo);
+    }
+    
+});
+function hexToRgb(hex) {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return { r, g, b };
+  }
+
+  // Berechnung, ob der Hintergrund dunkel oder hell ist
+  const isDarkBackground = (hex) => {
+    const rgb = hexToRgb(hex);
+    const yiq = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+    return yiq < 128; // Dunkel: Textfarbe weiß, hell: Textfarbe schwarz
+  };
 </script>
+
+<style scoped>
+/* Dein Styles hier */
+</style>
 <style scoped>
 .boardCard {
     display: flex;
@@ -54,11 +90,10 @@ const assignedTo = ref([
     background: black;
     border-radius: 8px;
     text-align: center;
-    font-size: 16px;
+    font-size: 2rem;
     line-height: 16px;
-    font-weight: 400;
-    color: #FFFFFF;
-    text-shadow: 1px 1px 2px #000;
+    font-weight: 600;
+   
 }
 
 
