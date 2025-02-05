@@ -36,12 +36,6 @@ const category = computed(() => {
 const subtasks = computed(() => props.task.subtasks);
 const subtasksDone = computed(() => subtasks.value.filter(subtask => subtask.is_completed).length);
 
-
-
-
-
-
-
 const assignedTo = computed(() => props.task.selected_contacts || []);
 
 function hexToRgb(hex) {

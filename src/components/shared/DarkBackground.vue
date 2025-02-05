@@ -28,7 +28,12 @@ const closeModal = () => {
     align-items: center;
     z-index: 100;
 }
-
+.modalContainer {
+max-width:100%;
+display:flex;
+justify-content:center;
+align-items:center;
+}
 
   
 </style>

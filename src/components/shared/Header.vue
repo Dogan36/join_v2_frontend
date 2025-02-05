@@ -60,7 +60,7 @@ function changeView(view) {
 }
 </script>
 <style>
-@import "@/assets/base.css";
+
 .header {
   display: flex;
   flex-direction: row;

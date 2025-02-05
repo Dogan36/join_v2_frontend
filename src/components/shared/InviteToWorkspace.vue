@@ -92,8 +92,6 @@ const  copyToClipboard = () => {
 </script>
 
 <style scoped>
-@import "@/assets/base.css";
-@import "@/assets/main.css";
 
 .copyCode{
   display: flex;

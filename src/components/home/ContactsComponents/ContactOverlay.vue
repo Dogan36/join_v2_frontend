@@ -179,7 +179,7 @@ function hexToRgb(hex) {
 </script>
 
 <style scoped>
-@import "@/assets/base.css";
+
 
 .contactOverlay {
   display: flex;

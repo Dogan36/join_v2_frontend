@@ -19,7 +19,7 @@
           <button
             class="secondary-button-layout"
             type="button"
-            @click="cancel"
+            @click="closeOverlay"
           >
             Cancel
           </button>
@@ -48,6 +48,10 @@ const props = defineProps({
 task: {
   type: Object,
   default: null, // Kein Task übergeben -> Add-Modus
+},
+status: {
+  type: String,
+  default: "todo", // Standardstatus für neuen Task
 },
 });
 
@@ -168,7 +172,7 @@ try {
 </script>
 
 <style>
-@import "@/assets/base.css";
+
 .addTaskMainContent {
   display: flex;
   max-width: 900px;

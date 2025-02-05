@@ -132,8 +132,7 @@ const close = () => {
 </script>
 
 <style>
-@import "@/assets/base.css";
-@import "@/assets/main.css";
+
 .workspace-info-overlay {
   display: flex;
   flex-direction: column;
@@ -142,7 +141,7 @@ const close = () => {
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
   border-radius: 30px;
   z-index: 2;
-  transform: translate(-50%, -50%);
+  transform: translate(0%, -50%);
   top: 50%;
   padding: 2rem;
   max-width: 330px;

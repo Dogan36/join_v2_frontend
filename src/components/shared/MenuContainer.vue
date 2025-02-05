@@ -109,7 +109,6 @@ function changeView(view) {
 </script>
 
 <style scoped>
-@import "@/assets/base.css";
 
 .menu {
   min-width: 250px;

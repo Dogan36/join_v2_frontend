@@ -138,7 +138,7 @@ const checkIfPasswordsMatch = () => {
 </script>
 
 <style>
-@import "@/assets/base.css";
+
 
 .signupOptions {
   display: flex;

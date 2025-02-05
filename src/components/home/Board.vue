@@ -18,10 +18,10 @@
       <div class="boardElement">
         <div class="boardElementHeader">
           <span>To do</span>
-          <img src="@/assets/img/boardPlusIcon.svg" alt="" />
+          <img @click="openAddTaskOverlay('todo')" src="@/assets/img/boardPlusIcon.svg" alt="" />
         </div>
         <div class="boardElementContent">
-          <BoardCard v-for="task in todoTasks" :key="task.id" :task="task" />
+          <BoardCard @click="openTaskDetail(task)" v-for="task in todoTasks" :key="task.id" :task="task" />
          
           <div v-if="todoTasks.length === 0" class="boardElementEmpty">No Task To Do</div> 
         </div>
@@ -29,30 +29,30 @@
       <div class="boardElement">
         <div class="boardElementHeader">
           <span>In Progress</span>
-          <img src="@/assets/img/boardPlusIcon.svg" alt="" />
+          <img @click="openAddTaskOverlay('inProgress')" src="@/assets/img/boardPlusIcon.svg" alt="" />
         </div>
         <div class="boardElementContent">
-          <BoardCard v-for="task in inProgressTasks" :key="task.id" :task="task" />
+          <BoardCard @click="openTaskDetail(task)" v-for="task in inProgressTasks" :key="task.id" :task="task" />
           <div v-if="inProgressTasks.length === 0" class="boardElementEmpty">No Task In Progress</div>     
         </div>
       </div>
       <div class="boardElement">
         <div class="boardElementHeader">
           <span>Awaiting Feedback</span>
-          <img src="@/assets/img/boardPlusIcon.svg" alt="" />
+          <img @click="openAddTaskOverlay('awaiting_feedback')" src="@/assets/img/boardPlusIcon.svg" alt="" />
         </div>
         <div class="boardElementContent">
-          <BoardCard v-for="task in awaitingFeedbackTasks" :key="task.id" :task="task" />
+          <BoardCard @click="openTaskDetail(task)" v-for="task in awaitingFeedbackTasks" :key="task.id" :task="task" />
           <div v-if="awaitingFeedbackTasks.length === 0" class="boardElementEmpty">No Task Awaiting Feedback</div>
         </div>
       </div>
       <div class="boardElement">
         <div class="boardElementHeader">
           <span>Done</span>
-          <img src="@/assets/img/boardPlusIcon.svg" alt="" />
+          <img @click="openAddTaskOverlay('done')" src="@/assets/img/boardPlusIcon.svg" alt="" />
         </div>
         <div class="boardElementContent">
-          <BoardCard v-for="task in doneTasks" :key="task.id" :task="task" />
+          <BoardCard @click="openTaskDetail(task)" v-for="task in doneTasks" :key="task.id" :task="task" />
           <div v-if="doneTasks.length === 0" class="boardElementEmpty">No Task Done</div>
         </div>
       </div>
@@ -60,8 +60,15 @@
 
     <DarkBackground v-if="isOverlayVisible" @close="closeOverlay">
       <AddTaskMain
-      :task="choosenTask" 
+      :task="choosenTask"
+      :status="choosenStatus"
       @close="closeOverlay"></AddTaskMain>
+    </DarkBackground>
+    <DarkBackground v-if="isDetailViewVisible" @close="closeOverlay">
+      <BoardTaskDetail
+      :task="choosenTask"
+      :status="choosenStatus"
+      @close="closeOverlay"></BoardTaskDetail>
     </DarkBackground>
   </div>
 </template>
@@ -73,21 +80,28 @@ import BoardCard from "./BoardComponents/BoardCard.vue";
 import AddTaskMain from "./AddTaskComponents/AddTaskMain.vue";
 import DarkBackground from "../shared/DarkBackground.vue";
 import { tasks } from "@/store/state";
+import BoardTaskDetail from "./BoardComponents/BoardTaskDetail.vue";
 const isOverlayVisible = ref(false);
-
+const isDetailViewVisible = ref(false);
+const choosenTask = ref(null);
+const choosenStatus = ref(null);
 const todoTasks = computed(() => tasks.value.filter(task => task.status === 'todo'));
 const inProgressTasks = computed(() => tasks.value.filter(task => task.status === 'inprogress'));
 const awaitingFeedbackTasks = computed(() => tasks.value.filter(task => task.status === 'awaiting_feedback'));
 const doneTasks = computed(() => tasks.value.filter(task => task.status === 'done'));
 
-const openAddTaskOverlay = () => {
+const openAddTaskOverlay = (status) => {
+  choosenStatus.value = status; // Setzt den Status, der an das Overlay übergeben wird
   isOverlayVisible.value = true;
 };
 
-const choosenTask = ref(null);
-
+const openTaskDetail = (task) => {
+  choosenTask.value = task; // Setzt den Status, der an das Overlay übergeben wird
+  isDetailViewVisible.value = true;
+};
 const closeOverlay = () => {
   isOverlayVisible.value = false;
+  isDetailViewVisible.value = false;
 };
 </script>
 <style scoped>
@@ -105,7 +119,7 @@ const closeOverlay = () => {
   z-index: 2;
   height: 85%;
   width: 85%;
-  transform: translate(-50%, -50%);
+  transform: translate(0%, -50%);
   top: 50%;
   padding: 5rem;
   max-width: 1000px;
@@ -114,19 +128,7 @@ const closeOverlay = () => {
 }
 
 
-.addTaskOverlay::-webkit-scrollbar {
-    width: 10px; /* Breite des Scrollbars */
-    max-height: 10px !important; /* Höhe des Scrollbars */
-    margin-left: -10px !important;
-}
-.addTaskOverlay::-webkit-scrollbar-track{
-  margin-block: 35px;
-}
-.addTaskOverlay::-webkit-scrollbar-thumb {
-    background-color: var(--main-color); /* Farbe des Scrollbar-Daumen */
-    border-radius: 5px; /* Rundung des Scrollbar-Daumen */
-   
-}
+
 .boardHeadlineRight {
   display: flex;
   flex-direction: row;
@@ -182,6 +184,9 @@ const closeOverlay = () => {
       font-weight: 700;
       font-size: 2.1rem;
       color: var(--main-color);
+    }
+    img {
+      cursor: pointer;
     }
   }
 

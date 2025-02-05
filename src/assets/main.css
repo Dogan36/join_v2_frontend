@@ -134,3 +134,18 @@ p.error-message {
   margin-bottom: 0.4rem;
   height: 1.8rem;
 }
+
+
+::-webkit-scrollbar {
+  width: 10px; /* Breite des Scrollbars */
+  max-height: 10px !important; /* Höhe des Scrollbars */
+  margin-left: -10px !important;
+}
+::-webkit-scrollbar-track{
+margin-block: 20px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--main-color); /* Farbe des Scrollbar-Daumen */
+  border-radius: 5px; /* Rundung des Scrollbar-Daumen */
+ 
+}
