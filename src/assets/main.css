@@ -149,3 +149,10 @@ margin-block: 20px;
   border-radius: 5px; /* Rundung des Scrollbar-Daumen */
  
 }
+
+span {
+  /* Standardmäßig soll der Cursor "default" sein */
+  cursor: default;
+  /* Damit das Span keine Mausereignisse empfängt und "unsichtbar" für den Mauszeiger wird */
+  pointer-events: none;
+}

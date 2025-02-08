@@ -9,7 +9,7 @@
     </div>
 
     <div v-if="addingNewSubtask" class="inputField" :class="{ 'input-error': error }">
-        <input type="text" v-model="newSubtask" placeholder="Enter new subtask" maxlength="20">
+        <input type="text" v-model="newSubtask" placeholder="Enter new subtask" maxlength="25">
         <div class="iconContainer">
             <img @click="toggleAddingNewSubtask" src="@/assets/img/blackX.svg" alt="">
             <div class="graySeperator"></div>
@@ -20,10 +20,11 @@
     </div>
 
     <div class="subTasksContainer">
-        <div v-for="subtask in subtasks" :key="subtask.id" class="subTask">
-            <div class="subTaskContent">{{ subtask.name }}</div>
+        <div class="subTask" v-for="subtask in subtasks" :key="subtask.id">
+            <span class="subTaskContent">{{ subtask.name }}</span>
             <div class="iconContainerSubtask">
                 <img @click="deleteSubtask(subtask.id)" class="deleteIcon" src="@/assets/img/delete.svg" alt="Delete" />
+                <input type="checkbox" v-model="subtask.is_completed" />
             </div>
             
         </div>
@@ -60,6 +61,10 @@ const toggleAddingNewSubtask = () => {
     addingNewSubtask.value = !addingNewSubtask.value;
 }
 
+const setSubtasks = (newSubtasks) => {
+    subtasks.value = newSubtasks;
+    console.log(subtasks);
+};
 
 const deleteSubtask = (index) => {
   subtasks.value.splice(index, 1);
@@ -68,6 +73,10 @@ const deleteSubtask = (index) => {
 
 watch(subtasks, (newSubtasks) => {
   emit("update:subtasks", newSubtasks);
+});
+
+defineExpose({
+    setSubtasks,
 });
 </script>
 
@@ -79,29 +88,35 @@ watch(subtasks, (newSubtasks) => {
     .subTask{
         display: flex;
         justify-content: space-between;
-    
         padding: 0.5rem;
         border-radius: 10px;
         align-items: center;
         font-size: 1.8rem;
+        &:first-child{
+            margin-top:0.5rem;
+        }
         &:hover{
             background-color: #E7E7E7;
         }
-        &:hover .iconContainerSubtask{
+        &:hover .iconContainerSubtask > *:first-child{
             display: flex;
         }
     }
 }
 
 .iconContainerSubtask {
-    display: none;
-    gap: 0.5rem;
-    img {
+    display: flex;
+    gap: 1rem;
+    img, input {
         cursor: pointer;
         height: 1.5rem ;
     }
-    img:hover{ 
+    img:hover, input:hover{ 
         scale: 1.1;
     }
+    :first-child{
+        display: none;
+    }
+
 }
 </style>

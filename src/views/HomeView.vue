@@ -5,7 +5,6 @@
       <Header />
       
       <main>
-        <div>{{members}}</div>
         <Summary v-if="currentView === 'summary'" />
         <Board v-if="currentView === 'board'" />
         <AddTask v-if="currentView === 'addTask'" />

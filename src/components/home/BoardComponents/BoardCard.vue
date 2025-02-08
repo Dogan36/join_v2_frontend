@@ -5,14 +5,14 @@
             <div class="cardTitle">{{ title }}</div>
             <div class="cardDescription">{{ description }}</div>
         </div>
-        <div v-if="subtasks.length > 0" class="cardProgress">
-            <progress :max="subtasks.length" :value="subtasksDone"></progress>
-            <div><span>{{subtasksDone}}</span><span>/</span><span>{{subtasks.length}}</span><span>Done</span></div>
+        <div  class="cardProgress">
+            <progress v-if="subtasks.length > 0" :max="subtasks.length" :value="subtasksDone"></progress>
+            <div v-if="subtasks.length > 0"><span>{{subtasksDone}}</span><span>/</span><span>{{subtasks.length}}</span><span>Done</span></div>
         </div>
         <div class="cardBottomDiv">
             <!-- Übergabe des assignedTo Werts an das AssignedToAvatars-Component -->
            <AssignedToAvatars :assignedTo="assignedTo"></AssignedToAvatars>
-            <img src="@/assets/img/prioMediumIcon.svg" alt="">
+            <img :src="buttonImg || require('@/assets/default-image.png')" alt="">
         </div>
     </div>
 </template>
@@ -21,6 +21,7 @@
 import { defineProps, computed, onMounted } from 'vue';
 import AssignedToAvatars from '@/components/shared/AssignedToAvatars.vue';
 import { categories } from '@/store/state';
+import { Prioicons } from '@/utils/prioIcons';
 const props = defineProps({
     task: {
         type: Object
@@ -30,13 +31,27 @@ const props = defineProps({
 const title = computed(() => props.task.name);
 const description = computed(() => props.task.description);
 const category = computed(() => {
-  return categories.value.find(category => category.id === props.task.category) || null;
+    const cat = categories.value.find(category => category.id === props.task.category);
+    if (!cat) {
+        return { name: 'Category Deleted', color: { hex_value: '#FFFF00'} }; // fallback value
+    }
+    return cat;
 });
 
 const subtasks = computed(() => props.task.subtasks);
 const subtasksDone = computed(() => subtasks.value.filter(subtask => subtask.is_completed).length);
-
 const assignedTo = computed(() => props.task.selected_contacts || []);
+const prio = computed(() => props.task.prio);
+const buttonImg = computed(() => {
+  if (prio.value === 'high') {
+    return Prioicons.urgent;
+  } else if (prio.value === 'medium') {
+    return Prioicons.medium; // Adjust the key if it's 'mediumWite'
+  } else if (prio.value === 'low') {
+    return Prioicons.low;
+  }
+  return ''; // Return a default or empty string if no match
+});
 
 function hexToRgb(hex) {
     const r = parseInt(hex.slice(1, 3), 16);
@@ -60,7 +75,7 @@ function hexToRgb(hex) {
 .boardCard {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    
     align-items: flex-start;
     padding: 18px 19px;
     gap: 20px;
@@ -134,8 +149,8 @@ function hexToRgb(hex) {
 .cardTitle {
     width: 100%;
     font-weight: 700;
-    font-size: 16px;
-    line-height: 120%;
+    font-size: 1.6rem;
+    line-height: 125%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

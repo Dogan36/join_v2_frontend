@@ -76,8 +76,6 @@
 import { defineProps, computed, defineEmits } from 'vue';
 import { ref } from 'vue';
 import Prioicons from '@/utils/prioIcons';
-
-const choosenPrio = ref('medium');
 const emit = defineEmits(['update:modelValue']);
 
 const props = defineProps({
@@ -92,11 +90,15 @@ const currentPrio = ref(props.modelValue || 'medium');
 
 
 function updatePrio(newPrio) {
+    console.log('updatePrio', newPrio);
     currentPrio.value = newPrio;
     emit('update:modelValue', newPrio);
 }
 
+
+
 defineExpose({
-    currentPrio
+    currentPrio,
+    updatePrio,
 });
 </script>

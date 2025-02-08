@@ -19,6 +19,10 @@ const dueDate = ref("");
 const error = ref("");
 
 const today = new Date().toISOString().split("T")[0];
+
+const setDueDate = (date) => {
+  dueDate.value = date;
+};
 const validate = () => {
   if (!dueDate.value.trim()) {
     error.value = 'Due date is required';
@@ -32,5 +36,6 @@ const validate = () => {
 defineExpose({
   validate,
   dueDate,
+  setDueDate,
 });
 </script>

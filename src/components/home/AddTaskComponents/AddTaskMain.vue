@@ -42,42 +42,40 @@ import AssignContacts from "./AssignContacts.vue";
 import DueDate from "./DueDate.vue";
 import PrioButtons from "./PrioButtons.vue";
 import Subtasks from "./Subtasks.vue";
-import { currentWorkspace, getToken } from "@/store/state";
-
+import { currentWorkspace, getToken, currentTask, tasks, selectedCategory} from "@/store/state";
+const isEditMode = ref(false); // Wird auf true gesetzt, wenn der Task bearbeitet wird
 const props = defineProps({
-task: {
-  type: Object,
-  default: null, // Kein Task übergeben -> Add-Modus
-},
-status: {
-  type: String,
-  default: "todo", // Standardstatus für neuen Task
+  status: {
+    type: String,
+    default: "todo", // Standardstatus für neuen Task
 },
 });
 
 const emit =  defineEmits(["close"]);
 
 onMounted(() => {
+isEditMode.value = !!currentTask.value; // Überprüfe, ob ein Task bearbeitet wird
 initializeForm();
 });
 
-const isEditMode = props.task !== null;
+
 const closeOverlay = () => {
 emit("close");
 };
 
 const initializeForm = () => {
-console.log(props.task);
-
-if (isEditMode) {
-  title.value?.setTitle(props.task.name || ""); // 'title' -> 'name'
-  description.value?.setDescription(props.task.description || "");
-  category.value?.setCategory(props.task.category || "");
-  dueDate.value?.setDueDate(props.task.due_date || "");
-  prio.value?.setPrio(props.task.status || "todo");
-  assignContacts.value?.setContacts(props.task.selectedContacts || []);
-  subtasks.value?.setSubtasks(props.task.subtasks || []);
-}
+  if (isEditMode.value) {
+    title.value?.setTitle(currentTask.value.name); // 'title' -> 'name'
+    description.value?.setDescription(currentTask.value.description || "");
+    category.value?.setCategory(currentTask.value.category || "");
+    dueDate.value?.setDueDate(currentTask.value.due_date || "");
+    prio.value?.updatePrio(currentTask.value.prio || "todo");
+    assignContacts.value?.setContacts(currentTask.value.selected_contacts || []);
+    subtasks.value?.setSubtasks(currentTask.value.subtasks || []);
+  }
+  else {
+    selectedCategory.value = null
+  }
 };
 
 // Referenzen für die Validierung der Komponenten
@@ -88,7 +86,7 @@ const assignContacts = ref(null);
 const dueDate = ref(null);
 const prio = ref(null);
 const subtasks = ref(null);
-const status = "todo";
+const status = props.status;
 const subtasksData = ref([]); // Sammle die Subtasks
 
 const updateSubtasks = (newSubtasks) => {
@@ -112,45 +110,72 @@ return isValid;
 // Funktion zum Starten der Validierung und Formular-Submit
 const handleSubmit = async () => {
 const isValid = validateForm();
-
 if (isValid) {
   createTask();
 }
 }
 const createTaskObject = () => {
-  console.log(title.value?.title, description.value?.description, category.value?.selectedCategory, assignContacts.value?.selectedContacts, dueDate.value?.dueDate, prio.value?.currentPrio, subtasksData.value, status);
   return {
     name: title.value?.title || "", // 'title' -> 'name'
     description: description.value?.description || "",
     category: category.value?.selectedCategory.id || "",
-    selectedContacts: assignContacts.value?.selectedContacts || [], // Optional, stelle sicher, dass Backend dies unterstützt
-    due_date: dueDate.value?.dueDate || "", // 'dueDate' -> 'due_date'
-    prio: prio.value?.currentPrio || "medium", // 'prio' -> 'status'
-    subtasks: subtasksData.value || [], // 'subtaskArrayId' entfernt, 'subtasks' hinzugefügt
-    status: status,
+    selected_contacts: assignContacts.value?.selectedContacts || [],
+    due_date: dueDate.value?.dueDate || "",
+    prio: prio.value?.currentPrio || "medium", 
+    subtasks: subtasksData.value || [],
+    status: props.status || "todo", 
   };
-  
 };
+
 const createTask = async () => {  
   try {
-  const taskData = createTaskObject();
-  const data = await createTaskFetch(taskData);
-  if (data) {
-    console.log("Task und Subtasks erstellt:", data);
-    closeOverlay();
-    // Optional: Aktualisiere die Task-Liste oder zeige eine Erfolgsmeldung
+    const taskData = createTaskObject();
+    if (!isEditMode.value) {
+      const task = await createTaskFetch(taskData);
+      tasks.value.push(task); // Füge den neuen Task zur Liste hinzu
+    }
+    else if (isEditMode.value) {
+      const task = await updateTaskFetch(taskData);
+      tasks.value = tasks.value.map((t) => {
+      if (t.id === currentTask.value.id) {
+        return task;
+      }
+      return t;
+    });
+    }
+  } catch (error) {
+    console.error("Fehler beim Erstellen:", error);
   }
-} catch (error) {
-  console.error("Fehler beim Erstellen:", error);
-  // Optional: Zeige eine Fehlermeldung im UI
+  closeOverlay();
 }
 
-}
+
 const createTaskFetch = async (taskData) => {
-  console.log("Task-Daten:", taskData);
+  try {
+    const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/${currentWorkspace.value.id}/tasks/`, { // Korrekte URL mit workspaceId
+      method: "POST",
+      headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Token ${getToken()}`,
+      },
+      body: JSON.stringify(taskData),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to create task", response);
+    }
+    const task = await response.json();
+    return task; // Antwort mit Task-Daten (z. B. ID)
+  } catch (error) {
+    console.error("Error creating task:", error);
+    return null;
+  }
+};
+
+const updateTaskFetch = async (taskData) => {
 try {
-  const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/${currentWorkspace.value.id}/tasks/`, { // Korrekte URL mit workspaceId
-    method: "POST",
+  const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/${currentWorkspace.value.id}/tasks/${currentTask.value.id}/`, { // Korrekte URL mit workspaceId
+    method: "PUT",
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Token ${getToken()}`,
@@ -162,8 +187,8 @@ try {
     throw new Error("Failed to create task", response);
   }
 
-  const data = await response.json();
-  return data; // Antwort mit Task-Daten (z. B. ID)
+  const task = await response.json();
+  return task; // Antwort mit Task-Daten (z. B. ID)
 } catch (error) {
   console.error("Error creating task:", error);
   return null;

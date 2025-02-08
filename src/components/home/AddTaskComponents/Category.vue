@@ -65,8 +65,12 @@ const error = ref('');
 const token = getToken();
 
 
-const setCategory = (category) => {
-  selectedCategory.value = category;
+const setCategory = (categoryId) => {
+  categories.value.forEach((category) => {
+    if (category.id === categoryId) {
+      selectedCategory.value = category;
+    }
+  });
 };
 
 const emit = defineEmits(['toggle']);

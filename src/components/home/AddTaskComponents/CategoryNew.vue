@@ -1,6 +1,6 @@
 <template>
   <div class="inputField" :class="{ 'input-error': error }">
-    <input v-model="newCategoryName" placeholder="Enter new category"></input>
+    <input v-model="newCategoryName" placeholder="Enter new category" maxlength="25"></input>
     <div :style="{ backgroundColor: newCategoryColor?.hex_value }" class="newCategoryColor"></div>
     <div class="iconContainer">
       <img @click="emit('toggle')" :src="blackXIcon" alt="" />

@@ -17,8 +17,6 @@ export default function useTextColor() {
       };
   
       const getTextColor = (hex) => {
-        console.log('hex', hex);
-        console.log('isDarkBackground(hex)', isDarkBackground(hex));
         return isDarkBackground(hex) ? '#FFFFFF' : '#000000';
       };
         

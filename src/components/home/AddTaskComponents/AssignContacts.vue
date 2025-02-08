@@ -47,6 +47,12 @@ const selectedContacts = computed(() => {
   return contacts.value.filter(contact => contact.selected).map(contact => contact.id);
 });
 
+const setContacts = (selectedContactsIds) => {
+  contacts.value = contacts.value.map(contact => ({
+    ...contact,
+    selected: selectedContactsIds.includes(contact.id),
+  }));
+};
 // Toggle dropdown visibility
 const toggleSelectContacts = () => {
   selectingContacts.value = !selectingContacts.value;
@@ -54,6 +60,7 @@ const toggleSelectContacts = () => {
 
 defineExpose({
  selectedContacts,
+ setContacts,
 });
 
 </script>

@@ -8,7 +8,7 @@
           <div class="graySeperator"></div>
           <img src="@/assets/img/searchIcon.svg" alt="" />
         </div>
-        <button @click="openAddTaskOverlay" class="main-button-layout">
+        <button @click="openAddTaskOverlay('todo')" class="main-button-layout">
           Add Task <img src="@/assets/img/plusIcon.svg" alt="" />
         </button>
       </div>
@@ -39,7 +39,7 @@
       <div class="boardElement">
         <div class="boardElementHeader">
           <span>Awaiting Feedback</span>
-          <img @click="openAddTaskOverlay('awaiting_feedback')" src="@/assets/img/boardPlusIcon.svg" alt="" />
+          <img @click="openAddTaskOverlay('awaitingFeedback')" src="@/assets/img/boardPlusIcon.svg" alt="" />
         </div>
         <div class="boardElementContent">
           <BoardCard @click="openTaskDetail(task)" v-for="task in awaitingFeedbackTasks" :key="task.id" :task="task" />
@@ -60,15 +60,14 @@
 
     <DarkBackground v-if="isOverlayVisible" @close="closeOverlay">
       <AddTaskMain
-      :task="choosenTask"
       :status="choosenStatus"
       @close="closeOverlay"></AddTaskMain>
     </DarkBackground>
     <DarkBackground v-if="isDetailViewVisible" @close="closeOverlay">
       <BoardTaskDetail
-      :task="choosenTask"
-      :status="choosenStatus"
-      @close="closeOverlay"></BoardTaskDetail>
+      :task="currentTask"
+      @close="closeOverlay"
+      @edit="openAddTaskOverlay()"></BoardTaskDetail>
     </DarkBackground>
   </div>
 </template>
@@ -79,24 +78,26 @@ import { ref, computed } from "vue";
 import BoardCard from "./BoardComponents/BoardCard.vue";
 import AddTaskMain from "./AddTaskComponents/AddTaskMain.vue";
 import DarkBackground from "../shared/DarkBackground.vue";
-import { tasks } from "@/store/state";
+import { tasks, currentTask } from "@/store/state";
 import BoardTaskDetail from "./BoardComponents/BoardTaskDetail.vue";
 const isOverlayVisible = ref(false);
 const isDetailViewVisible = ref(false);
-const choosenTask = ref(null);
-const choosenStatus = ref(null);
+let choosenStatus = '';
 const todoTasks = computed(() => tasks.value.filter(task => task.status === 'todo'));
-const inProgressTasks = computed(() => tasks.value.filter(task => task.status === 'inprogress'));
-const awaitingFeedbackTasks = computed(() => tasks.value.filter(task => task.status === 'awaiting_feedback'));
+const inProgressTasks = computed(() => tasks.value.filter(task => task.status === 'inProgress'));
+const awaitingFeedbackTasks = computed(() => tasks.value.filter(task => task.status === 'awaitingFeedback'));
 const doneTasks = computed(() => tasks.value.filter(task => task.status === 'done'));
 
 const openAddTaskOverlay = (status) => {
-  choosenStatus.value = status; // Setzt den Status, der an das Overlay übergeben wird
+  console.log(status)
+  if (status) {
+    choosenStatus = status
+    currentTask.value = null;}
   isOverlayVisible.value = true;
 };
 
 const openTaskDetail = (task) => {
-  choosenTask.value = task; // Setzt den Status, der an das Overlay übergeben wird
+  currentTask.value = task; // Setzt den Status, der an das Overlay übergeben wird
   isDetailViewVisible.value = true;
 };
 const closeOverlay = () => {
@@ -117,7 +118,7 @@ const closeOverlay = () => {
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
   border-radius: 30px;
   z-index: 2;
-  height: 85%;
+  max-height: 85%;
   width: 85%;
   transform: translate(0%, -50%);
   top: 50%;

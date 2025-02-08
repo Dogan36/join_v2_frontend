@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 export const getToken = () => localStorage.getItem('join_token');
 export const currentUser = ref('');
@@ -15,3 +15,8 @@ export const categories = ref([]);
 export const contactOverlayIsEditMode = ref(false);
 export const contactOverlayIsVisible = ref(false);
 export const selectedCategory = ref(null);
+export const currentTask = ref(null);
+
+watch(selectedCategory, (newCategory) => {
+    console.log('selectedCategory changed', newCategory);
+});
