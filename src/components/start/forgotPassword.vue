@@ -1,9 +1,11 @@
 <template>
   <FormLayout>
     <div class="formHeader">
-      <h1>Forgot Password</h1>
-      <img class="seperator" src="../../assets/img/seperator.svg" alt="" />
+      <img class="goBack" src="@/assets/img/arrowLeft.svg" alt="Back Arrow" @click="goBack" />
+      <h1>I forgot my password</h1>
     </div>
+      <img class="seperator" src="../../assets/img/seperator.svg" alt="" />
+      <span class="subHeader">Don't worry! Enter your email address and we will send you a link to reset your password.</span>
     <form class="form" @submit.prevent="tryRequest" novalidate>
       <InputField
         v-model="forgotEmail"
@@ -18,7 +20,7 @@
           emailNotFoundError: emailNotFoundError ? 'Email not found' : '',
         }"
       />
-      
+
       <div class="loginButtons">
         <button class="main-button-layout" type="submit">Log in</button>
       </div>
@@ -26,25 +28,18 @@
   </FormLayout>
 </template>
 <script setup>
-import { ref } from "vue";
+import { ref, defineEmits } from "vue";
 import { useRouter } from "vue-router";
 import FormLayout from "../shared/FormLayout.vue";
 import InputField from "../shared/InputField.vue";
-
-import { defineProps } from "vue";
 import { API_BASE_URL } from "@/config";
-const props = defineProps({
-  toggle: {
-    type: Function,
-    required: true,
-  },
- 
-});
-
-const router = useRouter();
+const emit = defineEmits();
 const forgotEmail = ref("");
-const rememberMe = ref(false);
 
+const goBack = () => {
+  console.log("Go back clicked");
+  emit("toggle");
+};
 // Fehlerstatus
 const emailError = ref(false);
 const emailFormatError = ref(false);
@@ -127,8 +122,6 @@ const checkEmailFormat = () => {
 </script>
 
 <style>
-@import "./../../assets/base.css";
-
 
 .buttonIcon {
   width: 24px;
@@ -149,26 +142,9 @@ const checkEmailFormat = () => {
   margin: 1rem 0;
 }
 
-.loginOptions {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin: 1rem 0;
-}
-.loginOptions label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-}
-.loginOptions span {
-  cursor: pointer;
-  color: var(--main-color-hover);
+.subHeader {
+  font-size: 2.1rem;
+  text-align: center;
 }
 
-.loginOptions span:hover {
-  color: var(--main-color);
-  scale: 1.05;
-}
 </style>

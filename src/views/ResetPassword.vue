@@ -140,20 +140,6 @@ const checkIfPasswordsMatch = () => {
 <style>
 
 
-.signupOptions {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
-  label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-  }
-}
-
 .logoContainer {
   height: 150px;
   margin-top: 40px;

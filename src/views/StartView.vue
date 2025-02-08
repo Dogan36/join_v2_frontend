@@ -4,20 +4,18 @@
     <div class="logoContainer">
       <img class="logo" src="@/assets/img/logo.svg" alt="">
     </div>
-
-    
       <div v-if="isLogin">
         <Login
-          :toggle="toggleSignup" 
-          :toggleForgotPassword="toggleForgotPassword" />
+          @toggleForgotPassword="toggleForgotPassword" />
       </div>
       <div  v-if="isSignup">
         <Signup
-          :toggle="toggleSignup"</Signup> />
+          @toggle="toggleSignup"
+          @privacyPolicy="goToPrivacyPolicy"></Signup>
       </div>
       <div v-if="isForgotPassword">
         <ForgotPassword
-        :toggle="toggleForgotPassword"/>
+        @toggle="toggleForgotPassword"/>
       </div>
     
 
@@ -36,9 +34,9 @@
 
 <script setup>
 import { ref } from 'vue';
-import Login from '.././components/start/Login.vue';
-import Signup from '.././components/start/SignUp.vue';
-import ForgotPassword from '.././components/start/ForgotPassword.vue';
+import Login from '@/components/start/Login.vue';
+import Signup from '@/components/start/SignUp.vue';
+import ForgotPassword from '@/components/start/ForgotPassword.vue';
 import { onMounted } from 'vue';
 import { currentUser } from '@/store/state';
 
@@ -51,11 +49,13 @@ const isSignup = ref(false);
 const isForgotPassword = ref(false);
 // Funktion zum Umschalten des Formulars
 const toggleSignup = () => {
+  console.log('toggleSignup');
   isLogin.value = !isLogin.value;
   isSignup.value = !isSignup.value;
 };
 
 const toggleForgotPassword = () => {
+  console.log('toggleForgotPassword');
   isLogin.value = !isLogin.value;
   isForgotPassword.value = !isForgotPassword.value
 };
@@ -65,6 +65,10 @@ const checkIfUserIsLoggedIn = () => {
     currentUser.value = JSON.parse(localStorage.getItem('join_user'));
     window.location.href = '/home';
   }
+};
+
+const goToPrivacyPolicy = () => {
+  window.location.href = '/privacy?type=privacyPolicy';
 };
 </script>
 
@@ -134,13 +138,17 @@ h2 {
   display: flex;
   justify-content: center;
   align-items: start;
-  gap: 20px;
-  
+  gap: 2rem;
 }
 
 .privacyLinks a {
-  font-size: 16px;
-  color: var(--main-color-hover);
+  font-size: 1.6rem;
+  color: #A8A8A8;
   text-decoration: none;
+  transition: all 0.0125s;
+  &:hover {
+    scale: 1.05;
+    color: var(--main-color-hover);
+  }
 }
 </style>

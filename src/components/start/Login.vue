@@ -3,8 +3,8 @@
   <FormLayout>
     <div class="formHeader">
       <h1>Login</h1>
-      <img class="seperator" src="../../assets/img/seperator.svg" alt="" />
     </div>
+    <img class="seperator" src="../../assets/img/seperator.svg" alt="" />
     <form class="form" @submit.prevent="tryLogin" novalidate>
       <InputField
         v-model="loginEmail"
@@ -38,15 +38,14 @@
       />
       <div class="loginOptions">
         <label>
-          <input type="checkbox" v-model="rememberMe" />Remember me</label
+          <input type="checkbox" v-model="rememberMe" /><span class="rememberMe">Remember me</span></label
         >
-        <span type="button" @click="toggleForgotPassword"
+        <span class="forgotPassword" type="button" @click="forgotPassword"
           >Forgot password?</span
         >
       </div>
       <div class="loginButtons">
         <button class="main-button-layout" type="submit">Log in</button>
-        <button v-on:click="showConfirmation('test')">tryRequest</button>
         <button class="secondary-button-layout" @click="guestLogin">
           Guest Login
         </button>
@@ -55,27 +54,17 @@
   </FormLayout>
 </template>
 <script setup>
-import { ref } from "vue";
+import { ref, defineEmits } from "vue";
 import { useRouter } from "vue-router";
 import FormLayout from "../shared/FormLayout.vue";
 import InputField from "../shared/InputField.vue";
 import { currentUser } from "@/store/state";
-import { defineProps } from "vue";
 import { API_BASE_URL } from "@/config";
 import { useLoadingOverlay } from '@/composables/useLoadingOverlay';
 import { useConfirmationOverlay } from "@/composables/useConfirmationOverlay";
 const { showOverlay, hideOverlay } = useLoadingOverlay();
 const { showConfirmation } = useConfirmationOverlay();
-const props = defineProps({
-  toggle: {
-    type: Function,
-    required: true,
-  },
-  toggleForgotPassword: {
-    type: Function,
-    required: true,
-  },
-});
+
 
 const router = useRouter();
 const loginEmail = ref("");
@@ -89,7 +78,10 @@ const emailNotFoundError = ref(false);
 const passwordError = ref(false);
 const passwordLengthError = ref(false);
 const passwordIncorrectError = ref(false);
-
+const emit = defineEmits();
+const forgotPassword = () => {
+  emit('toggleForgotPassword');
+};
 async function login(email, password) {
   showOverlay();
   let username = email;
@@ -193,10 +185,6 @@ const checkPasswordLength = () => {
   return !passwordLengthError.value;
 };
 
-const showForgotPassword = () => {
-  console.log("Forgot password clicked");
-};
-
 const guestLogin = () => {
   // Beispielhafte Logik für den Gast-Login
   console.log("Logging in as Guest");
@@ -205,8 +193,6 @@ const guestLogin = () => {
 </script>
 
 <style>
-@import "./../../assets/base.css";
-
 .buttonIcon {
   width: 24px;
   height: 24px;
@@ -231,21 +217,32 @@ const guestLogin = () => {
   justify-content: space-between;
   gap: 10px;
   flex-wrap: wrap;
-  margin: 1rem 0;
+  margin: 2rem 0;
 }
+
+  
 .loginOptions label {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
-}
+  font-size: 1.6rem;
+  
+ }
+
 .loginOptions span {
-  cursor: pointer;
-  color: var(--main-color-hover);
+  font-size: 1.6rem;
+  cursor: pointer !important;
+  pointer-events: auto;
+  transition: scale 0.125s;
 }
 
 .loginOptions span:hover {
-  color: var(--main-color);
   scale: 1.05;
 }
+
+.forgotPassword{
+  color: var(--main-color-hover) !important;
+}
+
 </style>

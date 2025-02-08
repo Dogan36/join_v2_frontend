@@ -101,17 +101,17 @@ const emitIconClick = () => {
 </script>
 
 <style>
-@import '@/assets/base.css';
-
 .inputField {
   display: flex;
   align-items: center;
   border: 1px solid #ccc;
   padding: 10px;
- gap: 10px;
+  gap: 10px;
   border-radius: 4px;
   background-color: white;
   justify-content: center;
+  width: 400px;
+  max-width: 95vw;
 }
 
 .input-error {
@@ -127,6 +127,7 @@ const emitIconClick = () => {
   background: transparent;
   font-size: 2.1rem;
   font-family: inherit;
+  width:50px
 }
 
 .inputField input[type="checkbox"] {

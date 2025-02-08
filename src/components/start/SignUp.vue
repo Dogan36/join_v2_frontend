@@ -1,9 +1,10 @@
 <template>
   <FormLayout>
     <div class="formHeader">
+      <img class="goBack" src="@/assets/img/arrowLeft.svg" alt="Back Arrow" @click="goBack" />
       <h1>Sign Up</h1>
-      <img class="seperator" src="../../assets/img/seperator.svg" alt="" />
     </div>
+      <img class="seperator" src="@/assets/img/seperator.svg" alt="" />
     <form class="form" @submit.prevent="trySignup" novalidate>
       <InputField
         v-model="signupName"
@@ -54,10 +55,8 @@
         }"
       />
       <div class="signupOptions">
-        <label>
-          <input type="checkbox" v-model="readPrivacy" />I accept the Privacy
-          Policy</label
-        >
+        <input type="checkbox" v-model="readPrivacy" />
+        I accept the <span @click="showPrivacyPolicy">Privacy Policy</span>
         <p v-if="privacyError" class="error-message">Please read and accept the Privacy Policy.</p>
       </div>
       <div class="loginButtons">
@@ -68,7 +67,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, defineEmits } from "vue";
 import FormLayout from "../shared/FormLayout.vue";
 import InputField from "../shared/InputField.vue";
 import { useLoadingOverlay } from '@/composables/useLoadingOverlay';
@@ -91,6 +90,15 @@ const passwordError = ref(false);
 const passwordLengthError = ref(false);
 const passwordMatchError = ref(false);
 const privacyError = ref(false);
+
+const emit = defineEmits();
+const goBack = () => {
+  emit("toggle");
+};
+
+const showPrivacyPolicy = () => {
+  emit("privacyPolicy");
+};
 
 async function signUp(name, email, password) {
   showOverlay();
@@ -229,15 +237,25 @@ const showForgotPassword = () => {
 
 .signupOptions {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
-  label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.6rem;
+  input {
     cursor: pointer;
+  }
+  span{
+    color: var(--main-color-hover);
+    cursor: pointer !important;
+    pointer-events: auto;
+    transition: all 0.125s;
+    &:hover{
+      scale:1.05;
+    }
   }
 }
 

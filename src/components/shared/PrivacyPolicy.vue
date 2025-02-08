@@ -1,6 +1,10 @@
 <template>
    <div class="legalContainer">
-        <h1>Privacy policy</h1>
+        <div class="legalHeader"> 
+            <h1>Privacy policy</h1>
+            <img src="@/assets/img/arrowLeft.svg" alt="Back Arrow" @click="goToStart" />
+        </div>
+       
         <h2>1. data protection at a glance</h2>
         <h3>General notes</h3>
         <p>The following information provides a simple overview of what happens to your personal data when you visit
@@ -190,3 +194,8 @@
         <p>Source: <a href="https://www.e-recht24.de">https://www.e-recht24.de</a></p>
 </div>
 </template>
+<script setup>
+const goToStart = () => {
+    window.location.href = '/start';
+};
+</script>

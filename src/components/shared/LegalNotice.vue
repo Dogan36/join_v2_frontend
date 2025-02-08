@@ -1,8 +1,9 @@
 <template>
     <div class="legalContainer">
-
-<h1>Legal Notice and Imprint</h1>
-
+<div class="legalHeader">
+    <h1>Legal Notice and Imprint</h1>
+    <img src="@/assets/img/arrowLeft.svg" alt="Back Arrow" @click="goToStart" />
+</div>
 <h2>Information according to § 5 TMG (Telemediengesetz)</h2>
 
 <p>Website Operator:<br>
@@ -13,7 +14,7 @@ Germany</p>
 
 <p>Contact:<br>
 Phone: +49 176 388 30 388<br>
-Email: dogancelik86@gmail.com</p>
+Email: mail@dogan-celik.com</p>
 
 <p>Represented by:<br>
 Dogan Celik</p>
@@ -59,4 +60,18 @@ For information on data protection, please refer to our Privacy Policy.</p>
     position: relative;
     gap: 20px;
 }
+.legalHeader{
+    display: flex;
+    justify-content: space-between;
+    img{
+        cursor: pointer;
+    }
+}
 </style>
+
+<script setup>
+
+const goToStart = () => {
+    window.location.href = '/start';
+};
+</script>
