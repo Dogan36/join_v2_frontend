@@ -42,7 +42,13 @@ import AssignContacts from "./AssignContacts.vue";
 import DueDate from "./DueDate.vue";
 import PrioButtons from "./PrioButtons.vue";
 import Subtasks from "./Subtasks.vue";
-import { currentWorkspace, getToken, currentTask, tasks, selectedCategory} from "@/store/state";
+import { useLoadingOverlay } from "@/composables/useLoadingOverlay";
+import { useConfirmationOverlay } from "@/composables/useConfirmationOverlay";
+const { showConfirmation } = useConfirmationOverlay();
+const { showOverlay, hideOverlay } = useLoadingOverlay();
+
+import { currentWorkspace, getToken, currentTask, tasks, selectedCategory, currentView} from "@/store/state";
+
 const isEditMode = ref(false); // Wird auf true gesetzt, wenn der Task bearbeitet wird
 const props = defineProps({
   status: {
@@ -132,7 +138,8 @@ const createTask = async () => {
     const taskData = createTaskObject();
     if (!isEditMode.value) {
       const task = await createTaskFetch(taskData);
-      tasks.value.push(task); // Füge den neuen Task zur Liste hinzu
+      tasks.value.push(task);
+      currentView.value = "board" // Füge den neuen Task zur Liste hinzu
     }
     else if (isEditMode.value) {
       const task = await updateTaskFetch(taskData);
@@ -151,6 +158,7 @@ const createTask = async () => {
 
 
 const createTaskFetch = async (taskData) => {
+  showOverlay();
   try {
     const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/${currentWorkspace.value.id}/tasks/`, { // Korrekte URL mit workspaceId
       method: "POST",
@@ -165,14 +173,18 @@ const createTaskFetch = async (taskData) => {
       throw new Error("Failed to create task", response);
     }
     const task = await response.json();
+    showConfirmation("Task added successfully");
     return task; // Antwort mit Task-Daten (z. B. ID)
   } catch (error) {
     console.error("Error creating task:", error);
     return null;
   }
+  
 };
 
 const updateTaskFetch = async (taskData) => {
+console.log("taskData", taskData)
+showOverlay();
 try {
   const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/${currentWorkspace.value.id}/tasks/${currentTask.value.id}/`, { // Korrekte URL mit workspaceId
     method: "PUT",
@@ -188,6 +200,7 @@ try {
   }
 
   const task = await response.json();
+  showConfirmation("Task updated successfully");
   return task; // Antwort mit Task-Daten (z. B. ID)
 } catch (error) {
   console.error("Error creating task:", error);

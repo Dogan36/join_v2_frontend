@@ -1,5 +1,5 @@
 <template>
-    <div v-if="props.task" draggable="true" class="boardCard">
+    <div v-if="props.task" class="boardCard">
         <div class="cardCategory" :style="{ background: category.color.hex_value, color: isDarkBackground(category.color.hex_value) ? '#fff' : '#000'  }">{{category.name}}</div>
         <div class="cardContent">
             <div class="cardTitle">{{ title }}</div>
@@ -75,7 +75,6 @@ function hexToRgb(hex) {
 .boardCard {
     display: flex;
     flex-direction: column;
-    
     align-items: flex-start;
     padding: 18px 19px;
     gap: 20px;
@@ -85,7 +84,6 @@ function hexToRgb(hex) {
     box-shadow: 0px 0px 14px 3px rgba(0, 0, 0, 0.04);
     border-radius: 30px;
     cursor: pointer;
-    margin-top: 20px;
 }
 
 .cardCategory {

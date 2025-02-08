@@ -1,10 +1,10 @@
 <template>
-  <div class="boardContent">
+  <div class="boardContent" @click="removeHighlight">
     <div class="headlineComponent">
       <h1>Board</h1>
       <div class="boardHeadlineRight">
         <div class="findTask">
-          <input placeholder="Find Task" type="text" />
+          <input placeholder="Find Task" type="text" v-model="searchQuery" />
           <div class="graySeperator"></div>
           <img src="@/assets/img/searchIcon.svg" alt="" />
         </div>
@@ -14,49 +14,48 @@
       </div>
     </div>
 
-    <div class="boardMainContent">
-      <div class="boardElement">
-        <div class="boardElementHeader">
-          <span>To do</span>
-          <img @click="openAddTaskOverlay('todo')" src="@/assets/img/boardPlusIcon.svg" alt="" />
-        </div>
-        <div class="boardElementContent">
-          <BoardCard @click="openTaskDetail(task)" v-for="task in todoTasks" :key="task.id" :task="task" />
-         
-          <div v-if="todoTasks.length === 0" class="boardElementEmpty">No Task To Do</div> 
-        </div>
+  <div class="boardMainContent">
+    <div v-for="column in columns" :key="column.status" class="boardElement">
+      <div class="boardElementHeader">
+        <span>{{ column.label }}</span>
+        <img
+          @click="openAddTaskOverlay(column.status)"
+          src="@/assets/img/boardPlusIcon.svg"
+          alt="Add Task"
+        />
       </div>
-      <div class="boardElement">
-        <div class="boardElementHeader">
-          <span>In Progress</span>
-          <img @click="openAddTaskOverlay('inProgress')" src="@/assets/img/boardPlusIcon.svg" alt="" />
+      <div
+        class="boardElementContent"
+        :class="{ hovered: hoveredColumn === column.status }"
+        @dragover.prevent="onDragOver(column.status)"
+        @dragenter.prevent="onDragEnter(column.status)"
+        @drop.prevent="onDrop(column.status)"
+      >
+        <BoardCard
+          v-for="task in tasksByStatus[column.status]"
+          :class="{ highlight: isHighlighted(task) }"
+          :key="task.id"
+          :task="task"
+          draggable="true"
+          @dragstart="onDragStart(task)"
+          @dragend="onDragEnd"
+          @click="openTaskDetail(task)"
+        />
+        <!-- Zeigt einen Drop-Indikator an, wenn über dieser Spalte gezogen wird -->
+        <div v-if="draggedTask && draggedTask.status !== column.status && hoveredColumn === column.status" class="empty-board-card">
+          <!-- Hier kann z. B. ein leeres BoardCard-Template stehen -->
+          Move here
         </div>
-        <div class="boardElementContent">
-          <BoardCard @click="openTaskDetail(task)" v-for="task in inProgressTasks" :key="task.id" :task="task" />
-          <div v-if="inProgressTasks.length === 0" class="boardElementEmpty">No Task In Progress</div>     
-        </div>
-      </div>
-      <div class="boardElement">
-        <div class="boardElementHeader">
-          <span>Awaiting Feedback</span>
-          <img @click="openAddTaskOverlay('awaitingFeedback')" src="@/assets/img/boardPlusIcon.svg" alt="" />
-        </div>
-        <div class="boardElementContent">
-          <BoardCard @click="openTaskDetail(task)" v-for="task in awaitingFeedbackTasks" :key="task.id" :task="task" />
-          <div v-if="awaitingFeedbackTasks.length === 0" class="boardElementEmpty">No Task Awaiting Feedback</div>
-        </div>
-      </div>
-      <div class="boardElement">
-        <div class="boardElementHeader">
-          <span>Done</span>
-          <img @click="openAddTaskOverlay('done')" src="@/assets/img/boardPlusIcon.svg" alt="" />
-        </div>
-        <div class="boardElementContent">
-          <BoardCard @click="openTaskDetail(task)" v-for="task in doneTasks" :key="task.id" :task="task" />
-          <div v-if="doneTasks.length === 0" class="boardElementEmpty">No Task Done</div>
+        <!-- Falls in der Spalte keine Tasks vorhanden sind -->
+        <div
+          v-if="tasksByStatus[column.status].length === 0 && hoveredColumn !== column.status"
+          class="boardElementEmpty"
+        >
+          No Task {{ column.label }}
         </div>
       </div>
     </div>
+ 
 
     <DarkBackground v-if="isOverlayVisible" @close="closeOverlay">
       <AddTaskMain
@@ -70,26 +69,133 @@
       @edit="openAddTaskOverlay()"></BoardTaskDetail>
     </DarkBackground>
   </div>
+  </div>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
-
+import { ref, computed, onBeforeUnmount } from "vue";
+import { API_BASE_URL } from "@/config";
 import BoardCard from "./BoardComponents/BoardCard.vue";
 import AddTaskMain from "./AddTaskComponents/AddTaskMain.vue";
 import DarkBackground from "../shared/DarkBackground.vue";
-import { tasks, currentTask } from "@/store/state";
+import { tasks, currentTask, currentWorkspace, getToken, categories, selectedTasks } from "@/store/state";
 import BoardTaskDetail from "./BoardComponents/BoardTaskDetail.vue";
 const isOverlayVisible = ref(false);
 const isDetailViewVisible = ref(false);
+const searchQuery = ref("");
 let choosenStatus = '';
-const todoTasks = computed(() => tasks.value.filter(task => task.status === 'todo'));
-const inProgressTasks = computed(() => tasks.value.filter(task => task.status === 'inProgress'));
-const awaitingFeedbackTasks = computed(() => tasks.value.filter(task => task.status === 'awaitingFeedback'));
-const doneTasks = computed(() => tasks.value.filter(task => task.status === 'done'));
+const draggedTask = ref(null);
+const hoveredColumn = ref(null);
+const columns = [
+  { status: 'todo', label: 'To do' },
+  { status: 'inProgress', label: 'In Progress' },
+  { status: 'awaitingFeedback', label: 'Awaiting Feedback' },
+  { status: 'done', label: 'Done' }
+];
+
+
+onBeforeUnmount(() => {
+  removeHighlight();
+});
+
+const isHighlighted = (task) => {
+  if(!selectedTasks.value) {
+    return false;
+  }
+  return selectedTasks.value.some(selectedTask => selectedTask.id === task.id);
+};
+
+const removeHighlight = () => {
+  selectedTasks.value = [];
+};
+
+
+const filteredTasks = computed(() => {
+  if (!searchQuery.value.trim()) {
+    return tasks.value;
+  }
+  const query = searchQuery.value.toLowerCase().trim();
+  return tasks.value.filter(task => {
+    const categoryObj = categories.value.find(cat => cat.id === task.category);
+    return (
+      (task.name && task.name.toLowerCase().includes(query)) ||
+      (task.description && task.description.toLowerCase().includes(query)) ||
+      (categoryObj && categoryObj.name.toLowerCase().includes(query))
+    );
+  });
+});
+
+const tasksByStatus = computed(() => {
+  const groups = {
+    todo: [],
+    inProgress: [],
+    awaitingFeedback: [],
+    done: []
+  };  
+  filteredTasks.value.forEach(task => {
+    if (groups[task.status]) {
+      groups[task.status].push(task);
+    }
+  });
+  return groups;
+});
+
+function onDragStart(task) {
+  draggedTask.value = task;
+  console.log(draggedTask.value.status);
+}
+
+function onDragEnd() {
+  draggedTask.value = null;
+  hoveredColumn.value = null;
+}
+
+function onDragOver(status) {
+  if (draggedTask.value) {
+    hoveredColumn.value = status;
+  }
+}
+
+function onDragEnter(status) {
+  if (draggedTask.value) {
+    hoveredColumn.value = status;
+  }
+}
+
+
+async function onDrop(status) {
+  console.log(`Task ${draggedTask.value.id} dropped in column: ${status} currentWorkspace.value.id ${currentWorkspace.value.id}`);
+  if (draggedTask.value) {
+    try {
+      // Beispiel-PATCH-Anfrage an deine API (passe URL und Authentifizierung ggf. an)
+      const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/${currentWorkspace.value.id}/tasks/${draggedTask.value.id}/`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Token ${getToken()}`
+        },
+        body: JSON.stringify({ status: status })
+      });
+      if (!response.ok) {
+        throw new Error('Task update failed');
+      }
+      const updatedTask = await response.json();
+      tasks.value = tasks.value.map(task => {
+        if (task.id === updatedTask.id) {
+          return { ...task, status: status };
+        }
+        return task;
+      });
+      // Optional: Aktualisiere hier deine lokale Taskliste oder hole neue Daten
+    } catch (error) {
+      console.error('Error updating task status:', error);
+    }
+  }
+  hoveredColumn.value = null;
+  draggedTask.value = null;
+}
 
 const openAddTaskOverlay = (status) => {
-  console.log(status)
   if (status) {
     choosenStatus = status
     currentTask.value = null;}
@@ -127,8 +233,6 @@ const closeOverlay = () => {
   overflow-y: auto;
  
 }
-
-
 
 .boardHeadlineRight {
   display: flex;
@@ -200,6 +304,29 @@ const closeOverlay = () => {
   }
 }
 
+.boardElementContent {
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.2s;
+  min-height: 250px; /* Damit auch bei wenigen Tasks der Bereich sichtbar bleibt */
+  position: relative;
+  border-radius: 30px;
+  gap: 1.5rem;
+}
+
+.boardElementContent.hovered {
+  background-color: #e0e0e0;
+}
+
+.empty-board-card {
+  border: 2px dashed #aaa;
+  text-align: center;
+  color: #aaa;
+  width: 100%;
+  height: 250px;
+  border-radius: 30px;
+  }
+
 .boardElementEmpty {
   width: 100%;
   height: 4.8rem;
@@ -213,5 +340,23 @@ const closeOverlay = () => {
   text-align: center;
   margin-top: 2rem;
   font-size: 1.6rem;
+}
+
+.highlight {
+  /* Beispiel für einen pulsierenden Border */
+  border: 2px solid #ff0000;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+  }
 }
 </style>

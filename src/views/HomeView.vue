@@ -49,7 +49,6 @@ onMounted(async () => {
 
 function getUser() { 
     currentUser.value = JSON.parse(localStorage.getItem("join_user"));
-    console.log("Current User:", currentUser.value);
 }
 
 function closeOverlay() {

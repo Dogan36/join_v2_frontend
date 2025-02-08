@@ -98,10 +98,10 @@ onMounted(loadColors);
 
 const addNewCategoryToList = (createdCategory) => {
   categories.value.push(createdCategory); // Fügt die neue Kategorie inkl. ID hinzu
-  selectedCategory.value = createdCategory; // Wählt die neue Kategorie aus
+  selectedCategory.value = createdCategory;
+  console.log(selectedCategory.value)
 };
 const addNewCategory = async () => {
-
   if (!checkNewCategoryName() || !checkCatgeoriesLength() || !checkCatgeoriesNameTaken()) {
     return;
   }
@@ -119,10 +119,10 @@ const addNewCategory = async () => {
       },
       body: JSON.stringify(newCategory),
     });
-    addNewCategoryToList(newCategory)
     showConfirmation('Category added successfully');
     if (!response.ok) throw new Error('Failed to add new category');
-    const createdCategory = await response.json(); // Hole die vollständige Antwort inkl. ID
+    const createdCategory = await response.json();
+    addNewCategoryToList(createdCategory)
     emit("toggle"); // Schließe ggf. das Modal oder die Ansicht
   } catch (error) {
     console.error('Error adding new category:', error.message);

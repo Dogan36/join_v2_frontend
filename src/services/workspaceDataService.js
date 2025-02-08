@@ -20,7 +20,6 @@ async function fetchTasks(workspaceId) {
 
 
 async function fetchCategories(workspaceId) {
-    console.log("fetchCategories");
     const token = getToken();
     const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/${workspaceId}/categories/`, {
       method: 'GET',

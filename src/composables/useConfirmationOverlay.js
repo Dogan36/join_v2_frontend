@@ -5,7 +5,7 @@ const confirmationMessage = ref('');
 let autoCloseTimer = null; // zum Merken des Timers
 import { useLoadingOverlay } from './useLoadingOverlay';
 // Zeit in Millisekunden, nach der das Overlay automatisch schließt
-const AUTO_CLOSE_DURATION = 2000;  
+const AUTO_CLOSE_DURATION = 1500;  
 
 export function useConfirmationOverlay() {
   const { hideOverlay } = useLoadingOverlay();

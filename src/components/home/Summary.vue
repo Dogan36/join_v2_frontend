@@ -1,87 +1,112 @@
 <template>
-  
       <div class="headlineComponent">
         <h1>Join 360</h1>
         <img class="headlineSeperator" src="@/assets/img/headlineSeperator.svg" alt="">
         <h2>Key Metrics at a Glance</h2>
       </div>
-
       <div class="contentSummary">
         <div class="contentButtons">
-
           <div class="buttonContainerRow">
-            <div class="buttonSummary buttonV1">
+            <div @click="goToBoard()" class="buttonSummary buttonV1">
               <div class="buttonContent">
-              <span id="summaryCountInBoard" class="buttonNumber">1</span>
+              <span id="summaryCountInBoard" class="buttonNumber">{{boardTasks.length}}</span>
               <span class="buttonText ">Tasks in Board</span>
               </div>
             </div>
-            <div  onclick="document.getElementById('board').click()"class="buttonSummary buttonV1">
+            <div @click="goToBoard(inProgressTasks)" class="buttonSummary buttonV1">
               <div class="buttonContent">
-              <div id="summaryCountProgress" class="buttonNumber">1</div>
+              <div id="summaryCountProgress" class="buttonNumber">{{inProgressTasks.length}}</div>
               <div class="buttonText">Tasks in Progress</div>
               </div>
             </div>
-            <div onclick="document.getElementById('board').click()" class="buttonSummary buttonV1">
+            <div @click="goToBoard(awaitingFeedbackTasks)" class="buttonSummary buttonV1">
               <div class="buttonContent">
-              <div id="summaryCountAwaiting" class="buttonNumber">1</div>
+              <div id="summaryCountAwaiting" class="buttonNumber">{{awaitingFeedbackTasks.length}}</div>
               <div class="buttonText">Tasks in Feedback</div>
               </div>
             </div>
           </div>
           <div class="buttonContainerRow">
-          <div class="buttonSummary buttonV2">
-            <div class="buttonV2Left">
-              
-                <img
-                  src="@/assets/img/prioMedium.svg"
-                  alt=""
+            <div @click="goToBoard(urgentTasks)" class="buttonSummary buttonV3">
+                <img class="urgentIcon" src="@/assets/img/prioHighRound.svg" alt="Urgent Icon"
                 />
-              
               <div class="buttonContent">
-                <span id="summaryCountUrgent"class="buttonNumber">2</span>
+                <span id="summaryCountUrgent"class="buttonNumber">{{urgentTasks.length}}</span>
                 <span class="buttonText">Urgent</span>
               </div>
             </div>
-            <div class="graySeperator"></div>
-            <div class="buttonV2RightContent">
-              <div id="summaryNextDeadline"class="buttonText">01.01.22</div>
+            <div @click="goToBoard(upcomingDeadline)" class="buttonSummary buttonV2">
+              <div class="buttonText">{{ upcomingDeadline.length > 0 ? upcomingDeadline[0].due_date : 'No upcoming deadlines' }}</div>
               <div class="buttonV2TextBold">Upcoming Deadline</div>
             </div>
           </div>
-        </div>
+        
           <div class="buttonContainerRow">
-            <div class="buttonSummary buttonV3">
+            <div @click="goToBoard(toDoTasks)" class="buttonSummary buttonV3">
               <div class="penIcon"></div>
               <div class="buttonContent">
-                <div id="summaryCountToDo" class="buttonNumber">2</div>
+                <div id="summaryCountToDo" class="buttonNumber">{{toDoTasks.length}}</div>
                 <div class="buttonText">To-do</div>
               </div>
             </div>
-            <div class="buttonSummary buttonV3">
+            <div @click="goToBoard(doneTasks)" class="buttonSummary buttonV3">
               <div class="hookIcon"></div>
               <div class="buttonContent">
-                  <div class="buttonNumber">2</div>
+                  <div class="buttonNumber">{{doneTasks.length}}</div>
                   <div class="buttonText">Done</div>
               </div>
           </div>
           </div>
         </div>
-        <div @click="console.log(currentUser.value)" id="welcomeDesk" class="welcomeDesk">
-          <span id="welcomeText">Good Morning</span>
+        <div id="welcomeDesk" class="welcomeDesk">
+          <span id="welcomeText">{{greetingByDaytime}}</span>
           <span id="welcomeName">{{ userName }}</span>
       </div>
       </div>
     
   </template>
 <script setup>
-import { currentUser } from '@/store/state';
-import { onMounted, ref, computed } from 'vue';
+import { currentUser, tasks } from '@/store/state';
+import { computed } from 'vue';
+import { currentView, selectedTasks } from '@/store/state';
 
+const goToBoard = (filter) => {
+  currentView.value = 'board';
+  if (filter) {
+    selectedTasks.value = filter;
+    console.log(selectedTasks.value);
+  }
+};
 const userName = computed(() => {
   return currentUser.value.name ? currentUser.value.name.split(' ')[0] : '';
 });
 
+const boardTasks = computed(() => tasks.value);
+const inProgressTasks = computed(() => tasks.value.filter(task => task.status === 'inProgress'))
+const awaitingFeedbackTasks = computed(() => tasks.value.filter(task => task.status === 'awaitingFeedback'))
+const urgentTasks = computed(() => tasks.value.filter(task => task.prio === 'high'))
+const upcomingDeadline = computed(() => {
+  const tasksWithDeadline = tasks.value.filter(task => task.due_date);
+  if (tasksWithDeadline.length === 0) {
+    return [];
+  }
+  tasksWithDeadline.sort((a, b) => new Date(a.due_date) - new Date(b.due_date));
+  const earliestDeadline = tasksWithDeadline[0].due_date;
+  return tasksWithDeadline.filter(task => task.due_date === earliestDeadline);
+});
+const toDoTasks = computed(() => tasks.value.filter(task => task.status === 'todo'))
+const doneTasks = computed(() => tasks.value.filter(task => task.status === 'done'))
+const greetingByDaytime = computed(() => {
+  const date = new Date();
+  const hours = date.getHours();
+  if (hours >= 5 && hours < 12) {
+    return 'Good Morning';
+  } else if (hours >= 12 && hours < 18) {
+    return 'Good Afternoon';
+  } else {
+    return 'Good Evening';
+  }
+});
 </script>
 <style scoped>
 .contentSummary {
@@ -144,9 +169,7 @@ justify-content: center;
   font-size: 2.1rem;
   line-height: 120%;
   text-align: center;
-  flex: none;
-  flex-grow: 0;
-
+  wrap: nowrap;
 }
 
 .buttonV1 {
@@ -154,45 +177,20 @@ justify-content: center;
 }
 
 .buttonV2 {
-  width: 100%;
-  flex-direction: row;
+  width: calc((100% - 3.5rem) / 2);
   justify-content: space-around;
-
-  img {
-    width: 7rem;
-    height: 7rem;
+  flex-direction: column;
+  .buttonText {
+    font-size: 2.1rem;
+    white-space: nowrap;
   }
-
   .buttonV2TextBold {
     font-size: 2.1rem;
     font-weight: 600;
   }
 }
 
-.buttonV2Left {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 2rem;
-}
 
-.graySeperator {
-  border: 2px solid #D1D1D1;
-  height: 100%;
-  transition: all 0.175s ease-in-out;
-}
-
-.buttonV2:hover .graySeperator {
-  background: white;
-  border: 2px solid #ffffff;
-}
-
-.buttonV2RightContent {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
 
 .buttonV3 {
   width: calc((100% - 3.5rem) / 2);
@@ -202,7 +200,9 @@ justify-content: center;
 }
 
 .penIcon,
-.hookIcon {
+.hookIcon,
+.urgentIcon
+ {
   width: 7rem;
   height: 7rem;
   background-size: cover;
@@ -220,7 +220,7 @@ justify-content: center;
 }
 
 .penIcon::before {
-  background-image: url('@/assets/img/pen.svg');
+  background-image: url('@/assets/img/penIcon.svg');
 }
 
 .hookIcon::before {
