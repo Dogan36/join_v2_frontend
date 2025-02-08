@@ -13,8 +13,7 @@
     width: 470px;
     min-width: fit-content;
     max-width: 100vw;
-    max-width:300px;
-    padding: 30px;
+    padding: 3rem;
     display: flex;
     flex-direction: column;
     justify-content: space-around;

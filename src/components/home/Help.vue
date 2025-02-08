@@ -2,6 +2,7 @@
   <div class="helpContent">
     <div class="headlineComponent">
       <h1>Help</h1>
+      <img v-if="route.path !== '/home'" src="@/assets/img/arrowLeft.svg" alt="Back Arrow" @click="goToStart" />
     </div>
 
     <p class="help-text">
@@ -105,9 +106,13 @@
 
 <style scoped>
 
-@import "@/assets/main.css";
-
-
+.headlineComponent {
+  display: flex;
+    justify-content: space-between;
+    img{
+        cursor: pointer;
+    }
+}
 
 .help-subtitle {
   font-size: 2rem;
@@ -149,3 +154,11 @@
   margin: 0 0 0.5rem;
 }
 </style>
+
+<script setup>
+import { useRoute } from 'vue-router';
+const route = useRoute();
+const goToStart = () => {
+    window.location.href = '/start';
+};
+</script>

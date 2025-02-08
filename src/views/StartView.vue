@@ -68,7 +68,7 @@ const checkIfUserIsLoggedIn = () => {
 };
 
 const goToPrivacyPolicy = () => {
-  window.location.href = '/privacy?type=privacyPolicy';
+  window.open('/privacy?type=privacyPolicy', '_blank');
 };
 </script>
 

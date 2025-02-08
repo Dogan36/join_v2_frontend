@@ -9,7 +9,7 @@
         alt=""
         @click="changeView('help')"
       />
-      <div class="headerUserProfilInitials" @click="openUserMenu">{{ currentUser.avatar }}</div>
+      <div v-if="route.path === '/home'" class="headerUserProfilInitials" @click="openUserMenu">{{ currentUser.avatar }}</div>
     </div>
 
     <div class="userMenuContent" v-if="showUserMenu">
@@ -26,8 +26,11 @@
 import { ref } from "vue";
 import { currentUser, currentView, isWorkspaceOverlayVisible } from "@/store/state";
 import { useRouter } from "vue-router";
+import { useRoute } from 'vue-router';
 const router = useRouter();
+const route = useRoute();
 const showUserMenu = ref(false);
+
 
 
 function openWorkspaceInfo() {

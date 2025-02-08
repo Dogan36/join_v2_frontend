@@ -105,12 +105,12 @@ const emitIconClick = () => {
   display: flex;
   align-items: center;
   border: 1px solid #ccc;
-  padding: 10px;
-  gap: 10px;
+  padding: 1rem;
+  gap: 1rem;
   border-radius: 4px;
   background-color: white;
   justify-content: center;
-  width: 400px;
+  width: 40rem;
   max-width: 95vw;
 }
 
@@ -170,8 +170,6 @@ const emitIconClick = () => {
 .inputField textarea::placeholder {
   padding: 0;
   font-size: 2.1rem; /* Schriftgröße des Platzhalters */
-  
-  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; /* Übernimmt die Schriftart */
   opacity: 1; /* Sichtbarkeit des Platzhalters */
 }
 

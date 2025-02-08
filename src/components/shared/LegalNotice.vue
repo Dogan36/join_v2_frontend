@@ -2,7 +2,7 @@
     <div class="legalContainer">
 <div class="legalHeader">
     <h1>Legal Notice and Imprint</h1>
-    <img src="@/assets/img/arrowLeft.svg" alt="Back Arrow" @click="goToStart" />
+    <img v-if="route.path !== '/home'" src="@/assets/img/arrowLeft.svg" alt="Back Arrow" @click="goToStart" />
 </div>
 <h2>Information according to § 5 TMG (Telemediengesetz)</h2>
 
@@ -70,7 +70,8 @@ For information on data protection, please refer to our Privacy Policy.</p>
 </style>
 
 <script setup>
-
+import { useRoute } from 'vue-router';
+const route = useRoute();
 const goToStart = () => {
     window.location.href = '/start';
 };

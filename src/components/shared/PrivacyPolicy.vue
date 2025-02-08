@@ -2,7 +2,7 @@
    <div class="legalContainer">
         <div class="legalHeader"> 
             <h1>Privacy policy</h1>
-            <img src="@/assets/img/arrowLeft.svg" alt="Back Arrow" @click="goToStart" />
+            <img v-if="route.path !== '/home'" src="@/assets/img/arrowLeft.svg" alt="Back Arrow" @click="goToStart" />
         </div>
        
         <h2>1. data protection at a glance</h2>
@@ -195,7 +195,10 @@
 </div>
 </template>
 <script setup>
+
+import { useRoute } from 'vue-router';
+const route = useRoute();
 const goToStart = () => {
-    window.location.href = '/start';
+    window.close();
 };
 </script>

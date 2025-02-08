@@ -218,6 +218,7 @@ const guestLogin = () => {
   gap: 10px;
   flex-wrap: wrap;
   margin: 2rem 0;
+  width: 100%;
 }
 
   
