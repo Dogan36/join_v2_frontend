@@ -37,7 +37,7 @@
             </div>
             <div @click="goToBoard(upcomingDeadline)" class="buttonSummary buttonV2">
               <div class="buttonText">{{ upcomingDeadline.length > 0 ? upcomingDeadline[0].due_date : 'No upcoming deadlines' }}</div>
-              <div class="buttonV2TextBold">Upcoming Deadline</div>
+              <div class="buttonV2TextBold">{{ deadlineLabel }}</div>
             </div>
           </div>
         
@@ -86,13 +86,29 @@ const inProgressTasks = computed(() => tasks.value.filter(task => task.status ==
 const awaitingFeedbackTasks = computed(() => tasks.value.filter(task => task.status === 'awaitingFeedback'))
 const urgentTasks = computed(() => tasks.value.filter(task => task.prio === 'high'))
 const upcomingDeadline = computed(() => {
-  const tasksWithDeadline = tasks.value.filter(task => task.due_date);
+  // Filtere Tasks mit due_date, die nicht den Status 'done' haben
+  const tasksWithDeadline = tasks.value.filter(task => task.due_date && task.status !== 'done');
   if (tasksWithDeadline.length === 0) {
     return [];
   }
+  // Sortiere die Tasks anhand des Fälligkeitsdatums
   tasksWithDeadline.sort((a, b) => new Date(a.due_date) - new Date(b.due_date));
+  // Ermittle das früheste Fälligkeitsdatum
   const earliestDeadline = tasksWithDeadline[0].due_date;
+  // Gib alle Tasks zurück, die genau dieses Datum haben
   return tasksWithDeadline.filter(task => task.due_date === earliestDeadline);
+});
+const deadlineLabel = computed(() => {
+  if (upcomingDeadline.value.length === 0) {
+    return "Upcoming Deadline"; // oder alternativ einen anderen Standardtext
+  }
+  const earliestDeadline = upcomingDeadline.value[0].due_date;
+  // Vergleiche das Datum: Liegt das früheste Datum in der Vergangenheit?
+  if (new Date(earliestDeadline) < new Date()) {
+    return "Missed Deadline";
+  } else {
+    return "Upcoming Deadline";
+  }
 });
 const toDoTasks = computed(() => tasks.value.filter(task => task.status === 'todo'))
 const doneTasks = computed(() => tasks.value.filter(task => task.status === 'done'))
@@ -169,7 +185,7 @@ justify-content: center;
   font-size: 2.1rem;
   line-height: 120%;
   text-align: center;
-  wrap: nowrap;
+  text-wrap: nowrap;
 }
 
 .buttonV1 {
