@@ -106,10 +106,9 @@ async function login(email, password) {
       window.location.href = "/home"; // Beispiel: Weiterleitung
     } else {
       const errorData = await response.json();
-      console.error("Fehler bei Login:", errorData);
-      if (errorData.email) {
+      if (errorData.error === "User does not exist") {
         emailNotFoundError.value = true;
-      } else if (errorData.non_field_errors) {
+      } else if (errorData.error === "Incorrect password") {
         passwordIncorrectError.value = true;
         }
       }
@@ -139,14 +138,12 @@ const resetErrors = () => {
 const checkForErrors = () => {
   const isEmailValid = checkIfEmailEmpty();
   const isEmailFormatValid = isEmailValid && checkEmailFormat(); // Nur prüfen, wenn E-Mail nicht leer
-  const isEmailFound = isEmailFormatValid && checkEmailDatabase(); // Nur prüfen, wenn Format korrekt
   const isPasswordValid = checkIfPasswordEmpty();
   const isPasswordLengthValid = isPasswordValid && checkPasswordLength(); // Nur prüfen, wenn Passwort nicht leer
 
   return (
     !isEmailValid ||
     !isEmailFormatValid ||
-    !isEmailFound ||
     !isPasswordValid ||
     !isPasswordLengthValid
   );
@@ -164,15 +161,6 @@ const checkEmailFormat = () => {
   return !emailFormatError.value;
 };
 
-const checkEmailDatabase = () => {
-  const emailDatabase = [
-    "user@example.com",
-    "admin@example.com",
-    "dogancelik86@gmail.com",
-  ]; // Beispielhafte Datenbank
-  emailNotFoundError.value = !emailDatabase.includes(loginEmail.value);
-  return !emailNotFoundError.value;
-};
 
 const checkIfPasswordEmpty = () => {
   passwordError.value = !loginPassword.value;

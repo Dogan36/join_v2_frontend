@@ -1,12 +1,14 @@
 <template>
   <div v-if="activeModal === 'workspaceInfo'" class="workspace-info-overlay">
-    <div v-if="currentWorkspace">
+    <div v-if="currentWorkspace" class="workspace-info-content">
     <div class="workspace-info-header">
-      <h2>Workspace Details</h2>
-      <img @click="close" src="@/assets/img/blackX.svg" alt="" />
-    </div>
-    <div class="workspace-info">
-      <h3>{{ currentWorkspace.name }}</h3>
+      <img class="logo" src="@/assets/img/logoInvert.svg" alt="" />
+      <h3>Workspace Details</h3>
+      <div class="workspace-header-content">
+        <p>
+        <span class="label">Workspace:</span>
+        <span class="value">{{ currentWorkspace.name }}</span>
+      </p>
       <p>
         <span class="label">Owner:</span>
         <span class="value">{{ currentWorkspace.owner.name }}</span>
@@ -15,6 +17,9 @@
         <span class="label">Members:</span>
         <span class="value">{{ currentWorkspace.members.length }}</span>
       </p>
+    </div>
+    </div>
+    <div class="workspace-info-main">
       <div class="buttonContainer">
         <button
           class="main-button-layout"
@@ -41,23 +46,28 @@
         >
           Share Joining Code
         </button>
+        
         <button
           class="main-button-layout button-red"
           @click="setActiveModal('leaveWorkspace')"
         >
           Leave Workspace
         </button>
+        <button
+          class="secondary-button-layout"
+          @click="close"
+        >
+          Close
+        </button>
       </div>
     </div>
   </div>
-  <div v-else>
-
+  <div v-else class="workspace-info-content">
     <div class="workspace-info-header">
       <h2>Welcome</h2>
+      <p>Create or join workspace to get started</p>
     </div>
-    <p>Create or join workspace to get started</p>
-    <div class="workspace-info">
-      
+    <div class="workspace-info-main">
       <div class="buttonContainer">
         <button
           class="main-button-layout"
@@ -133,34 +143,37 @@ const close = () => {
 
 <style>
 
+.logo{
+  height: 6.6rem;
+        width: 5.5rem;
+}
+
 .workspace-info-overlay {
   display: flex;
-  flex-direction: column;
   position: absolute;
+  flex-direction: column;
   background-color: white;
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
   border-radius: 30px;
   z-index: 2;
   transform: translate(0%, -50%);
   top: 50%;
-  padding: 2rem;
-  max-width: 330px;
   overflow-y: auto;
+  max-width: 100vw;
+}
+
+.workspace-info-content {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
   p {
     font-size: 2rem;
-    color: #333;
     margin: 0.5rem 0;
     padding: 0.25rem;
     line-height: 1.5;
     display: flex;
     justify-content: space-between;
-    border-bottom: 1px solid #eaeaea;
-    &:last-child {
-      border-bottom: none;
-    }
-    p:last-child {
-      border-bottom: none;
-  }
+   
 }
   p span.label {
     font-weight: bold; /* Fett gedruckt für Labels */
@@ -169,14 +182,15 @@ const close = () => {
 
   p span.value {
     font-weight: normal; /* Normale Schrift für Werte */
-    color: #555; /* Etwas heller als der Text der Labels für visuelle Trennung */
   }
 }
 
-.workspace-info {
+.workspace-info-main {
   display: flex;
+  justify-content: space-around;
   flex-direction: column;
-  gap: 1rem;
+  padding: 2rem;
+  width: 40rem;
   .buttonContainer {
     display: flex;
     flex-direction: column;
@@ -187,20 +201,23 @@ const close = () => {
 
 .workspace-info-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
+  padding: 2rem;
   gap: 2rem;
-  img {
-    cursor: pointer;
-  }
+  background-color: var(--main-color);
+  color: white;
+  max-width: 300px;
 }
 
 h3 {
-  font-size: 2rem; /* Größere Schrift für Überschriften */
-  color: #2a3647; /* Dunkelblau für bessere Sichtbarkeit und Designkonsistenz */
+  font-size: 3rem; /* Größere Schrift für Überschriften */
   margin-bottom: 2rem; /* Größerer Abstand zur nächsten Sektion */
   font-weight: bold; /* Fett gedruckt für zusätzliche Betonung */
 }
 
-
+.inputFieldWorkspaceOverlay {
+  width: 30rem !important;
+}
 </style>

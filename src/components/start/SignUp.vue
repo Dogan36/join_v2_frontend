@@ -121,7 +121,6 @@ async function signUp(name, email, password) {
       
     } else {
       const errorData = await response.json();
-      console.error('Fehler bei der Registrierung:', errorData);
       if (errorData.email) {
         emailTakenError.value = true;
       }
@@ -227,13 +226,11 @@ const checkPrivacyAccepted = () => {
   return !privacyError.value;
 };
 
-const showForgotPassword = () => {
-  console.log("Forgot password clicked");
-};
+
 </script>
 
 <style>
-@import "../../assets/base.css";
+
 
 .signupOptions {
   display: flex;

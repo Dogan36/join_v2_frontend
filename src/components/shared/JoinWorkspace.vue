@@ -1,23 +1,27 @@
 <template>
   <div class="workspace-info-overlay">
-    <div class="workspace-info">
+    <div class="workspace-info-content">
         <div class="workspace-info-header">
-            <h2>Join Workspace</h2>
-            <img @click="close" src="@/assets/img/blackX.svg" alt="" />
+          <img class="logo" src="@/assets/img/logoInvert.svg" alt="" />
+            <h3>Join Workspace</h3>
+            
+            <p>Please enter the code to join new workspace</p>
         </div>
-        <p>Please enter the code to join new workspace</p>
-        <div>
+        <div class="workspace-info-main">
         <div class="inputContainer" >
-            <div class="inputField" :class="{ 'input-error': error }">
+            <div class="inputField inputFieldWorkspaceOverlay" :class="{ 'input-error': error }">
             <input id="title" v-model="workspaceCode" type="text" placeholder="Enter workspace code"></input>
         </div>
-    </div>
-    <p v-if="error" class="error-message">{{ error }}</p>
-  </div>
-    <div class="buttonContainer">
-      <button class="main-button-layout" @click="submitWorkspaceCode">
-        Join Workspace
-      </button>
+        <p v-if="error" class="error-message">{{ error }}</p>
+      </div>
+      <div class="buttonContainer">
+        <button class="main-button-layout" @click="submitWorkspaceCode">
+          Join Workspace
+        </button>
+        <button class="secondary-button-layout" @click="close">
+          Close
+        </button>
+      </div>
     </div>
     </div>
   </div>

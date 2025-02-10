@@ -230,10 +230,11 @@ try {
 .inputContainer {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  
 
   label {
     font-size: 2.1rem;
+    margin-bottom: 0.8rem;
   }
 }
 

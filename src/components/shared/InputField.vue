@@ -86,11 +86,13 @@ const passwordIconClass = computed(() => {
 
 // Eingabe-Event
 const onInput = (event) => {
+  console.log('Input event', event.target.value);
   emit('update:modelValue', event.target.value);
 };
 
 // Passwort-Sichtbarkeit umschalten
 const togglePasswordVisibility = () => {
+  console.log('Toggle password visibility');
   isPasswordVisible.value = !isPasswordVisible.value;
 };
 
@@ -110,7 +112,6 @@ const emitIconClick = () => {
   border-radius: 4px;
   background-color: white;
   justify-content: center;
-  width: 40rem;
   max-width: 95vw;
 }
 

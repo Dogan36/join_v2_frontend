@@ -185,7 +185,6 @@ justify-content: center;
   font-size: 2.1rem;
   line-height: 120%;
   text-align: center;
-  text-wrap: nowrap;
 }
 
 .buttonV1 {

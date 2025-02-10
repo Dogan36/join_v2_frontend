@@ -19,11 +19,14 @@
   <DarkBackground v-if="currentWorkspace === null || isWorkspaceOverlayVisible" @close="closeOverlay">
     <WorkspaceInfo @close="closeOverlay"></WorkspaceInfo>
   </DarkBackground>
+  <DarkBackground v-if="isProfilOverlayVisible" @close="closeOverlay">
+    <Profil @close="closeOverlay"></Profil>
+  </DarkBackground>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { members, currentView, isWorkspaceOverlayVisible } from "@/store/state";
+import { members, currentView, isWorkspaceOverlayVisible, isProfilOverlayVisible } from "@/store/state";
 import MenuContainer from "@/components/shared/MenuContainer.vue";
 import Header from "@/components/shared/Header.vue";
 import Summary from "@/components/home/Summary.vue";
@@ -35,6 +38,7 @@ import LegalNotice from "@/components/shared/LegalNotice.vue";
 import Help from "@/components/home/Help.vue";
 import WorkspaceInfo from "@/components/shared/WorkspaceInfo.vue";
 import DarkBackground from "@/components/shared/DarkBackground.vue";
+import Profil from "@/components/shared/Profil.vue";
 import useWorkspaces from "@/composables/useWorkspaces";
 import useContacts from "@/composables/useContacts";
 import { currentUser } from "@/store/state";
@@ -52,6 +56,7 @@ function getUser() {
 }
 
 function closeOverlay() {
+  isProfilOverlayVisible.value = false;
   isWorkspaceOverlayVisible.value = false;
 }
 

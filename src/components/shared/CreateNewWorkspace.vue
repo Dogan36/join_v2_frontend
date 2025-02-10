@@ -1,24 +1,32 @@
 <template>
   <div class="workspace-info-overlay">
-    <div class="workspace-info">
+    <div class="workspace-info-content">
         <div class="workspace-info-header">
-            <h2>Create New Workspace</h2>
-            <img @click="close" src="@/assets/img/blackX.svg" alt="" />
+          <img class="logo" src="@/assets/img/logoInvert.svg" alt="" />
+            <h3>Create New Workspace</h3>
+            <div class="workspace-header-content">
+            <p>Please enter a name for your new workspace</p>
+          </div>
         </div>
-        <p>Please enter a name for your new workspace</p>
-        <div>
+        <div class="workspace-info-main">
+        <div class="inputContent">
         <div class="inputContainer" >
-            <div class="inputField" :class="{ 'input-error': error }">
+          <div class="inputField" :class="{ 'input-error': error }">
             <input id="title" v-model="newWorkspaceName" type="text" placeholder="Enter workspace name"></input>
+          </div>
+          <p v-if="error" class="error-message">{{ error }}</p>
+        </div>  
         </div>
-    </div>
-    <p v-if="error" class="error-message">{{ error }}</p>
-  </div>
+  
     <div class="buttonContainer">
       <button class="main-button-layout" @click="submitNewWorkspace">
         Create Workspace
       </button>
+      <button class="secondary-button-layout" @click="close">
+        Cancel
+      </button>
     </div>
+</div>
     </div>
   </div>
 </template>

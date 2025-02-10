@@ -137,11 +137,11 @@ p{
 }
 
 p.error-message {
-  color: #f28b82;
-  font-size: 1rem;
-  margin: 0;
-  margin-bottom: 0.4rem;
-  height: 1.8rem;
+  color: #f28b82!important;
+  font-size: 1rem !important;
+  margin: 0 !important;
+  margin-bottom: 0.4rem !important;
+  height: 1.8rem !important;
 }
 
 

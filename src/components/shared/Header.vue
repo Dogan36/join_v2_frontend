@@ -9,10 +9,11 @@
         alt=""
         @click="changeView('help')"
       />
-      <div v-if="route.path === '/home'" class="headerUserProfilInitials" @click="openUserMenu">{{ currentUser.avatar }}</div>
+      <div v-if="route.path === '/home'" class="headerUserProfilInitials" @click="toggleUserMenu()">{{ currentUser.avatar }}</div>
     </div>
 
-    <div class="userMenuContent" v-if="showUserMenu">
+    <div class="userMenuContent" v-if="showUserMenu" @mouseenter="onUserMenuMouseEnter" 
+    @mouseleave="onUserMenuMouseLeave">
       <p @click="changeView('privacy')">Privacy Policy</p>
       <p @click="changeView('legalNotice')">Legal Notice</p>
       <p @click="openWorkspaceInfo">Workspace</p>
@@ -24,7 +25,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { currentUser, currentView, isWorkspaceOverlayVisible } from "@/store/state";
+import { currentUser, currentView, isWorkspaceOverlayVisible, isProfilOverlayVisible } from "@/store/state";
 import { useRouter } from "vue-router";
 import { useRoute } from 'vue-router';
 const router = useRouter();
@@ -34,22 +35,39 @@ const showUserMenu = ref(false);
 
 
 function openWorkspaceInfo() {
+  closeUserMenu();
   isWorkspaceOverlayVisible.value = true;
 }
-function openUserMenu() {
-  showUserMenu.value = true;
-  setTimeout(() => {
-      closeUserMenu();
-    }, 2000);
+
+function goToProfile() {
+  isProfilOverlayVisible.value = true;
+  closeUserMenu();
+}
+
+let closeUserMenuTimeout = null;
+
+function toggleUserMenu() {
+  showUserMenu.value = !showUserMenu.value;
+  clearTimeout(closeUserMenuTimeout);
+  closeUserMenuTimeout = setTimeout(() => {
+    closeUserMenu();
+  }, 2000);
+}
+
+function onUserMenuMouseEnter() {
+  clearTimeout(closeUserMenuTimeout);
+}
+
+function onUserMenuMouseLeave() {
+  closeUserMenuTimeout = setTimeout(() => {
+    closeUserMenu();
+  }, 2000);
 }
 
 function closeUserMenu() {
   showUserMenu.value = false;
 }
 
-function goToProfile() {
-  closeUserMenu();
-}
 
 function logout() {
   closeUserMenu();

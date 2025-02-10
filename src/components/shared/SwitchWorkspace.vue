@@ -1,18 +1,21 @@
 <template>
   <div class="workspace-info-overlay">
-    <div class="workspace-info">
+    <div class="workspace-info-content">
     <div class="workspace-info-header">
-      <h2>Switch Workspace</h2>
-      <img @click="close" src="@/assets/img/blackX.svg" alt="">
-    </div>
+      <img class="logo" src="@/assets/img/logoInvert.svg" alt="" />
+      <h3>Switch Workspace</h3>
       <div v-if="filteredWorkspaces.length === 0">
         <p>You are not a member of any other workspaces.</p>
         <p>Join a workspace or create a new one.</p>
       </div>
       <div v-else>
-        <p>Choose Workspace</p>
+        <p>Choose a workspace to switch to</p>
+      </div>
+    </div>
       
-        <select id="workspaceSelect" class="inputField " v-model="selectedWorkspace">
+      <div class="workspace-info-main">
+        <div class="buttonContainer">
+        <select v-if="filteredWorkspaces.length > 0"  id="workspaceSelect" class="inputField inputFieldWorkspaceOverlay" v-model="selectedWorkspace">
           <option  value="" selected>Bitte Workspace auswählen</option>
           <option
             v-for="workspace in filteredWorkspaces"
@@ -22,8 +25,6 @@
             {{ workspace.name }}
           </option>
         </select>
-      </div>
-      <div class="buttonContainer">
         <button v-if="filteredWorkspaces.length === 0"  class="secondary-button-layout" @click="setActiveModal('createWorkspace')">
           Create New Workspace
         </button>
@@ -33,8 +34,11 @@
         <button v-else class="main-button-layout" @click="confirmSwitch">
           Switch Workspace
         </button>
+        <button class="secondary-button-layout" @click="close">
+          Close
+        </button>
       </div>
-      
+      </div>
     </div>
   </div>
 </template>
@@ -68,5 +72,4 @@ const close = () => {
   emit("close");
 };
 </script>
-
 
