@@ -164,6 +164,7 @@ defineExpose({
       align-items: center;
       gap: 0.5rem;
       height: 100%;
+      font-size: 1.6rem;
     }
 
     img {

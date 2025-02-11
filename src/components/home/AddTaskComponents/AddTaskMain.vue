@@ -1,8 +1,11 @@
 <template>
   <div class="addTaskOverlay">
-    <h1 class="headlineComponent">
+    <div class="addTaskHeadline"><h1 class="headlineComponent">
       {{ isEditMode ? "Edit Task" : "Add Task" }}
     </h1>
+    <img v-if="isAddTaskOverlayVisible" @click="closeOverlay" src="@/assets/img/blackX.svg" alt="">
+  </div>
+    
     <form class="addTaskMainContent" @submit.prevent="handleSubmit">
       <div class="formLeft">
         <Title ref="title" />
@@ -46,8 +49,7 @@ import { useLoadingOverlay } from "@/composables/useLoadingOverlay";
 import { useConfirmationOverlay } from "@/composables/useConfirmationOverlay";
 const { showConfirmation } = useConfirmationOverlay();
 const { showOverlay, hideOverlay } = useLoadingOverlay();
-
-import { currentWorkspace, getToken, currentTask, tasks, selectedCategory, currentView} from "@/store/state";
+import { currentWorkspace, getToken, currentTask, tasks, selectedCategory, currentView, isAddTaskOverlayVisible} from "@/store/state";
 
 const isEditMode = ref(false); // Wird auf true gesetzt, wenn der Task bearbeitet wird
 const props = defineProps({
@@ -210,7 +212,9 @@ try {
 </script>
 
 <style>
-
+.addTaskOverlay{
+  max-width: 100%;
+}
 .addTaskMainContent {
   display: flex;
   max-width: 900px;
@@ -222,8 +226,6 @@ try {
 .formRight {
   display: flex;
   flex-direction: column;
- flex: 1;
- min-width: 360px;
   max-width: 100%;
 }
 
@@ -233,7 +235,7 @@ try {
   
 
   label {
-    font-size: 2.1rem;
+    font-size: 2rem;
     margin-bottom: 0.8rem;
   }
 }
@@ -243,6 +245,25 @@ try {
   align-self: flex-end;
   gap: 1rem;
   margin-top: 2rem;
+}
+
+.addTaskHeadline{
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  img{
+    height: 20px;
+    margin-bottom: 2rem;
+    cursor: pointer;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .addTaskMainContent {
+    justify-content: center;
+  }
+  
 }
 
 </style>

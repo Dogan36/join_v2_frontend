@@ -68,18 +68,46 @@ function closeOverlay() {
   display: flex;
   width: 100%;
   height: 100%;
+ 
 }
 
 .content {
   flex: 1; /* Nimmt die restliche Breite ein */
   display: flex;
   flex-direction: column;
-  max-width: calc(100% - 25rem); /* Abzug der Breite des Menüs */
+  max-width: calc(100% - 25rem);
+  height: 100%;
+  max-height: 100svh;
+  overflow: hidden;
 }
 
 main {
   flex: 1; /* Füllt den verbleibenden Raum */
-  padding: 5rem;
+  padding: 3.5rem;
   overflow-y: auto; /* Ermöglicht das Scrollen bei Überlauf */
 }
+
+@media screen and (max-width: 1000px) {
+  .home {
+    flex-direction: column-reverse;
+  }
+  .content {
+    max-width: 100%;
+  }
+  main {
+    padding: 2rem;
+    align-items: center;
+  }
+}
+@media screen and (max-width: 700px) {
+  main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    align-items: center;
+    position: relative;
+  }
+}
+
 </style>

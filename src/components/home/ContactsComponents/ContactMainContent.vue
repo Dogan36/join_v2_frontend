@@ -47,6 +47,7 @@
       </div>
     </div>
     <div class="buttonContainer">
+      <div @click="$emit('close')" class="secondary-button-layout closeContact">Close</div>
       <div @click="$emit('openOverlay', false)" class="main-button-layout">New Contact
         <img src="@/assets/img/addContactIcon.svg" alt="">
       </div>
@@ -61,7 +62,7 @@ import { selectedContact } from "@/store/state";
 import { defineEmits } from "vue";
 import  useContacts  from "@/composables/useContacts";
 const { deleteContact } = useContacts();
-const emit = defineEmits(["openOverlay"]); // Definiere ein Event für das Parent
+const emit = defineEmits(["openOverlay", "close"]); // Definiere ein Event für das Parent
 
 const textColor = computed(() => {
   return isDarkBackground.value ? '#fff' : '#000';
@@ -96,15 +97,19 @@ function hexToRgb(hex) {
     display: flex;
     flex-direction: column;
     gap: 20px;
-
+    padding: 20px;
+    background: #FFFFFF;
+    box-shadow: 0px 0px 4px rgb(0 0 0 / 10%);
+    border-radius: 20px;
+    width: 377px;
+    max-width: 100%;
     .cardHeader {
       display: flex;
       flex-direction: row;
       align-items: center;
       padding: 0px;
-      gap: 54px;
-      width: 461px;
-      height: 120px;
+      gap: 1rem;
+      flex-wrap: wrap;
     }
 
     .cardAvatar {
@@ -112,21 +117,27 @@ function hexToRgb(hex) {
       justify-content: center;
       align-items: center;
       text-align: center;
-      min-width: 12rem;
-      min-height: 12rem;
-      border: 1px solid #ffffff;
+      min-width: 8rem;
+      min-height: 8rem;
+      border: 2px solid #b9c3ce;
       border-radius: 100%;
       font-weight: 500;
-      font-size: 47px;
+      font-size: 4rem;
       align-self: center;
-      line-height: 12rem;
+      line-height: 120%;
     }
 
     .cardHeaderContent {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      max-width: 100%;
+      flex-wrap: wrap;
+    
       span {
         font-weight: 500;
-        font-size: 4.7rem;
-        text-wrap: nowrap;
+        font-size: 2.5rem;
+  
       }
       .cardHeaderEdits {
         display: flex;
@@ -170,7 +181,6 @@ function hexToRgb(hex) {
       .cardPhoneContainer {
         display: flex;
         flex-direction: column;
-        gap: 10px;
         span {
           font-weight: 600;
           font-size: 1.6rem;
@@ -196,9 +206,44 @@ function hexToRgb(hex) {
 .buttonContainer {
   display: flex;
   justify-content: flex-end;
-  .main-button-layout {
-    padding: 1rem 1.5rem;
+}
+
+.closeContact {
+  display: none;
+}
+
+@media screen and (max-width: 1000px) {
+  .contactsContent {
+    gap: 1rem;
   }
+  
+}
+@media screen and (max-width: 700px) {
+.contactMainContent {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        flex: 1;
+        z-index: 3;
+        background: yellow;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        align-items: center;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 1rem;
+  align-items: center;
+}
+.closeContact {
+  display: flex;
+}
 }
 </style>
 

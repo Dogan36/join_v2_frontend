@@ -47,21 +47,22 @@
     display: flex;
     gap: 10px;
     margin-top: 5px;
+    flex-wrap: wrap;
 }
 
 .prioButton{
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 134px;
-    height: 51px;
     background-color: white;
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
-    padding: 18px 10px;
+    padding: 0px 2rem;
+    height: 4rem;
     gap: 10px;
     font-size: 21px;
     cursor: pointer;
+    
     span{
         font-size: 21px;
     }

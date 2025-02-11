@@ -10,7 +10,6 @@
 <style scoped>
 
 .form-layout {
-    width: 470px;
     min-width: fit-content;
     max-width: 100vw;
     padding: 3rem;

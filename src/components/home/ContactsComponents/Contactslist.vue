@@ -1,15 +1,18 @@
 <template>
  
   <div class="contactsList">
-    <select class="inputField dropDown" v-model="selectedFilter">
+    <select class="dropdown" v-model="selectedFilter">
       <option class="option" value="all"> All Contacts</option>
       <option value="own"> Own Contacts</option>
       <option value="members"> Workspace Members</option>
     </select>
+    <div @click="$emit('openOverlay', false)" class="main-button-layout contactListAddNewContact">New Contact
+        <img src="@/assets/img/addContactIcon.svg" alt="">
+      </div>
     <div v-if="isEmpty">
       <p>{{ emptyMessage }}</p>
     </div>
-    <div v-else v-for="(group, letter) in groupedContacts" :key="letter">
+    <div class="letterSection" v-else v-for="(group, letter) in groupedContacts" :key="letter">
       <h2 class="letterSeparator">{{ letter }}</h2>
       <img src="@/assets/img/contactSeperator.svg" />
       <div v-for="contact in group" :key="contact.id">
@@ -86,13 +89,13 @@ const emptyMessage = computed(() => {
   align-items: center;
   flex-direction: column;
   padding: 0px;
-  width: 420px;
+  width: 320px;
   max-width: 100%;
   gap: 10px;
   padding: 10px;
   background-color: white;
   overflow-y: scroll;
-  margin: -50px 0 -50px -50px;
+  margin: -3.5rem 0 -3.5rem -3.5rem;
   
   img {
     width: 100%;
@@ -118,8 +121,37 @@ const emptyMessage = computed(() => {
   font-size: 2.1rem;
 }
 
-.dropDown {
+.dropdown {
     cursor: pointer;
+    width: 20rem;
+    height: 4rem;
+    padding: 0.5rem;
+    font-size: 1.6rem;
+    box-shadow: 0px 0px 4px 0px #00000040;
+    border-radius: 5px;
+}
+.contactListAddNewContact{
+  display: none;
+}
+
+@media screen and (max-width: 1000px) {
+  .contactsList {
+    margin: -2rem 0 -2rem -2rem;
+    width: 320px;
+  }
+  
+}
+
+@media screen and (max-width: 700px) {
+  .contactsList {
+    position: absolute;
+    height: 100%;
+    margin: -1rem -1rem -1rem -1rem;
+    width: 100%;
+  }
+  .contactListAddNewContact{
+    display: block;
+  }
 }
 
 </style>

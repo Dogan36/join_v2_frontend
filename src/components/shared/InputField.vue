@@ -107,17 +107,17 @@ const emitIconClick = () => {
   display: flex;
   align-items: center;
   border: 1px solid #ccc;
-  padding: 1rem;
+  padding:1rem 1rem;
   gap: 1rem;
   border-radius: 4px;
   background-color: white;
   justify-content: center;
-  max-width: 95vw;
+  max-width: 100%;
+  width: 40rem;
 }
 
 .input-error {
   border: 2px solid red;
- 
 }
 
 .inputField input,
@@ -126,9 +126,9 @@ const emitIconClick = () => {
   border: none;
   outline: none;
   background: transparent;
-  font-size: 2.1rem;
+  font-size: 1.6rem;
   font-family: inherit;
-  width:50px
+  max-width: 100%;
 }
 
 .inputField input[type="checkbox"] {
@@ -136,7 +136,6 @@ const emitIconClick = () => {
   width: 20px;
   height: 20px;
   cursor: pointer;
- 
 }
 
 .input-icon {
@@ -155,7 +154,6 @@ const emitIconClick = () => {
   height: auto; /* Ermöglicht flexibles Wachstum */
   min-height: 120px;
   width: auto;
-  min-width: 200px;
   overflow: hidden; 
   font-family: inherit;
 }
@@ -170,7 +168,7 @@ const emitIconClick = () => {
 .inputField input::placeholder,
 .inputField textarea::placeholder {
   padding: 0;
-  font-size: 2.1rem; /* Schriftgröße des Platzhalters */
+  font-size: 1.6rem; /* Schriftgröße des Platzhalters */
   opacity: 1; /* Sichtbarkeit des Platzhalters */
 }
 

@@ -7,6 +7,7 @@ export const workspaces = ref([]);
 export const currentWorkspace = ref('');
 export const isWorkspaceOverlayVisible = ref(false);
 export const isProfilOverlayVisible = ref(false);
+export const isAddTaskOverlayVisible = ref(false);
 export const members = ref([]);
 export const contacts = ref([]);
 export const selectedContact = ref(null);

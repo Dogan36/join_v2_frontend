@@ -127,16 +127,15 @@ function changeView(view) {
 
 
 .logoContainer {
-  width: 100.03px;
-  height: 121.97px;
+  width: 70px;
+ 
   flex: none;
   order: 0;
   flex-grow: 0;
 }
 
 .logoTemplate {
-  width: 100.03px;
-  height: 121.97px;
+  width: 70px;
   cursor: pointer;
 }
 
@@ -163,6 +162,9 @@ function changeView(view) {
   padding: 10px 0px 10px 30px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
   transition: background-color 0.5s ease;
+  &:hover{
+    background-color: rgba(0, 0, 0, 0.2);;
+  }
 }
 
 .desktopTemplateIconContainer {
@@ -177,6 +179,7 @@ function changeView(view) {
   flex: none;
   order: 0;
   flex-grow: 0;
+  
 }
 
 .desktopTemplateIcon {
@@ -196,6 +199,9 @@ function changeView(view) {
 .desktopTemplateIconActive {
   background-color: #091931;
   transition: background-color 0.5s ease;
+  &:hover{
+    background-color: #091931;
+  }
 }
 
 .desktopTemplateIconActive p {
@@ -250,5 +256,51 @@ function changeView(view) {
 .deleteIcon {
   width: 20px;
   height: 20px;
+}
+
+@media screen and (max-width: 1000px) {
+  .menu {
+    height: fit-content;
+    gap: 10px;
+    padding:0px;
+  }
+  .logoTemplate{
+    display: none;
+  }
+
+  .desktopTemplateMenu {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 0px;
+  }
+
+  .desktopTemplateMenu:last-of-type{
+    display: none;
+  } 
+
+}
+
+@media screen and (max-width: 700px) {
+  .menu {
+    height: fit-content;
+    padding:0px;
+    gap: 0;
+  }
+  .desktopTemplateMenu {
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 0px;
+    gap: 0;
+  }
+  .desktopTemplateMenuElements{
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 25%;
+    gap: 0;
+    padding: 5px;
+  }
+  
 }
 </style>

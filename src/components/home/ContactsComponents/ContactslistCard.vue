@@ -71,6 +71,8 @@ function hexToRgb(hex) {
   border-radius: 10px;
   margin-bottom: 1rem;
   transition: all 0.3s ease;
+  width: 290px;
+  max-width: 100%;
   .contact-image{
     position: absolute;
     right: 12px;
@@ -112,8 +114,8 @@ function hexToRgb(hex) {
   padding: 0px;
   gap: 5px;
   h3 {
-    font-size: 2.1rem;
-    white-space: nowrap;
+    font-size: 2rem;
+    white-space: wrap;
     display: flex;
     align-items: center;
     color: #000000;

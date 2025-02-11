@@ -138,7 +138,7 @@ function changeView(view) {
 }
 
 .logoHeaderMobile {
-  height: 100%;
+  height: 60%;
   display: none;
 }
 
@@ -164,5 +164,28 @@ function changeView(view) {
     font-size: 1.6rem;
     cursor: pointer;
   }
+}
+
+@media screen and (max-width: 1000px) {
+  .header {
+    padding: 0px 15px;
+    gap: 10px;
+  }
+  
+  .headerUserProfil {
+    gap: 10px;
+  }
+  
+  .headerHeadline {
+    font-size: 18px;
+  }
+
+  .logoHeaderMobile {
+    display: block;
+  }
+  .userMenuContent {
+    right: 20px;
+  }
+
 }
 </style>

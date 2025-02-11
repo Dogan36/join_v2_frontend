@@ -57,7 +57,7 @@
     </div>
  
 
-    <DarkBackground v-if="isOverlayVisible" @close="closeOverlay">
+    <DarkBackground v-if="isAddTaskOverlayVisible" @close="closeOverlay">
       <AddTaskMain
       :status="choosenStatus"
       @close="closeOverlay"></AddTaskMain>
@@ -78,9 +78,8 @@ import { API_BASE_URL } from "@/config";
 import BoardCard from "./BoardComponents/BoardCard.vue";
 import AddTaskMain from "./AddTaskComponents/AddTaskMain.vue";
 import DarkBackground from "../shared/DarkBackground.vue";
-import { tasks, currentTask, currentWorkspace, getToken, categories, selectedTasks } from "@/store/state";
+import { tasks, currentTask, currentWorkspace, getToken, categories, selectedTasks, isAddTaskOverlayVisible } from "@/store/state";
 import BoardTaskDetail from "./BoardComponents/BoardTaskDetail.vue";
-const isOverlayVisible = ref(false);
 const isDetailViewVisible = ref(false);
 const searchQuery = ref("");
 let choosenStatus = '';
@@ -199,7 +198,7 @@ const openAddTaskOverlay = (status) => {
   if (status) {
     choosenStatus = status
     currentTask.value = null;}
-  isOverlayVisible.value = true;
+  isAddTaskOverlayVisible.value = true;
 };
 
 const openTaskDetail = (task) => {
@@ -207,13 +206,17 @@ const openTaskDetail = (task) => {
   isDetailViewVisible.value = true;
 };
 const closeOverlay = () => {
-  isOverlayVisible.value = false;
+  isAddTaskOverlayVisible.value = false;
   isDetailViewVisible.value = false;
 };
 </script>
 <style scoped>
 .headlineComponent {
   justify-content: space-between;
+  align-items: flex-start;
+}
+.boardContent {
+  width: 100%;
 }
 
 .addTaskOverlay {
@@ -224,12 +227,11 @@ const closeOverlay = () => {
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
   border-radius: 30px;
   z-index: 2;
-  max-height: 85%;
-  width: 85%;
+  max-height: 100%;
+  max-width: 100%;
   transform: translate(0%, -50%);
   top: 50%;
-  padding: 5rem;
-  max-width: 1000px;
+  padding: 3rem;
   overflow-y: auto;
  
 }
@@ -238,14 +240,16 @@ const closeOverlay = () => {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 3.5rem;
+  gap: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .findTask {
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 1.3rem 2.1rem;
+  height: 4rem;
+  padding: 0rem 2.1rem;
   gap: 5px;
   background: #ffffff;
   border: 1px solid #a8a8a8;
@@ -357,6 +361,27 @@ const closeOverlay = () => {
   }
   100% {
     box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .boardHeadlineRight{
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .boardMainContent{
+    justify-content: center;
+    
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .headlineComponent{
+    flex-wrap: wrap;
+  }
+  .boardHeadlineRight{
+    flex-wrap: wrap;
+    justify-content: flex-start;
   }
 }
 </style>

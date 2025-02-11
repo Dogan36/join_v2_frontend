@@ -54,7 +54,7 @@
   </FormLayout>
 </template>
 <script setup>
-import { ref, defineEmits } from "vue";
+import { ref, defineEmits, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import FormLayout from "../shared/FormLayout.vue";
 import InputField from "../shared/InputField.vue";
@@ -79,13 +79,20 @@ const passwordError = ref(false);
 const passwordLengthError = ref(false);
 const passwordIncorrectError = ref(false);
 const emit = defineEmits();
+
 const forgotPassword = () => {
   emit('toggleForgotPassword');
 };
+
+onMounted(() => {
+  if (localStorage.getItem("join_remember")) {
+    loginEmail.value = localStorage.getItem("join_remember");
+    rememberMe.value = true;
+  }
+});
 async function login(email, password) {
   showOverlay();
   let username = email;
-  console.log("Logging in with email:", email, "and password:", password);
   try {
     const response = await fetch(`${API_BASE_URL}/user/login/`, {
       method: "POST",
@@ -97,10 +104,13 @@ async function login(email, password) {
 
     if (response.ok) {
       const data = await response.json();
-      console.log("Login successful:", data);
       localStorage.setItem("join_token", data.token);
       localStorage.setItem("join_user", JSON.stringify(data.user))
-     
+      if (rememberMe.value) {
+        localStorage.setItem("join_remember", email);
+      } else {
+        localStorage.removeItem("join_remember");
+      }
       console.log(currentUser.value)
       showConfirmation('Login successful!');
       window.location.href = "/home"; // Beispiel: Weiterleitung
@@ -174,7 +184,6 @@ const checkPasswordLength = () => {
 };
 
 const guestLogin = () => {
-  // Beispielhafte Logik für den Gast-Login
   console.log("Logging in as Guest");
   router.push("/home");
 };
@@ -216,7 +225,9 @@ const guestLogin = () => {
   gap: 0.5rem;
   cursor: pointer;
   font-size: 1.6rem;
-  
+  input{
+    cursor: pointer;
+  }
  }
 
 .loginOptions span {

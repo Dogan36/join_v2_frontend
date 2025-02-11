@@ -133,21 +133,21 @@ const greetingByDaytime = computed(() => {
 
 .contentButtons {
   display: flex;
-  gap: 3.5rem;
+  gap: 2rem;
   flex-direction: column;
-  min-width: 58rem;
 }
 
 .buttonContainerRow {
   display: flex;
-  gap: 3.5rem;
+  gap: 2rem;
 }
 
 .buttonSummary {
 display: flex;
 align-items: center;
 justify-content: center;
-  height: 15rem;
+  height: 13rem;
+  width: 13rem;
   background: #FFFFFF;
   box-shadow: 0px 0px 4px rgb(0 0 0 / 10%);
   border-radius: 20px;
@@ -155,6 +155,7 @@ justify-content: center;
   cursor: pointer;
   transition: all 0.175s ease-in-out;
   padding: 1.5rem;
+  text-align: center;
 }
 
 .buttonContent {
@@ -172,27 +173,22 @@ justify-content: center;
 }
 
 .buttonNumber {
-  font-size: 5.5rem;
+  font-size: 3.5rem;
   font-style: normal;
   font-weight: 600;
 }
 
 .buttonText {
-  width: 8.7rem;
-  font-family: 'Inter';
-  font-style: normal;
   font-weight: 400;
-  font-size: 2.1rem;
+  font-size: 2rem;
   line-height: 120%;
   text-align: center;
 }
 
-.buttonV1 {
-  width: calc((100% - 7rem) / 3);
-}
+
 
 .buttonV2 {
-  width: calc((100% - 3.5rem) / 2);
+  width: calc((100% - 2rem) / 2);
   justify-content: space-around;
   flex-direction: column;
   .buttonText {
@@ -200,15 +196,13 @@ justify-content: center;
     white-space: nowrap;
   }
   .buttonV2TextBold {
-    font-size: 2.1rem;
+    font-size: 2rem;
     font-weight: 600;
   }
 }
 
-
-
 .buttonV3 {
-  width: calc((100% - 3.5rem) / 2);
+  width: calc((100% - 2rem) / 2);
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
@@ -218,8 +212,8 @@ justify-content: center;
 .hookIcon,
 .urgentIcon
  {
-  width: 7rem;
-  height: 7rem;
+  width: 6rem;
+  height: 6rem;
   background-size: cover;
   background-repeat: no-repeat;
 
@@ -257,15 +251,96 @@ justify-content: center;
   gap: 0.5rem;
   margin-top: 3rem;
   span:first-child {
-    font-size: 4.7rem;
+    font-size: 4rem;
     font-weight: 500;
     text-align: center;
   }
   span:last-child {
-    font-size: 6.4rem;
+    font-size: 6rem;
     font-weight: 700;
     color: var(--main-color-hover);
     text-align: center;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .contentSummary {
+    gap: 2rem;
+  }
+  .contentButtons {
+    gap: 1rem;
+  }
+  .buttonContainerRow {
+    gap: 1rem;
+  }
+
+  .buttonV2 {
+  width: calc((100% - 1rem) / 2);
+  }
+  .buttonV3 {
+    width: calc((100% - 1rem) / 2);
+  }
+  .penIcon,
+  .hookIcon,
+  .urgentIcon {
+    width: 4rem;
+    height: 4rem;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .contentSummary {
+    gap: 2rem;
+    max-width: 100%;
+  }
+  .contentButtons {
+    gap: 1rem;
+    width: 100%;
+  }
+  .buttonContainerRow {
+    width: 100%;
+    gap: 1rem;
+  }
+
+  .buttonV1{
+    width: calc((100% - 2rem)/3);
+    aspect-ratio: 1/1;
+  }
+
+  .penIcon,
+  .hookIcon,
+  .urgentIcon {
+    width: 3rem;
+    height: 3rem;
+  }
+  .welcomeDesk {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 400px) {
+ 
+  .buttonNumber {
+    font-size: 2.5rem;
+  }
+  .buttonText {
+    font-size: 1.5rem;
+  }
+
+  .buttonV2{
+    .buttonText {
+      font-size: 1.5rem;
+    }
+  }
+  .buttonV1{
+    width: calc((100% - 2rem)/3);
+  }
+ 
+  .penIcon,
+  .hookIcon,
+  .urgentIcon {
+    width: 3rem;
+    height: 3rem;
   }
 }
 </style>
