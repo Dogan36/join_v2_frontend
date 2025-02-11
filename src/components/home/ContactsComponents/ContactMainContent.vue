@@ -133,7 +133,7 @@ function hexToRgb(hex) {
       justify-content: space-between;
       max-width: 100%;
       flex-wrap: wrap;
-    
+      gap: 1rem;
       span {
         font-weight: 500;
         font-size: 2.5rem;

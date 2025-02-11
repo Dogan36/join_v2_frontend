@@ -145,7 +145,7 @@ const close = () => {
 
 .logo{
   height: 6.6rem;
-        width: 5.5rem;
+  width: 5.5rem;
 }
 
 .workspace-info-overlay {
@@ -219,5 +219,31 @@ h3 {
 
 .inputFieldWorkspaceOverlay {
   width: 30rem !important;
+}
+
+@media screen and (max-width: 700px) {
+  .workspace-info-overlay {
+    max-width: 100%;
+    
+  }
+
+  .workspace-info-header {
+    width: 100%;
+    max-width: unset;
+  }
+  .workspace-info-content {
+    flex-direction: column;
+    width: 100%;
+  }
+  .workspace-info-header {
+    width: 100%;
+  }
+  .workspace-info-main {
+    width: 100%;
+    p{
+    flex-wrap: wrap;
+  }
+  }
+  
 }
 </style>

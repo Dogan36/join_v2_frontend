@@ -1,15 +1,18 @@
 <template>
-  <div class="contactOverlay">
-    <div class="overlayHeader">
-      <img src="@/assets/img/logoInvert.svg" alt="" />
-      <div class="overlayHeaderText">
-        <h1>{{ contactOverlayIsEditMode ? "Edit Contact" : "Add Contact" }}</h1>
-        <h2>Tasks are better with a team!</h2>
-        <img src="@/assets/img/headlineSeperator.svg" alt="" />
+  <div class="workspace-info-overlay">
+    <div class="workspace-info-content">
+    <div class="workspace-info-header">
+      <img class="logo" src="@/assets/img/logoInvert.svg" alt="" />
+      
+        <h2>{{ contactOverlayIsEditMode ? "Edit Contact" : "Add Contact" }}</h2>
+        
+      <div class="workspace-header-content">
+        <p>Tasks are better with a team!</p>
       </div>
+     
     </div>
-    <div class="overLayContent">
-      <img v-if="!contactOverlayIsEditMode" src="@/assets/img/newContactIcon.svg" alt="Contact Icon" />
+    <div class="workspace-info-main">
+      <img class="cardContactImg" style="align-self: center;" v-if="!contactOverlayIsEditMode" src="@/assets/img/newContactIcon.svg" alt="Contact Icon" />
       <div v-else
           class="cardAvatar"
           :style="{ backgroundColor: selectedContact.color?.hex_value || '#ffffff', color: textColor }"
@@ -55,6 +58,7 @@
       </form>
     </div>
   </div>
+</div>
 </template>
 
 <script setup>
@@ -233,10 +237,14 @@ function hexToRgb(hex) {
   align-items: center;
   justify-content: space-around;
   width: 60%;
-  img {
-    height: 120px;
-    width: 120px;
-  }
+ 
+}
+
+.cardContactImg{
+  align-self: center;
+  height: 6rem;
+  width: 6rem;
+  margin-bottom: 1rem;
 }
 
 .cardAvatar {
@@ -244,14 +252,15 @@ function hexToRgb(hex) {
       justify-content: center;
       align-items: center;
       text-align: center;
-      min-width: 12rem;
-      min-height: 12rem;
+      min-width: 6rem;
+      min-height: 6rem;
       border: 1px solid #ffffff;
       border-radius: 100%;
       font-weight: 500;
-      font-size: 47px;
+      font-size: 3rem;
       align-self: center;
-      line-height: 12rem;
+      line-height: 120%;
+      margin-bottom: 1rem;
     }
 
 
