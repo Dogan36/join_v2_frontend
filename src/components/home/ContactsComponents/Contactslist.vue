@@ -47,6 +47,7 @@ const combinedContacts = computed(() => {
     ...contact,
     isMember: false  // Markiere, dass es sich um einen Kontakt handelt
   }));
+  console.log(allContacts)
   const allMembers = members.value
   .filter(member => member.id !== currentUser.value.id)
   .map(member => ({
@@ -59,14 +60,25 @@ const combinedContacts = computed(() => {
 });
 
 const groupedContacts = computed(() => {
-  return combinedContacts.value.reduce((groups, contact) => {
+  // Kontakte nach erstem Buchstaben gruppieren
+  const groups = combinedContacts.value.reduce((acc, contact) => {
     const firstLetter = contact.name[0].toUpperCase();
-    if (!groups[firstLetter]) {
-      groups[firstLetter] = [];
+    if (!acc[firstLetter]) {
+      acc[firstLetter] = [];
     }
-    groups[firstLetter].push(contact);
-    return groups;
+    acc[firstLetter].push(contact);
+    return acc;
   }, {});
+
+  // Neues Objekt mit sortierten Schlüsseln erzeugen
+  const sortedGroups = {};
+  Object.keys(groups)
+    .sort() // sortiert alphabetisch
+    .forEach(letter => {
+      sortedGroups[letter] = groups[letter];
+    });
+
+  return sortedGroups;
 });
 
 const isEmpty = computed(() => {

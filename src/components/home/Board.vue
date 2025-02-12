@@ -1,5 +1,6 @@
 <template>
-  <div class="boardContent" @click="removeHighlight">
+  <div class="boardContent" @click="removeHighlight" ref="boardContentRef">
+   
     <div class="headlineComponent">
       <h1>Board</h1>
       <div class="boardHeadlineRight">
@@ -14,8 +15,17 @@
       </div>
     </div>
 
-  <div class="boardMainContent">
-    <div v-for="column in columns" :key="column.status" class="boardElement">
+  <div @touchmove="onTouchMove" class="boardMainContent" ref="boardMainContentRef">
+    <div v-if="longPressFlag" class="long-press-overlay top"
+    ><img src="@/assets/img/scrollArrow.svg" alt=""></div>
+    <div v-if="longPressFlag"  class="long-press-overlay bottom"
+    ><img src="@/assets/img/scrollArrow.svg" alt=""></div>
+    <div v-for="column in columns" :key="column.status" :data-status="column.status" class="boardElement">
+      <div v-if="draggedTask && longPressFlag" 
+       class="drag-preview" 
+       :style="{ top: dragPreviewPosition.y + 'px', left: dragPreviewPosition.x + 'px' }">
+    <BoardCard :task="draggedTask" class="ghost" />
+  </div>
       <div class="boardElementHeader">
         <span>{{ column.label }}</span>
         <img
@@ -39,13 +49,18 @@
           draggable="true"
           @dragstart="onDragStart(task)"
           @dragend="onDragEnd"
-          @click="openTaskDetail(task)"
+          
+          @touchstart.prevent="onTouchStart(task, $event)"
+          @touchend.prevent="onTouchEnd"
+          @touchcancel.prevent="onTouchEnd"
         />
         <!-- Zeigt einen Drop-Indikator an, wenn über dieser Spalte gezogen wird -->
-        <div v-if="draggedTask && draggedTask.status !== column.status && hoveredColumn === column.status" class="empty-board-card">
-          <!-- Hier kann z. B. ein leeres BoardCard-Template stehen -->
-          Move here
-        </div>
+        <div
+    v-if="draggedTask && draggedTask.status !== column.status && hoveredColumn === column.status"
+    class="empty-board-card"
+  >
+    Move here
+  </div>
         <!-- Falls in der Spalte keine Tasks vorhanden sind -->
         <div
           v-if="tasksByStatus[column.status].length === 0 && hoveredColumn !== column.status"
@@ -82,6 +97,7 @@ import { tasks, currentTask, currentWorkspace, getToken, categories, selectedTas
 import BoardTaskDetail from "./BoardComponents/BoardTaskDetail.vue";
 const isDetailViewVisible = ref(false);
 const searchQuery = ref("");
+
 let choosenStatus = '';
 const draggedTask = ref(null);
 const hoveredColumn = ref(null);
@@ -92,6 +108,118 @@ const columns = [
   { status: 'done', label: 'Done' }
 ];
 
+const longPressFlag = ref(false);
+let touchTimer = null;
+const touchedTask = ref(null);
+const dragPreviewPosition = ref({ x: 0, y: 0 });
+const boardMainContentRef = ref(null);
+const boardContentRef = ref({ x: 0, y: 0 });
+let maxScroll = 0;
+let scrollInterval = null;
+function getMainElement() {
+  return document.querySelector('main');
+}
+
+function startScrolling(direction, e) {
+  stopScrolling();
+  scrollInterval = setInterval(() => {
+    const mainElement = getMainElement();
+    if (mainElement) {
+      mainElement.scrollBy({
+        top: direction === 'up' ? -220 : 200, // Geschwindigkeit anpassen
+        behavior: 'smooth'
+      });
+    }
+    
+    // Aktualisiere die Drag-Preview-Position relativ zum boardMainContent
+    const rect = boardMainContentRef.value.getBoundingClientRect();
+    dragPreviewPosition.value = {
+      x: e.touches[0].clientX - rect.left,
+      y: e.touches[0].clientY - rect.top
+    };
+  }, 50); // Intervall anpassen
+}
+
+function stopScrolling() {
+  if (scrollInterval) {
+    clearInterval(scrollInterval);
+    scrollInterval = null;
+  }
+}
+
+function onTouchStart(task, e) {
+  console.log("ontouchstart")
+  const mainElement = getMainElement();
+  maxScroll = mainElement.scrollHeight - mainElement.clientHeight;
+  console.log(maxScroll)
+  touchedTask.value = task;
+  const rect = boardMainContentRef.value.getBoundingClientRect();
+  dragPreviewPosition.value = {
+    x: e.touches[0].clientX - rect.left,
+    y: e.touches[0].clientY - rect.top
+  };
+  touchTimer = setTimeout(() => {
+    longPressFlag.value = true;
+    onDragStart(task);
+  }, 500);
+}
+
+function onTouchMove(e) {
+  const mainElement = getMainElement();
+  
+  if (longPressFlag.value && boardMainContentRef.value) {
+    const rect = boardMainContentRef.value.getBoundingClientRect();
+    dragPreviewPosition.value = {
+      x: e.touches[0].clientX - rect.left,
+      y: e.touches[0].clientY - rect.top
+    };
+
+    // Aktualisiere hoveredColumn anhand der Touch-Position
+    updateHoveredColumn(e);
+
+    if (e.touches[0].clientY < 100) {
+      startScrolling('up', e);
+    } else if (e.touches[0].clientY > window.innerHeight - 100 && mainElement.scrollTop <= maxScroll) {
+      startScrolling('down', e);
+    } else {
+      stopScrolling();
+    }
+  }
+}
+
+function onTouchEnd(e) {
+  stopScrolling();
+  clearTimeout(touchTimer);
+  
+  if (longPressFlag.value) {
+    if (hoveredColumn.value) {
+      onDrop(hoveredColumn.value);
+    } else {
+      onDragEnd();
+    }
+    longPressFlag.value = false;
+  } else if (touchedTask.value) {
+    // Bei kurzem Tippen: Öffne die Task-Detailansicht
+    openTaskDetail(touchedTask.value);
+  }
+  
+  touchedTask.value = null;
+}
+
+function updateHoveredColumn(e) {
+  const elem = document.elementFromPoint(
+    e.touches[0].clientX,
+    e.touches[0].clientY
+  );
+  if (elem) {
+    const boardElement = elem.closest('.boardElement');
+    if (boardElement) {
+      hoveredColumn.value = boardElement.getAttribute('data-status');
+    } else {
+      hoveredColumn.value = null;
+    }
+  }
+}
 
 onBeforeUnmount(() => {
   removeHighlight();
@@ -211,6 +339,46 @@ const closeOverlay = () => {
 };
 </script>
 <style scoped>
+.long-press-overlay {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  height: 50px; /* Bei Bedarf anpassen */
+  background: var(--main-color-hover);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  img{
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.long-press-overlay.top {
+  top: 6rem;
+  img{
+    transform: rotate(90deg);
+  }
+}
+
+.long-press-overlay.bottom {
+  bottom: 6rem;
+  img{
+    transform: rotate(270deg);
+  }
+}
+.drag-preview {
+  position: absolute;
+  pointer-events: none; /* Damit das Element keine Touch-/Mouse-Events blockiert */
+  opacity: 0.8;
+  z-index: 200;
+  transform: translate(-50%, -50%);
+}
+.scroll-arrow {
+  width: 24px; /* Größe nach Bedarf anpassen */
+  height: 24px;
+}
 .headlineComponent {
   justify-content: space-between;
   align-items: flex-start;
@@ -276,6 +444,7 @@ const closeOverlay = () => {
   padding: 0px;
   gap: 2.6rem;
   flex-wrap: wrap;
+  position: relative;
 }
 
 .boardElement {
@@ -320,6 +489,10 @@ const closeOverlay = () => {
 
 .boardElementContent.hovered {
   background-color: #e0e0e0;
+}
+
+.ghost {
+  opacity: 0.3;
 }
 
 .empty-board-card {
