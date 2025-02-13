@@ -21,7 +21,6 @@ export default function useContacts() {
     }
 
     const saveContact = async (contact) => {
-        console.log(contactOverlayIsEditMode);
         if (contactOverlayIsEditMode.value) {
             updateContact(contact);
         } else {

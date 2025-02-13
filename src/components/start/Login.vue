@@ -2,7 +2,9 @@
 <template>
   <FormLayout>
     <div class="formHeader">
+      <div></div>
       <h1>Login</h1>
+      <div></div>
     </div>
     <img class="seperator" src="../../assets/img/seperator.svg" alt="" />
     <form class="form" @submit.prevent="tryLogin" novalidate>
@@ -90,7 +92,9 @@ onMounted(() => {
     rememberMe.value = true;
   }
 });
+
 async function login(email, password) {
+  console.log("Login with", email, password);
   showOverlay();
   let username = email;
   try {
@@ -111,7 +115,6 @@ async function login(email, password) {
       } else {
         localStorage.removeItem("join_remember");
       }
-      console.log(currentUser.value)
       showConfirmation('Login successful!');
       window.location.href = "/home"; // Beispiel: Weiterleitung
     } else {
@@ -184,8 +187,7 @@ const checkPasswordLength = () => {
 };
 
 const guestLogin = () => {
-  console.log("Logging in as Guest");
-  router.push("/home");
+  login("guest@join.dogan-celik.de", "Guest1234")
 };
 </script>
 
@@ -202,6 +204,8 @@ const guestLogin = () => {
   justify-content: space-around;
   gap: 10px;
   flex-wrap: wrap;
+  margin-top: 1rem;
+  width: 100%;
 }
 
 .seperator {

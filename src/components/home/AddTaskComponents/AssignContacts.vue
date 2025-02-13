@@ -47,6 +47,14 @@ const selectedContacts = computed(() => {
   return contacts.value.filter(contact => contact.selected).map(contact => contact.id);
 });
 
+const clear = () => {
+  contacts.value = contacts.value.map(contact => ({
+    ...contact,
+    selected: false,
+  }));
+  selectingContacts.value = false;
+};
+
 const setContacts = (selectedContactsIds) => {
   contacts.value = contacts.value.map(contact => ({
     ...contact,
@@ -61,6 +69,7 @@ const toggleSelectContacts = () => {
 defineExpose({
  selectedContacts,
  setContacts,
+  clear,
 });
 
 </script>

@@ -47,7 +47,6 @@ const combinedContacts = computed(() => {
     ...contact,
     isMember: false  // Markiere, dass es sich um einen Kontakt handelt
   }));
-  console.log(allContacts)
   const allMembers = members.value
   .filter(member => member.id !== currentUser.value.id)
   .map(member => ({

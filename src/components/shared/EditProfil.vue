@@ -80,7 +80,6 @@ onMounted(() => {
 
 
 const updateProfile = async () => {
-  console.log(checkForProfilErrors());
   if(!checkForProfilErrors()) {
     return;
   }
@@ -104,7 +103,7 @@ const updateProfile = async () => {
       console.error("Profile update failed:", errorData.error);
       if (errorData.error === "email_taken") {
         emailTakenError.value = true;
-        console.log(emailTakenError.value);
+  
       }
       return;
     }

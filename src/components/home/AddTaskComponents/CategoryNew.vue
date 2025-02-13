@@ -99,7 +99,6 @@ onMounted(loadColors);
 const addNewCategoryToList = (createdCategory) => {
   categories.value.push(createdCategory); // Fügt die neue Kategorie inkl. ID hinzu
   selectedCategory.value = createdCategory;
-  console.log(selectedCategory.value)
 };
 const addNewCategory = async () => {
   if (!checkNewCategoryName() || !checkCatgeoriesLength() || !checkCatgeoriesNameTaken()) {

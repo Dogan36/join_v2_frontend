@@ -146,7 +146,6 @@ const checkForPasswordErrors = () =>{
   const isOldPasswordLengthValid = checkOldPasswordLength();
   const isNewPasswordLengthValid = checkNewPasswordLength();
   const isPasswordMatch = checkIfPasswordsMatch();
-  console.log(isOldPasswordValid, isOldPasswordLengthValid, isNewPasswordValid, isNewPasswordLengthValid, isNewPasswordRepeatValid, isPasswordMatch);
   return !(
     isOldPasswordValid &&
     isOldPasswordLengthValid &&

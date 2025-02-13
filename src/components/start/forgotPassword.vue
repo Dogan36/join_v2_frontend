@@ -3,6 +3,7 @@
     <div class="formHeader">
       <img class="goBack" src="@/assets/img/arrowLeft.svg" alt="Back Arrow" @click="goBack" />
       <h1>I forgot my password</h1>
+      <div style="width: 37px;"></div>
     </div>
       <img class="seperator" src="../../assets/img/seperator.svg" alt="" />
       <span class="subHeader">Don't worry! Enter your email address and we will send you a link to reset your password.</span>
@@ -32,12 +33,15 @@ import { ref, defineEmits } from "vue";
 import { useRouter } from "vue-router";
 import FormLayout from "../shared/FormLayout.vue";
 import InputField from "../shared/InputField.vue";
+import { useConfirmationOverlay } from "@/composables/useConfirmationOverlay";
+import { useLoadingOverlay } from "@/composables/useLoadingOverlay";
+const { showOverlay, hideOverlay } = useLoadingOverlay();
+const  {showConfirmation} = useConfirmationOverlay();
 import { API_BASE_URL } from "@/config";
 const emit = defineEmits();
 const forgotEmail = ref("");
 
 const goBack = () => {
-  console.log("Go back clicked");
   emit("toggle");
 };
 // Fehlerstatus
@@ -47,52 +51,44 @@ const emailNotFoundError = ref(false);
 
 
 async function requestPasswordReset(email) {
-  console.log("Requesting password reset with email:", email);
+  showOverlay();
   try {
     const response = await fetch(`${API_BASE_URL}/user/password-reset-request/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      // Das Backend erwartet i. d. R. ein Feld "email" (oder wie du es im Serializer definiert hast)
-      body: JSON.stringify({ email }),
-      
+      body: JSON.stringify({ "email": email }),
     });
 
     if (response.ok) {
-      // Erfolgsfall: z.B. 200 OK
       const data = await response.json();
-      console.log("Antwort vom Backend:", data);
-      // z.B. "Password reset link has been sent to your email"
-      alert("E-Mail zum Zurücksetzen wurde versendet. Bitte checke dein Postfach.");
-      
-      // Weiterleitung auf eine andere Seite oder Reset des Formulars
-      // window.location.href = "/start";
+      showConfirmation(data.message);
+      emit("toggle");
     } else {
       // Falls das Backend einen Fehler (z.B. 400 oder 404) schickt:
       const errorData = await response.json();
       console.error("Fehler beim Anfordern des Reset-Links:", errorData);
 
       // Beispiel: wenn der Server bei einer ungültigen E-Mail "User with this email does not exist" zurückgibt
-      if (errorData.error) {
-        alert("Fehler: " + errorData.error);
+      if (errorData.error == "User with this email does not exist") {
+        emailNotFoundError.value = true;
       } else {
         alert("Unbekannter Fehler beim Zurücksetzen des Passworts.");
       }
     }
   } catch (error) {
     // Netzwerkfehler oder Server nicht erreichbar
-    console.error("Netzwerkfehler beim Passwort-Reset:", error);
+ 
     alert("Netzwerkfehler. Bitte später erneut versuchen.");
   }
+  hideOverlay();
 }
 
 const tryRequest = () => {
   resetErrors();
   if (!checkForErrors()) {
     requestPasswordReset(forgotEmail.value);
-  } else {
-    console.log("Form validation failed");
   }
 };
 
@@ -137,14 +133,6 @@ const checkEmailFormat = () => {
   flex-wrap: wrap;
 }
 
-.seperator {
-  width: 150px;
-  margin: 1rem 0;
-}
 
-.subHeader {
-  font-size: 2.1rem;
-  text-align: center;
-}
 
 </style>

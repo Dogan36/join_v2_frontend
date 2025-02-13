@@ -89,9 +89,12 @@ const props = defineProps({
 // Debugging hinzufügen, um sicherzustellen, dass der Standardwert korrekt ist
 const currentPrio = ref(props.modelValue || 'medium');
 
+const clear = () => {
+    currentPrio.value = 'medium';
+};
 
 function updatePrio(newPrio) {
-    console.log('updatePrio', newPrio);
+
     currentPrio.value = newPrio;
     emit('update:modelValue', newPrio);
 }
@@ -101,5 +104,6 @@ function updatePrio(newPrio) {
 defineExpose({
     currentPrio,
     updatePrio,
+    clear
 });
 </script>

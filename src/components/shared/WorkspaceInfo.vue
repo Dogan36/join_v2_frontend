@@ -113,7 +113,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref,  } from "vue";
+import { ref} from "vue";
 
 import CreateNewWorkspace from "./CreateNewWorkspace.vue";
 import SwitchWorkspace from "./SwitchWorkspace.vue";
@@ -123,13 +123,8 @@ import JoinWorkspace from "./JoinWorkspace.vue";
 
 import {currentWorkspace } from '@/store/state';
 
-onMounted(() => {
-  console.log("Current Workspace:", currentWorkspace.value);
-});
 const activeModal = ref('workspaceInfo');
-
 const setActiveModal = (modalName) => {
-  console.log("Received modal name:", modalName);
   activeModal.value = modalName;
 };
 const emit = defineEmits(["close"]);
@@ -138,11 +133,9 @@ const close = () => {
   emit("close");
 };
 
-
 </script>
 
 <style>
-
 .logo{
   height: 6.6rem;
   width: 5.5rem;
@@ -173,6 +166,7 @@ const close = () => {
     line-height: 1.5;
     display: flex;
     justify-content: space-between;
+
    
 }
   p span.label {
@@ -182,6 +176,7 @@ const close = () => {
 
   p span.value {
     font-weight: normal; /* Normale Schrift für Werte */
+    text-align: right;
   }
 }
 
@@ -242,6 +237,9 @@ h3 {
     width: 100%;
     p{
     flex-wrap: wrap;
+  }
+  .inputContainer{
+    margin-bottom : 1rem;
   }
   }
   

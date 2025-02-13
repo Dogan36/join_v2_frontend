@@ -63,10 +63,8 @@ const confirmSwitch = () => {
 };
 
 const setActiveModal = (modalName) => {
-  console.log("Emitting modalName:", modalName);
   emit("setActiveModal", modalName);
 };
-
 
 const close = () => {
   emit("close");

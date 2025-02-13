@@ -2,7 +2,6 @@
   <div class="menu">
     <img
       class="logoTemplate"
-      @click="console.log(currentView)"
       src="@/assets/img/logoInvert.svg"
       alt=""
     />

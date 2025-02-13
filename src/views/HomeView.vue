@@ -16,7 +16,7 @@
     </div>
   </div>
   
-  <DarkBackground v-if="currentWorkspace === null || isWorkspaceOverlayVisible" @close="closeOverlay">
+  <DarkBackground v-if="currentWorkspace == null|| isWorkspaceOverlayVisible" @close="closeOverlay">
     <WorkspaceInfo @close="closeOverlay"></WorkspaceInfo>
   </DarkBackground>
   <DarkBackground v-if="isProfilOverlayVisible" @close="closeOverlay">
@@ -25,8 +25,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { members, currentView, isWorkspaceOverlayVisible, isProfilOverlayVisible } from "@/store/state";
+import { ref, onMounted, watch } from "vue";
+import { currentView, isWorkspaceOverlayVisible, isProfilOverlayVisible, currentWorkspace } from "@/store/state";
 import MenuContainer from "@/components/shared/MenuContainer.vue";
 import Header from "@/components/shared/Header.vue";
 import Summary from "@/components/home/Summary.vue";
@@ -42,14 +42,16 @@ import Profil from "@/components/shared/Profil.vue";
 import useWorkspaces from "@/composables/useWorkspaces";
 import useContacts from "@/composables/useContacts";
 import { currentUser } from "@/store/state";
-
-const { currentWorkspace, loadWorkspaces } = useWorkspaces();
+const { loadWorkspaces } = useWorkspaces();
 const { loadContacts } = useContacts();
 onMounted(async () => {
   getUser();
   loadWorkspaces();
   loadContacts();
+  
 });
+
+
 
 function getUser() { 
     currentUser.value = JSON.parse(localStorage.getItem("join_user"));

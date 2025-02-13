@@ -10,7 +10,7 @@ import { fetchWorkspaces,
 import { useConfirmationOverlay } from './useConfirmationOverlay';
 import { useLoadingOverlay } from './useLoadingOverlay';
 import useWorkspaceData from './useWorkspaceData';
-import { getToken, currentWorkspace, workspaces } from '@/store/state';
+import { getToken, currentWorkspace, workspaces, currentUser } from '@/store/state';
 const token = getToken();
 const { loadWorkspaceData } = useWorkspaceData();
 
@@ -64,6 +64,7 @@ export default function useWorkspaces() {
         console.error('Fehler beim Laden der Workspaces:', error);
       }
     }
+    console.log(currentWorkspace)
   };
 
   const addWorkspace = async (name) => {
@@ -85,7 +86,8 @@ export default function useWorkspaces() {
       const newWorkspace = await createWorkspaceAPI(name);
       workspaces.value.push(newWorkspace); // Neuen Workspace zur Liste hinzufügen
       currentWorkspace.value = newWorkspace;
-      showConfirmation(`Workspace "${newWorkspace.name}" created successfully.`);// Diese Funktion speichert den aktuellen Workspace in LocalStorage
+      console.log(currentWorkspace.value)
+      showConfirmation(`Workspace "${newWorkspace.name}" created`);// Diese Funktion speichert den aktuellen Workspace in LocalStorage
     } catch (err) {
       console.error("Fehler beim Erstellen des Workspaces:", err);
     } finally {
@@ -101,6 +103,12 @@ export default function useWorkspaces() {
 
 
   const leaveWorkspace = async () => {
+    
+    if (currentWorkspace.value.id == "93" && currentUser.value.id == "29") {
+      alert("Guest cannot leave this workspaces");
+      hideOverlay();
+      return;
+    }
     showOverlay();
     try {
       if (!token) {
@@ -119,6 +127,11 @@ export default function useWorkspaces() {
 
   const deleteWorkspace = async () => {
     showOverlay();
+    if (currentWorkspace.value.id == "108") {
+      alert("Guests cannot delete this workspaces");
+      hideOverlay();
+      return;
+    }
     try {
       if (!token) throw new Error("Kein Token gefunden. Der Benutzer ist nicht authentifiziert.");
       await deleteWorkspaceAPI(token, currentWorkspace.value.id);
@@ -134,7 +147,6 @@ export default function useWorkspaces() {
 
   const invitePerEmail = async (email, join_code) => {
     showOverlay();
-    console.log("Sending invite with email:", email + " and join code:", join_code);
     try {
       await invitePerEmailAPI(email, join_code);
       showConfirmation("Einladung erfolgreich verschickt.");

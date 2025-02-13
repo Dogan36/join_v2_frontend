@@ -148,10 +148,8 @@ function stopScrolling() {
 }
 
 function onTouchStart(task, e) {
-  console.log("ontouchstart")
   const mainElement = getMainElement();
   maxScroll = mainElement.scrollHeight - mainElement.clientHeight;
-  console.log(maxScroll)
   touchedTask.value = task;
   const rect = boardMainContentRef.value.getBoundingClientRect();
   dragPreviewPosition.value = {
@@ -269,7 +267,6 @@ const tasksByStatus = computed(() => {
 
 function onDragStart(task) {
   draggedTask.value = task;
-  console.log(draggedTask.value.status);
 }
 
 function onDragEnd() {
@@ -291,7 +288,6 @@ function onDragEnter(status) {
 
 
 async function onDrop(status) {
-  console.log(`Task ${draggedTask.value.id} dropped in column: ${status} currentWorkspace.value.id ${currentWorkspace.value.id}`);
   if (draggedTask.value) {
     try {
       // Beispiel-PATCH-Anfrage an deine API (passe URL und Authentifizierung ggf. an)

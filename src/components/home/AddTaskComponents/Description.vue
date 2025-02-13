@@ -20,9 +20,15 @@ const errorMessage = ref("");
 const setDescription = (value) => {
   description.value = value;
 };
+
+const clear = () => {
+  description.value = "";
+  errorMessage.value = "";
+};
 defineExpose({
   setDescription,
   description,
+  clear,
 });
 </script>
 

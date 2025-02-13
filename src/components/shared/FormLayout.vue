@@ -10,7 +10,6 @@
 <style scoped>
 
 .form-layout {
-    min-width: fit-content;
     max-width: 100vw;
     padding: 3rem;
     display: flex;
@@ -26,5 +25,12 @@
     left: 50%;
     transform: translate(-50%, -50%);
     gap: 1rem
+}
+
+@media screen and (max-width: 700px) {
+    .form-layout {
+        padding: 1rem;
+    }
+    
 }
 </style>

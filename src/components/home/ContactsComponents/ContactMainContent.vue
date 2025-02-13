@@ -71,7 +71,6 @@ const textColor = computed(() => {
 // Berechnung, ob der Hintergrund dunkel oder hell ist
 const isDarkBackground = computed(() => {
   if(selectedContact === null) return false;
-  console.log(selectedContact.value);
   const hex = selectedContact.value.color.hex_value;
   const rgb = hexToRgb(hex);
   const yiq = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;

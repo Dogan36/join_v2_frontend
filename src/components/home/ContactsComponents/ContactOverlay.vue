@@ -82,12 +82,10 @@ const emailFormatError = ref(false);
 const emailTakenError = ref(false);
 
 onMounted(() => {
-  console.log(contactOverlayIsEditMode.value)
   initializeForm();
 });
 
 const initializeForm = () => {
-  console.log(contactOverlayIsEditMode.value)
   if (contactOverlayIsEditMode.value) {
     contactName.value = selectedContact.value.name;
     contactEmail.value = selectedContact.value.email;
@@ -106,7 +104,7 @@ const save = () => {
     saveContact(contact, selectedContact.id);
     resetForm();
   } else {
-    console.log("Form validation failed");
+    return;
   }
  
 

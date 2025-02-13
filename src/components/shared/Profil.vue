@@ -46,25 +46,16 @@
 <script setup>
 import { currentUser, getToken } from "@/store/state";
 import { defineEmits, onMounted, ref } from "vue";
-
 import EditProfil from "./EditProfil.vue";
 import ChangePassword from "./ChangePassword.vue";
-
-
 const activeModal = ref('profilInfo');
-
 const emit = defineEmits(["close"]);
-
-
 
 const close = () => {
   emit("close");
 };
 
-
-
 const setActiveModal = (modalName) => {
-  console.log("Received modal name:", modalName);
   activeModal.value = modalName;
 };
 </script>

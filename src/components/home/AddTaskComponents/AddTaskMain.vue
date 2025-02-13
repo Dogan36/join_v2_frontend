@@ -51,6 +51,7 @@ const { showConfirmation } = useConfirmationOverlay();
 const { showOverlay, hideOverlay } = useLoadingOverlay();
 import { currentWorkspace, getToken, currentTask, tasks, selectedCategory, currentView, isAddTaskOverlayVisible} from "@/store/state";
 
+
 const isEditMode = ref(false); // Wird auf true gesetzt, wenn der Task bearbeitet wird
 const props = defineProps({
   status: {
@@ -68,8 +69,20 @@ initializeForm();
 
 
 const closeOverlay = () => {
+clearForm();
 emit("close");
 };
+
+const clearForm = () => {
+title.value?.clear();
+description.value?.clear();
+category.value?.clear();
+assignContacts.value?.clear();
+dueDate.value?.clear();
+prio.value?.clear();
+subtasks.value?.clear();
+};
+
 
 const initializeForm = () => {
   if (isEditMode.value) {
@@ -185,7 +198,6 @@ const createTaskFetch = async (taskData) => {
 };
 
 const updateTaskFetch = async (taskData) => {
-console.log("taskData", taskData)
 showOverlay();
 try {
   const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/${currentWorkspace.value.id}/tasks/${currentTask.value.id}/`, { // Korrekte URL mit workspaceId

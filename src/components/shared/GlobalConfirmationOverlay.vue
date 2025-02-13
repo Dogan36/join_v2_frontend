@@ -3,7 +3,7 @@
   <div v-on:click="closeConfirmation()" v-if="isConfirmationVisible" class="confirmation-overlay">
     <transition name="fade">
       <div class="confirmation-box">
-        <p>{{ confirmationMessage }}</p>
+        <h4>{{ confirmationMessage }}</h4>
       </div>
     </transition>
   </div>
@@ -34,12 +34,13 @@ const { isConfirmationVisible, confirmationMessage } = useConfirmationOverlay();
 /* Die eigentliche Box, die rein- und rausfahren soll */
 .confirmation-box {
 
-  background: #fff;
-  color: #333;
+  background: var(--main-color);
+  color: white;
   padding: 16px;
-  min-width: 200px;
+  
   border-radius: 6px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  font-size: 2rem;
 }
 
 /* Animationen */

@@ -36,7 +36,7 @@
               </div>
             </div>
             <div @click="goToBoard(upcomingDeadline)" class="buttonSummary buttonV2">
-              <div class="buttonText">{{ upcomingDeadline.length > 0 ? upcomingDeadline[0].due_date : 'No upcoming deadlines' }}</div>
+              <div class="buttonText">{{ upcomingDeadline.length > 0 ? upcomingDeadline[0].due_date : 'No' }}</div>
               <div class="buttonV2TextBold">{{ deadlineLabel }}</div>
             </div>
           </div>
@@ -58,7 +58,11 @@
           </div>
           </div>
         </div>
-        <div id="welcomeDesk" class="welcomeDesk">
+        <div class="welcomeDesk">
+          <span id="welcomeText">{{greetingByDaytime}}</span>
+          <span id="welcomeName">{{ userName }}</span>
+      </div>
+      <div v-if="!greetingDone" class="welcomeDeskOverlay">
           <span id="welcomeText">{{greetingByDaytime}}</span>
           <span id="welcomeName">{{ userName }}</span>
       </div>
@@ -67,14 +71,21 @@
   </template>
 <script setup>
 import { currentUser, tasks } from '@/store/state';
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { currentView, selectedTasks } from '@/store/state';
+import { greetingDone } from '@/store/state';
+
+onMounted(() => {
+  setTimeout(() => {
+    greetingDone.value = true;
+  }, 3000);
+});
 
 const goToBoard = (filter) => {
   currentView.value = 'board';
   if (filter) {
     selectedTasks.value = filter;
-    console.log(selectedTasks.value);
+
   }
 };
 const userName = computed(() => {
@@ -313,9 +324,49 @@ justify-content: center;
     width: 3rem;
     height: 3rem;
   }
-  .welcomeDesk {
+
+  .welcomeDesk{
     display: none;
   }
+
+  .welcomeDeskOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 100; /* Über allen anderen Inhalten */
+  margin: 0;
+  background-color: var(--color-background);
+  opacity: 1;
+  animation: fadeOutWelcome 1s ease-out forwards;
+  animation-delay: 2s;
+  span:first-child {
+    font-size: 4rem;
+    font-weight: 500;
+    text-align: center;
+  }
+  span:last-child {
+    font-size: 6rem;
+    font-weight: 700;
+    color: var(--main-color-hover);
+    text-align: center;
+  } /* Nach 2 Sekunden beginnt das Ausblenden */
+}
+
+@keyframes fadeOutWelcome {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    z-index: -1;
+  }
+}
 }
 
 @media screen and (max-width: 400px) {

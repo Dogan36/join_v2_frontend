@@ -50,7 +50,7 @@ const copyToClipboardText = ref("Copy to Clipboard");
 const trySend = async() => {
   resetErrors();
   if (checkForErrors()) {
-    console.log("Form validation failed");
+    return;
   } else {
     try {
     await invitePerEmail(shareCodeEmail.value, currentWorkspace.value.join_code);

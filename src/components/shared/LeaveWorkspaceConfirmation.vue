@@ -7,17 +7,17 @@
    <div class="workspace-header-content">
     <div v-if="currentWorkspace.owner.id === currentUser.id">
         <p>You are the owner of this workspace!</p>
-        <p style="color: var(--color-warn);">Leaving it will delete it permanently!</p>
       </div>
       <div v-else>
         <p>You are about to leave the workspace</p>
-        <p>Are you sure?</p>
       </div>
-   </div>
     </div>
-     <div class="workspace-info-main">
-      <div></div>
-      <div class="buttonContainer">
+  </div>
+  <div class="workspace-info-main">
+    <div></div>
+    <div class="buttonContainer">
+      <p v-if="currentWorkspace.owner.id === currentUser.id" style="color: var(--color-warn);">Leaving it will delete it permanently!</p>
+        <p>Are you sure?</p>
        
         <button v-if="currentWorkspace.owner.id === currentUser.id" class="main-button-layout button-red" @click="confirmDelete">
           Delete Workspace

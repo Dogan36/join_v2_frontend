@@ -20,6 +20,11 @@ const setTitle = (value) => {
   title.value = value;
 };
 
+const clear = () => {
+  title.value = "";
+  error.value = "";
+};
+
 // Validierungslogik
 const validate = () => {
   if (!title.value.trim()) {
@@ -35,6 +40,7 @@ defineExpose({
   setTitle,
   validate,
   title,
+  clear
 });
 
 </script>

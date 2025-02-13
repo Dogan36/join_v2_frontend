@@ -94,13 +94,11 @@
   display: flex;
   width: 100%;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: flex-start;
   text-align: center;
-  position: relative;
+  
   img{
-    position:absolute;
-    left: 0;
     height: 3.7rem;
     width: 3.7rem;
     cursor: pointer;

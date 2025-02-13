@@ -3,6 +3,7 @@
     <div class="formHeader">
       <img class="goBack" src="@/assets/img/arrowLeft.svg" alt="Back Arrow" @click="goBack" />
       <h1>Sign Up</h1>
+      <div style="width: 37px;"></div>
     </div>
       <img class="seperator" src="@/assets/img/seperator.svg" alt="" />
     <form class="form" @submit.prevent="trySignup" novalidate>
@@ -57,8 +58,8 @@
       <div class="signupOptions">
         <input type="checkbox" v-model="readPrivacy" />
         I accept the <span @click="showPrivacyPolicy">Privacy Policy</span>
-        <p v-if="privacyError" class="error-message">Please read and accept the Privacy Policy.</p>
       </div>
+      <p v-if="privacyError" class="error-message">Please read and accept the Privacy Policy.</p>
       <div class="loginButtons">
         <button class="main-button-layout" type="submit">Sign Up</button>
       </div>
@@ -111,14 +112,14 @@ async function signUp(name, email, password) {
       body: JSON.stringify({ name, email, password })
      
     });
-    console.log(JSON.stringify({ name, email, password }))
+
     if (response.ok) {
       const data = await response.json();
       localStorage.setItem("join_token", data.token);
       localStorage.setItem("join_user", JSON.stringify(data.user))
       
       showConfirmation('Sign up successful!');
-      
+      emit("toggle");
     } else {
       const errorData = await response.json();
       if (errorData.email) {
@@ -137,8 +138,6 @@ const trySignup = () => {
   resetErrors();
   if (!checkForErrors()) {
     signUp(signupName.value, signupEmail.value, signupPassword.value);
-  } else {
-    console.log("Errors detected. Sign up aborted.");
   }
 };
 
@@ -217,7 +216,6 @@ const checkIfPasswordRepeatEmpty = () => {
 
 const checkIfPasswordsMatch = () => {
   passwordMatchError.value = signupPassword.value !== signupPasswordRepeat.value;
-  console.log("Passwords match:", !passwordMatchError.value);
   return !passwordMatchError.value;
 };
 
@@ -237,11 +235,11 @@ const checkPrivacyAccepted = () => {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin-bottom: 20px;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   font-size: 1.6rem;
+  width: 100%;
   input {
     cursor: pointer;
   }

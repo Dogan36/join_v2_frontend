@@ -63,7 +63,10 @@ const toggleAddingNewSubtask = () => {
 
 const setSubtasks = (newSubtasks) => {
     subtasks.value = newSubtasks;
-    console.log(subtasks);
+};
+
+const clear = () => {
+    subtasks.value = [];
 };
 
 const deleteSubtask = (index) => {
@@ -77,6 +80,7 @@ watch(subtasks, (newSubtasks) => {
 
 defineExpose({
     setSubtasks,
+    clear
 });
 </script>
 

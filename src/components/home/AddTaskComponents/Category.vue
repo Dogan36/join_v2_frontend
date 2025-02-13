@@ -73,6 +73,12 @@ const setCategory = (categoryId) => {
   });
 };
 
+const clear = () => {
+  selectedCategory.value = null;
+  error.value = '';
+  selectingCategory.value = false;
+};
+
 const emit = defineEmits(['toggle']);
 const toggleSelectCategory = () => {
     selectingCategory.value = !selectingCategory.value
@@ -128,7 +134,8 @@ const validate = () => {
 defineExpose({
   setCategory,
   validate,
-  selectedCategory
+  selectedCategory,
+  clear
 });
 
 </script>

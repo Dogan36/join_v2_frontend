@@ -19,3 +19,4 @@ export const contactOverlayIsVisible = ref(false);
 export const selectedCategory = ref(null);
 export const currentTask = ref(null);
 export const selectedTasks = ref(null);
+export const greetingDone = ref(false);

@@ -49,7 +49,6 @@ window.addEventListener('resize', () => {
 });
 
 const showMainContent = computed(() => {
-  console.log(selectedContact.value);
   return !isMobile.value || selectedContact.value;
 });
 

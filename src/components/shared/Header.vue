@@ -14,8 +14,8 @@
 
     <div class="userMenuContent" v-if="showUserMenu" @mouseenter="onUserMenuMouseEnter" 
     @mouseleave="onUserMenuMouseLeave">
-      <p @click="changeView('privacy')">Privacy Policy</p>
-      <p @click="changeView('legalNotice')">Legal Notice</p>
+      <p class="privacyLinkMobile" @click="changeView('privacy')">Privacy Policy</p>
+      <p class="privacyLinkMobile" @click="changeView('legalNotice')">Legal Notice</p>
       <p @click="openWorkspaceInfo">Workspace</p>
       <p @click="goToProfile">Profil</p>
       <p @click="logout">Logout</p>
@@ -166,7 +166,14 @@ function changeView(view) {
   }
 }
 
+.privacyLinkMobile {
+ display: none;
+}
+
 @media screen and (max-width: 1000px) {
+  .privacyLinkMobile {
+    display: block;
+  }
   .header {
     padding: 0px 15px;
     gap: 10px;
