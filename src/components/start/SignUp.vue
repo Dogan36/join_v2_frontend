@@ -1,7 +1,7 @@
 <template>
   <FormLayout>
-    <div class="formHeader">
-      <img class="goBack" src="@/assets/img/arrowLeft.svg" alt="Back Arrow" @click="goBack" />
+    <div class="form-header">
+      <img class="go-back" src="@/assets/img/arrowLeft.svg" alt="Back Arrow" @click="goBack" />
       <h1>Sign Up</h1>
       <div style="width: 37px;"></div>
     </div>
@@ -55,12 +55,12 @@
             : '',
         }"
       />
-      <div class="signupOptions">
+      <div class="signup-options">
         <input type="checkbox" v-model="readPrivacy" />
         I accept the <span @click="showPrivacyPolicy">Privacy Policy</span>
       </div>
       <p v-if="privacyError" class="error-message">Please read and accept the Privacy Policy.</p>
-      <div class="loginButtons">
+      <div class="login-buttons">
         <button class="main-button-layout" type="submit">Sign Up</button>
       </div>
     </form>
@@ -230,7 +230,7 @@ const checkPrivacyAccepted = () => {
 <style>
 
 
-.signupOptions {
+.signup-options {
   display: flex;
   flex-direction: row;
   justify-content: center;

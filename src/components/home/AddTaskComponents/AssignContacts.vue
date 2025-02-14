@@ -1,29 +1,28 @@
 <template>
-  <div class="inputContainer">
+  <div class="input-container">
             <label class="title">Assigned to</label>
             
        
-    <div class="inputField dropDown">
+    <div class="inputfield dropdown">
       <!-- Toggle Dropdown -->
-      <div @click="toggleSelectContacts" class="dropDownOption">
-        <div class="dropDownOptionContent">Select Contacts to Assign</div>
-        <img class="arrowIcon" src="@/assets/img/arrowIcon.svg" :style="{ transform: selectingContacts ? 'rotate(180deg)' : 'rotate(0deg)' }" alt="Delete" />
+      <div @click="toggleSelectContacts" class="dropdown-option">
+        <div class="dropdown-option-content">Select Contacts to Assign</div>
+        <img class="arrow-icon-dropdown" src="@/assets/img/arrowIcon.svg" :style="{ transform: selectingContacts ? 'rotate(180deg)' : 'rotate(0deg)' }" alt="Delete" />
       </div>
   
       <!-- Dropdown Options -->
-      <label  class="dropDownOption"
+      <label  class="dropdown-option"
         v-for="contact in contacts" 
         :key="contact.id" 
         v-if="selectingContacts"
         >
 
-        <div class="dropDownOptionContent">
+        <div class="dropdown-option-content">
           {{ contact.name }}
         </div>
         <input 
           type="checkbox" 
           v-model="contact.selected"
-          
         />
       </label>
     </div>
@@ -69,7 +68,7 @@ const toggleSelectContacts = () => {
 defineExpose({
  selectedContacts,
  setContacts,
-  clear,
+ clear,
 });
 
 </script>

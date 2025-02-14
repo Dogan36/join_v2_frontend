@@ -52,7 +52,7 @@
         }"
       />
       
-      <div class="buttonContainer">
+      <div class="button-container">
         <button class="main-button-layout" @click="submit">
           Save
         </button>
@@ -185,7 +185,6 @@ const checkIfPasswordsMatch = () => {
   passwordMatchError.value = newPassword.value !== newPasswordRepeat.value;
   return passwordMatchError.value;
 };
-
 
 const close = () => {
   emit("setActiveModal");

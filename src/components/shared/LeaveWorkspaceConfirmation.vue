@@ -15,7 +15,7 @@
   </div>
   <div class="workspace-info-main">
     <div></div>
-    <div class="buttonContainer">
+    <div class="button-container">
       <p v-if="currentWorkspace.owner.id === currentUser.id" style="color: var(--color-warn);">Leaving it will delete it permanently!</p>
         <p>Are you sure?</p>
        
@@ -58,8 +58,3 @@ const close = () => {
   emit("close");
 };
 </script>
-
-<style scoped>
-
-
-</style>

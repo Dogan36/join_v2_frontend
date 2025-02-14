@@ -8,13 +8,13 @@
             <p>Please enter the code to join new workspace</p>
         </div>
         <div class="workspace-info-main">
-        <div class="inputContainer" >
-            <div class="inputField inputFieldWorkspaceOverlay" :class="{ 'input-error': error }">
+        <div class="input-container" >
+            <div class="inputfield inputfield-workspace-overlay" :class="{ 'input-error': error }">
             <input id="title" v-model="workspaceCode" type="text" placeholder="Enter workspace code"></input>
         </div>
         <p v-if="error" class="error-message">{{ error }}</p>
       </div>
-      <div class="buttonContainer">
+      <div class="button-container">
         <button class="main-button-layout" @click="submitWorkspaceCode">
           Join Workspace
         </button>
@@ -37,9 +37,6 @@ const emit = defineEmits(["close"]);
 const workspaceCode = ref("");
 const error = ref("");
 
-
-
-
 const submitWorkspaceCode = async () => {
   if (workspaceCode.value.trim()) {
     error.value = "";
@@ -60,15 +57,8 @@ const submitWorkspaceCode = async () => {
   }
 };
 
-
-
 const close = () => {
   emit("close");
 };
 
-
 </script>
-
-<style scoped>
-
-</style>

@@ -1,12 +1,12 @@
 <!-- src/views/LoginView.vue -->
 <template>
   <FormLayout>
-    <div class="formHeader">
+    <div class="form-header">
       <div></div>
       <h1>Login</h1>
       <div></div>
     </div>
-    <img class="seperator" src="../../assets/img/seperator.svg" alt="" />
+    <img class="seperator" src="@/assets/img/seperator.svg" alt="" />
     <form class="form" @submit.prevent="tryLogin" novalidate>
       <InputField
         v-model="loginEmail"
@@ -38,15 +38,15 @@
             : '',
         }"
       />
-      <div class="loginOptions">
+      <div class="login-options">
         <label>
-          <input type="checkbox" v-model="rememberMe" /><span class="rememberMe">Remember me</span></label
+          <input type="checkbox" v-model="rememberMe" /><span class="remember-me">Remember me</span></label
         >
-        <span class="forgotPassword" type="button" @click="forgotPassword"
+        <span class="forgot-password" type="button" @click="forgotPassword"
           >Forgot password?</span
         >
       </div>
-      <div class="loginButtons">
+      <div class="login-buttons">
         <button class="main-button-layout" type="submit">Log in</button>
         <button class="secondary-button-layout" @click="guestLogin">
           Guest Login
@@ -192,14 +192,14 @@ const guestLogin = () => {
 </script>
 
 <style>
-.buttonIcon {
+.button-icon {
   width: 24px;
   height: 24px;
   margin-left: 0.5rem;
   align-self: center;
 }
 
-.loginButtons {
+.login-buttons {
   display: flex;
   justify-content: space-around;
   gap: 10px;
@@ -213,7 +213,7 @@ const guestLogin = () => {
   margin: 1rem 0;
 }
 
-.loginOptions {
+.login-options {
   display: flex;
   justify-content: space-between;
   gap: 10px;
@@ -223,7 +223,7 @@ const guestLogin = () => {
 }
 
   
-.loginOptions label {
+.login-options label {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -234,18 +234,18 @@ const guestLogin = () => {
   }
  }
 
-.loginOptions span {
+.login-options span {
   font-size: 1.6rem;
   cursor: pointer !important;
   pointer-events: auto;
   transition: scale 0.125s;
 }
 
-.loginOptions span:hover {
+.login-options span:hover {
   scale: 1.05;
 }
 
-.forgotPassword{
+.forgot-password{
   color: var(--main-color-hover) !important;
 }
 

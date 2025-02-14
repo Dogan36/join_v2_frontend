@@ -1,5 +1,5 @@
 <template>
-  <div class="inputField" :class="{ 'input-error': error }">
+  <div class="inputfield" :class="{ 'input-error': error }">
     <!-- Input Feld -->
     <input
       :type="isPasswordVisible ? 'text' : type"
@@ -81,7 +81,7 @@ const passwordIconAlt = computed(() => {
 const passwordIconClass = computed(() => {
   return passwordIconSrc.value.includes('loginPassword') // Passwortfeld
     ? 'input-icon' // Standard-Stil für das Schloss-Icon
-    : 'input-icon cursorPointer'; // Stil für Auge-Icons
+    : 'input-icon cursor-pointer'; // Stil für Auge-Icons
 });
 
 // Eingabe-Event
@@ -101,7 +101,7 @@ const emitIconClick = () => {
 </script>
 
 <style>
-.inputField {
+.inputfield {
   display: flex;
   align-items: center;
   border: 1px solid #ccc;
@@ -118,8 +118,8 @@ const emitIconClick = () => {
   border: 2px solid red;
 }
 
-.inputField input,
-.inputField textarea {
+.inputfield input,
+.inputfield textarea {
   flex: 1;
   border: none;
   outline: none;
@@ -129,7 +129,7 @@ const emitIconClick = () => {
   max-width: 100%;
 }
 
-.inputField input[type="checkbox"] {
+.inputfield input[type="checkbox"] {
  flex: 0;
   width: 20px;
   height: 20px;
@@ -142,11 +142,11 @@ const emitIconClick = () => {
   margin-left: 0.5em;
 }
 
-.cursorPointer {
+.cursor-pointer {
   cursor: pointer;
 }
 
-.inputField.textarea {
+.inputfield.textarea {
   align-items: flex-start;
   resize: vertical; /* Parent-Element ist resizeable */
   height: auto; /* Ermöglicht flexibles Wachstum */
@@ -157,14 +157,14 @@ const emitIconClick = () => {
 }
 
 /* Stile für Textarea */
-.inputField.textarea textarea {
+.inputfield.textarea textarea {
   height: 100%;
   resize: none;
   font-family: inherit; /* Keine direkte Kontrolle über die Textarea-Größe */
   
 }
-.inputField input::placeholder,
-.inputField textarea::placeholder {
+.inputfield input::placeholder,
+.inputfield textarea::placeholder {
   padding: 0;
   font-size: 1.6rem; /* Schriftgröße des Platzhalters */
   opacity: 1; /* Sichtbarkeit des Platzhalters */

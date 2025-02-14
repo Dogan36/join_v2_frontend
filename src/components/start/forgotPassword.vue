@@ -1,12 +1,12 @@
 <template>
   <FormLayout>
-    <div class="formHeader">
-      <img class="goBack" src="@/assets/img/arrowLeft.svg" alt="Back Arrow" @click="goBack" />
+    <div class="form-header">
+      <img class="go-back" src="@/assets/img/arrowLeft.svg" alt="Back Arrow" @click="goBack" />
       <h1>I forgot my password</h1>
       <div style="width: 37px;"></div>
     </div>
       <img class="seperator" src="../../assets/img/seperator.svg" alt="" />
-      <span class="subHeader">Don't worry! Enter your email address and we will send you a link to reset your password.</span>
+      <span class="subheader">Don't worry! Enter your email address and we will send you a link to reset your password.</span>
     <form class="form" @submit.prevent="tryRequest" novalidate>
       <InputField
         v-model="forgotEmail"
@@ -22,7 +22,7 @@
         }"
       />
 
-      <div class="loginButtons">
+      <div class="login-buttons">
         <button class="main-button-layout" type="submit">Submit</button>
       </div>
     </form>
@@ -30,7 +30,6 @@
 </template>
 <script setup>
 import { ref, defineEmits } from "vue";
-import { useRouter } from "vue-router";
 import FormLayout from "../shared/FormLayout.vue";
 import InputField from "../shared/InputField.vue";
 import { useConfirmationOverlay } from "@/composables/useConfirmationOverlay";
@@ -119,14 +118,14 @@ const checkEmailFormat = () => {
 
 <style>
 
-.buttonIcon {
+.button-icon {
   width: 24px;
   height: 24px;
   margin-left: 0.5rem;
   align-self: center;
 }
 
-.loginButtons {
+.login-buttons {
   display: flex;
   justify-content: space-around;
   gap: 10px;

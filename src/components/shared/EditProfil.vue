@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="workspace-info-main">
-        <div class="inputContainer">
+        <div class="input-container">
           <InputField
             v-model="newName"
             type="text"
@@ -36,7 +36,7 @@
             icon="src/assets/img/phone.svg"
           />
         </div>
-        <div class="buttonContainer">
+        <div class="button-container">
           <button class="main-button-layout" @click="updateProfile">
             Save
           </button>

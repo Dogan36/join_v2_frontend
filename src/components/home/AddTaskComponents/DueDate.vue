@@ -1,7 +1,7 @@
 <template>
-    <div class="inputContainer">
+    <div class="input-container">
       <label class="title">Due date</label>
-      <div class="inputField"  :class="{ 'input-error': error }">
+      <div class="inputfield"  :class="{ 'input-error': error }">
         <input 
           v-model="dueDate"
           type="date"

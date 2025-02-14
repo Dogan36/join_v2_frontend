@@ -1,6 +1,6 @@
 <template>
-    <div class="legalContainer">
-<div class="legalHeader">
+    <div class="legal-container">
+<div class="legal-header">
     <h1>Legal Notice and Imprint</h1>
     <img v-if="route.path !== '/home'" src="@/assets/img/arrowLeft.svg" alt="Back Arrow" @click="goToStart" />
 </div>
@@ -52,7 +52,7 @@ For information on data protection, please refer to our Privacy Policy.</p>
 </div>
 </template>
 <style>
-.legalContainer {
+.legal-container {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -60,7 +60,7 @@ For information on data protection, please refer to our Privacy Policy.</p>
     position: relative;
     gap: 20px;
 }
-.legalHeader{
+.legal-header{
     display: flex;
     justify-content: space-between;
     img{

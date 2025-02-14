@@ -1,6 +1,6 @@
 <template>
-   <div class="legalContainer">
-        <div class="legalHeader"> 
+   <div class="legal-container">
+        <div class="legal-header"> 
             <h1>Privacy policy</h1>
             <img v-if="route.path !== '/home'" src="@/assets/img/arrowLeft.svg" alt="Back Arrow" @click="goToStart" />
         </div>

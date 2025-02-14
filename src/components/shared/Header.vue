@@ -1,21 +1,21 @@
 <template>
   <div class="header">
-    <img class="logoHeaderMobile" src="@/assets/img/logo.svg" alt="" />
-    <p class="headerHeadline">Kanban Projekt Management Tool</p>
-    <div class="headerUserProfil">
+    <img class="logo-header-mobile" src="@/assets/img/logo.svg" alt="" />
+    <p class="header-headline">Kanban Projekt Management Tool</p>
+    <div class="header-user-profil">
       <img
-        class="headerUserProfilIcon"
+        class="header-user-profil-icon"
         src="@/assets/img/questionmark.svg"
         alt=""
         @click="changeView('help')"
       />
-      <div v-if="route.path === '/home'" class="headerUserProfilInitials" @click="toggleUserMenu()">{{ currentUser.avatar }}</div>
+      <div v-if="route.path === '/home'" class="header-user-profil-initials" @click="toggleUserMenu()">{{ currentUser.avatar }}</div>
     </div>
 
-    <div class="userMenuContent" v-if="showUserMenu" @mouseenter="onUserMenuMouseEnter" 
+    <div class="user-menu-content" v-if="showUserMenu" @mouseenter="onUserMenuMouseEnter" 
     @mouseleave="onUserMenuMouseLeave">
-      <p class="privacyLinkMobile" @click="changeView('privacy')">Privacy Policy</p>
-      <p class="privacyLinkMobile" @click="changeView('legalNotice')">Legal Notice</p>
+      <p class="privacy-link-mobile" @click="changeView('privacy')">Privacy Policy</p>
+      <p class="privacy-link-mobile" @click="changeView('legalNotice')">Legal Notice</p>
       <p @click="openWorkspaceInfo">Workspace</p>
       <p @click="goToProfile">Profil</p>
       <p @click="logout">Logout</p>
@@ -95,14 +95,14 @@ function changeView(view) {
   z-index: 2;
 }
 
-.headerHeadline {
+.header-headline {
   font-family: "Inter";
   font-style: normal;
   font-weight: 400;
   font-size: 21px;
 }
 
-.headerUserProfil {
+.header-user-profil {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -110,7 +110,7 @@ function changeView(view) {
   gap: 26px;
 }
 
-.headerUserProfilIcon {
+.header-user-profil-icon {
   cursor: pointer;
   &:hover {
     filter: invert(1);
@@ -118,7 +118,7 @@ function changeView(view) {
 }
 
 
-.headerUserProfilInitials {
+.header-user-profil-initials {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -137,12 +137,12 @@ function changeView(view) {
   }
 }
 
-.logoHeaderMobile {
+.logo-header-mobile {
   height: 60%;
   display: none;
 }
 
-.userMenuContent {
+.user-menu-content {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -166,12 +166,12 @@ function changeView(view) {
   }
 }
 
-.privacyLinkMobile {
+.privacy-link-mobile {
  display: none;
 }
 
 @media screen and (max-width: 1000px) {
-  .privacyLinkMobile {
+  .privacy-link-mobile {
     display: block;
   }
   .header {
@@ -179,18 +179,18 @@ function changeView(view) {
     gap: 10px;
   }
   
-  .headerUserProfil {
+  .header-user-profil {
     gap: 10px;
   }
   
-  .headerHeadline {
+  .header-headline {
     font-size: 18px;
   }
 
-  .logoHeaderMobile {
+  .logo-header-mobile {
     display: block;
   }
-  .userMenuContent {
+  .user-menu-content {
     right: 20px;
   }
 

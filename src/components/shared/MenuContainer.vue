@@ -1,94 +1,94 @@
 <template>
   <div class="menu">
     <img
-      class="logoTemplate"
+      class="logo-template"
       src="@/assets/img/logoInvert.svg"
       alt=""
     />
-    <div v-if="route.path === '/home'" class="desktopTemplateMenu">
+    <div v-if="route.path === '/home'" class="desktop-template-menu">
       <div
         @click="changeView('summary')"
         :class="[
-          'desktopTemplateMenuElements',
+          'desktop-template-menu-elements',
           { desktopTemplateIconActive: currentView === 'summary' },
         ]"
       >
-        <div class="desktopTemplateIconContainer">
+        <div class="desktop-template-icon-container">
           <img
-            class="desktopTemplateIcon"
+            class="desktop-template-icon"
             src="@/assets/img/summaryIcon.svg"
             alt=""
           />
         </div>
-        <p class="desktopTemplateFont">Summary</p>
+        <p class="desktop-template-font">Summary</p>
       </div>
       <div
         @click="changeView('board')"
         :class="[
-          'desktopTemplateMenuElements',
+          'desktop-template-menu-elements',
           { desktopTemplateIconActive: currentView === 'board' },
         ]"
       >
-        <div class="desktopTemplateIconContainer">
+        <div class="desktop-template-icon-container">
           <img
-            class="desktopTemplateIcon"
+            class="desktop-template-icon"
             src="@/assets/img/boardIcon.svg"
             alt=""
           />
         </div>
-        <p id="board" class="desktopTemplateFont">Board</p>
+        <p class="desktop-template-font">Board</p>
       </div>
       <div
         @click="changeView('addTask')"
         :class="[
-          'desktopTemplateMenuElements',
+          'desktop-template-menu-elements',
           { desktopTemplateIconActive: currentView === 'addTask' },
         ]"
       >
-        <div class="desktopTemplateIconContainer">
+        <div class="desktop-template-icon-container">
           <img
-            class="desktopTemplateIcon"
+            class="desktop-template-icon"
             src="@/assets/img/addTaskIcon.svg"
             alt=""
           />
         </div>
-        <p class="desktopTemplateFont">Add Task</p>
+        <p class="desktop-template-font">Add Task</p>
       </div>
       <div
         @click="changeView('contacts')"
         :class="[
-          'desktopTemplateMenuElements',
+          'desktop-template-menu-elements',
           { desktopTemplateIconActive: currentView === 'contacts' },
         ]"
       >
-        <div class="desktopTemplateIconContainer">
+        <div class="desktop-template-icon-container">
           <img
-            class="desktopTemplateIcon"
+            class="desktop-template-icon"
             src="@\assets/img/contactsIcon.svg"
             alt=""
           />
         </div>
-        <p class="desktopTemplateFont">Contacts</p>
+        <p class="desktop-template-font">Contacts</p>
       </div>
     </div>
-    <div class="desktopTemplateMenu">
+    <div class="desktop-template-menu">
       <div
         @click="changeView('privacy');"
         :class="[
-          'desktopTemplateMenuElements',
+          'desktop-template-menu-elements',
           { desktopTemplateIconActive: currentView === 'privacy' },
         ]"
       >
-        <p class="desktopTemplateFont">Privacy Policy</p>
+        <p class="desktop-template-font">Privacy Policy</p>
       </div>
       <div
         @click="changeView('legalNotice')"
         :class="[
-          'desktopTemplateMenuElements',
+          'desktop-template-menu-elements',
           { desktopTemplateIconActive: currentView === 'legalNotice' },
         ]"
       >
-        <p class="desktopTemplateFont">Legal Notice</p>
+        <p class="desktop-template-font">Legal Notice</p>
       </div>
     </div>
   </div>
@@ -125,20 +125,19 @@ function changeView(view) {
 }
 
 
-.logoContainer {
+.logo-container {
   width: 70px;
- 
   flex: none;
   order: 0;
   flex-grow: 0;
 }
 
-.logoTemplate {
+.logo-template {
   width: 70px;
   cursor: pointer;
 }
 
-.desktopTemplateMenu {
+.desktop-template-menu {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -151,7 +150,7 @@ function changeView(view) {
   flex-grow: 0;
 }
 
-.desktopTemplateMenuElements {
+.desktop-template-menu-elements {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -166,7 +165,7 @@ function changeView(view) {
   }
 }
 
-.desktopTemplateIconContainer {
+.desktop-template-icon-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -181,21 +180,21 @@ function changeView(view) {
   
 }
 
-.desktopTemplateIcon {
+.desktop-template-tcon {
   width: 22px;
   height: 26px;
   color: #cdcdcd;
   
 }
 
-.desktopTemplateFont {
+.desktop-template-font {
   font-weight: 400;
   font-size: 16px;
   white-space: nowrap;
   color: #cdcdcd;
 }
 
-.desktopTemplateIconActive {
+.desktop-template-iconActive {
   background-color: #091931;
   transition: background-color 0.5s ease;
   &:hover{
@@ -203,11 +202,11 @@ function changeView(view) {
   }
 }
 
-.desktopTemplateIconActive p {
+.desktop-template-icon-active p {
   color: white !important;
 }
 
-.desktopTemplateLegalContainer {
+.desktop-template-legal-container {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -220,7 +219,7 @@ function changeView(view) {
   flex-grow: 0;
 }
 
-.desktopTemplateLegal {
+.desktop-template-legal {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -233,7 +232,7 @@ function changeView(view) {
   flex-grow: 0;
 }
 
-.desktopTemplateLegalIconContainer {
+.desktop-template-legal-icon-container {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -247,12 +246,12 @@ function changeView(view) {
   flex-grow: 0;
 }
 
-.colorAndDeleteIconContainer {
+.color-and-delete-icon-container {
   display: flex;
   align-items: center;
 }
 
-.deleteIcon {
+.delete-icon {
   width: 20px;
   height: 20px;
 }
@@ -263,18 +262,18 @@ function changeView(view) {
     gap: 10px;
     padding:0px;
   }
-  .logoTemplate{
+  .logo-template{
     display: none;
   }
 
-  .desktopTemplateMenu {
+  .desktop-template-menu {
     flex-direction: row;
     justify-content: space-between;
     gap: 10px;
     padding: 0px;
   }
 
-  .desktopTemplateMenu:last-of-type{
+  .desktop-template-menu:last-of-type{
     display: none;
   } 
 
@@ -286,13 +285,13 @@ function changeView(view) {
     padding:0px;
     gap: 0;
   }
-  .desktopTemplateMenu {
+  .desktop-template-menu {
     flex-direction: row;
     justify-content: space-around;
     padding: 0px;
     gap: 0;
   }
-  .desktopTemplateMenuElements{
+  .desktop-template-menu-elements{
     flex-direction: column;
     justify-content: center;
     align-items: center;

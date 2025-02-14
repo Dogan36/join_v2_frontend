@@ -1,28 +1,28 @@
 <template>
-  <div class="contactMainContent">
-    <div class="headlineComponent">
+  <div class="contact-main-content">
+    <div class="headline-component">
       <h1>Contacts</h1>
       <img
-        class="headlineSeperator"
+        class="headline-seperator"
         src="@/assets/img/headlineSeperator.svg"
         alt=""
       />
       <h2>Better with a Team</h2>
     </div>
-    <div v-if="selectedContact" class="contactCard">
-      <div class="cardHeader">
+    <div v-if="selectedContact" class="contact-card">
+      <div class="card-header">
         <div
-          class="cardAvatar"
+          class="card-avatar"
           :style="{ backgroundColor: selectedContact.color.hex_value, color: textColor }"
         >
           {{ selectedContact.avatar }}
         </div>
-        <div class="cardHeaderContent">
+        <div class="card-header-content">
           <span>{{
             selectedContact.name
           }}</span>
 
-          <div v-if="!selectedContact.isMember" class="cardHeaderEdits">
+          <div v-if="!selectedContact.isMember" class="card-header-edits">
             <div @click="$emit('openOverlay', true)" class="edit">
               <img src="@/assets/img/editIcon.svg" alt="" />
               <span>Edit</span>
@@ -34,20 +34,20 @@
           </div>
         </div>
       </div>
-      <div class="cardInfoHeader">Contact Information</div>
-      <div class="cardInfo">
-        <div class="cardEmailContainer">
+      <div class="card-info-header">Contact Information</div>
+      <div class="card-info">
+        <div class="card-email-container">
           <span>Email</span>
           <a href="mailto:">{{ selectedContact.email }}</a>
         </div>
-        <div class="cardPhoneContainer">
+        <div class="card-phone-container">
           <span>Phone</span>
           <a href="tel:">{{ selectedContact.phone }}</a>
         </div>
       </div>
     </div>
-    <div class="buttonContainer">
-      <div @click="$emit('close')" class="secondary-button-layout closeContact">Close</div>
+    <div class="button-container">
+      <div @click="$emit('close')" class="secondary-button-layout close-contact">Close</div>
       <div @click="$emit('openOverlay', false)" class="main-button-layout">New Contact
         <img src="@/assets/img/addContactIcon.svg" alt="">
       </div>
@@ -87,12 +87,12 @@ function hexToRgb(hex) {
 </script>
 
 <style scoped>
-.contactMainContent {
+.contact-main-content {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   flex: 1;
-  .contactCard {
+  .contact-card {
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -102,7 +102,7 @@ function hexToRgb(hex) {
     border-radius: 20px;
     width: 377px;
     max-width: 100%;
-    .cardHeader {
+    .card-header {
       display: flex;
       flex-direction: row;
       align-items: center;
@@ -111,7 +111,7 @@ function hexToRgb(hex) {
       flex-wrap: wrap;
     }
 
-    .cardAvatar {
+    .card-avatar {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -126,7 +126,7 @@ function hexToRgb(hex) {
       line-height: 120%;
     }
 
-    .cardHeaderContent {
+    .card-header-content {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -138,7 +138,7 @@ function hexToRgb(hex) {
         font-size: 2.5rem;
   
       }
-      .cardHeaderEdits {
+      .card-header-edits {
         display: flex;
         gap: 2.5rem;
         .edit {
@@ -148,7 +148,6 @@ function hexToRgb(hex) {
           padding: 0px;
           gap: 6px;
           cursor: pointer;
-
           span {
             font-weight: unset;
             font-size: 16px;
@@ -165,19 +164,19 @@ function hexToRgb(hex) {
       }
     }
 
-    .cardInfoHeader {
+    .card-info-header {
       font-size: 2.1rem;
     }
 
-    .cardInfo {
+    .card-info {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
 
       gap: 20px;
 
-      .cardEmailContainer,
-      .cardPhoneContainer {
+      .card-email-container,
+      .card-phone-container {
         display: flex;
         flex-direction: column;
         span {
@@ -185,14 +184,14 @@ function hexToRgb(hex) {
           font-size: 1.6rem;
         }
       }
-      .cardEmailContainer a {
+      .card-email-container a {
         text-decoration: none;
         font-size: 1.6rem;
         cursor: pointer;
         color: #007cee;
       }
 
-      .cardPhoneContainer a {
+      .card-phone-container a {
         text-decoration: none;
         font-size: 1.6rem;
         cursor: pointer;
@@ -202,23 +201,23 @@ function hexToRgb(hex) {
   }
 }
 
-.buttonContainer {
+.button-container {
   display: flex;
   justify-content: flex-end;
 }
 
-.closeContact {
+.close-contact {
   display: none;
 }
 
 @media screen and (max-width: 1000px) {
-  .contactsContent {
+  .contacts-content {
     gap: 1rem;
   }
   
 }
 @media screen and (max-width: 700px) {
-.contactMainContent {
+.contact-cain-content {
         display: flex;
         flex-direction: column;
         justify-content: space-around;
@@ -233,14 +232,14 @@ function hexToRgb(hex) {
         align-items: center;
 }
 
-.buttonContainer {
+.button-container {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   gap: 1rem;
   align-items: center;
 }
-.closeContact {
+.close-contact {
   display: flex;
 }
 }

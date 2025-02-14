@@ -1,21 +1,21 @@
 <template>
-  <div class="inputField" :class="{ 'input-error': error }">
+  <div class="inputfield" :class="{ 'input-error': error }">
     <input v-model="newCategoryName" placeholder="Enter new category" maxlength="25"></input>
-    <div :style="{ backgroundColor: newCategoryColor?.hex_value }" class="newCategoryColor"></div>
-    <div class="iconContainer">
+    <div :style="{ backgroundColor: newCategoryColor?.hex_value }" class="new-category-color"></div>
+    <div class="icon-container">
       <img @click="emit('toggle')" :src="blackXIcon" alt="" />
-      <div class="graySeperator"></div>
+      <div class="gray-seperator"></div>
       <img @click="addNewCategory" :src="blackCheckIcon" alt="" />
     </div>
   </div>
   
-  <div id="colorContainer" class="colorContainer">
+  <div id="colorContainer" class="color-container">
     <div
       v-for="(color, index) in colors.slice(0, 5)"
       :key="index"
       :style="{ backgroundColor: color.hex_value }"
       @click="chooseColor(index)"
-      class="colorCategoryButton colorCategoryButtonNew"
+      class="color-category-button color-category-button-new"
     ></div>
   </div>
   <p class="error-message">{{ error }}</p>
@@ -50,7 +50,6 @@ const checkNewCategoryName = () => {
   }
   return true;
 };
-
 
 const checkCatgeoriesLength = () => {
   if (categories.value.length === 20) {
@@ -135,23 +134,20 @@ const addNewCategory = async () => {
 </script>
 
 <style scoped>
-.iconContainer {
+.icon-container {
   display: flex;
   gap: 0.5rem;
-
   img {
     cursor: pointer;
   }
 }
 
-.colorContainer {
+.color-container {
   display: flex;
-
-  .colorCategoryButtonNew {
+  .color-category-button-new {
     margin: 1rem;
     cursor: pointer;
     border: 1px solid black;
-
     &:hover {
       border: 2px solid white;
       box-shadow: silver 4px 3px 6px;
@@ -161,7 +157,7 @@ const addNewCategory = async () => {
   }
 }
 
-.newCategoryColor {
+.new-category-color {
   width: 12px;
   height: 12px;
   border-radius: 100%;

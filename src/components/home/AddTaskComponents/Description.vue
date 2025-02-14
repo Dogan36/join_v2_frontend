@@ -1,7 +1,7 @@
 <template>
-  <div class="inputContainer">
+  <div class="input-container">
     <label class="title">Description</label>
-    <div class="inputField">
+    <div class="inputfield">
       <textarea
         v-model="description"
         type="text"
@@ -33,9 +33,9 @@ defineExpose({
 </script>
 
 <style scoped>
-.inputField {
+  .inputfield {
   height: unset;
   overflow-y: auto;
   max-width: 100%;
-}
+  }
 </style>

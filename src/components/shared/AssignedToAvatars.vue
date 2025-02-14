@@ -1,7 +1,7 @@
 <template>
-  <div class="assignedTo">
+  <div class="assigned-to">
     <div
-      class="cardAvatar"
+      class="card-avatar"
       :key="contact.id"
       :style="{ background: contact.color.hex_value, color: isDarkBackground(contact.color.hex_value) ? '#fff' : '#000' }"
       v-for="contact in assignedToReduced"
@@ -10,7 +10,7 @@
       {{ contact.avatar }}
     </div>
     <div
-      class="cardAvatar"
+      class="card-avatar"
       v-if="remainingContacts > 0"
     >
     +{{ remainingContacts }}
@@ -60,13 +60,13 @@ function hexToRgb(hex) {
 </script>
 
 <style scoped>
-.assignedTo {
+.assigned-to {
   width: 50%;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  .cardAvatar {
+  .card-avatar {
     display: flex;
     flex-direction: column;
     justify-content: center;

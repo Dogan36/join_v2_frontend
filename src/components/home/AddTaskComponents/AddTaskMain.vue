@@ -1,24 +1,24 @@
 <template>
-  <div class="addTaskOverlay">
-    <div class="addTaskHeadline"><h1 class="headlineComponent">
+  <div class="addtask-overlay">
+    <div class="addtask-headline"><h1 class="headline-component">
       {{ isEditMode ? "Edit Task" : "Add Task" }}
     </h1>
     <img v-if="isAddTaskOverlayVisible" @click="closeOverlay" src="@/assets/img/blackX.svg" alt="">
   </div>
     
-    <form class="addTaskMainContent" @submit.prevent="handleSubmit">
-      <div class="formLeft">
+    <form class="addtask-main-content" @submit.prevent="handleSubmit">
+      <div class="form-left">
         <Title ref="title" />
         <Description ref="description" />
         <Category ref="category" />
         <AssignContacts ref="assignContacts" />
       </div>
 
-      <div class="formRight">
+      <div class="form-right">
         <DueDate ref="dueDate" />
         <PrioButtons ref="prio" />
         <Subtasks ref="subtasks" @update:subtasks="updateSubtasks" />
-        <div class="formButtons">
+        <div class="form-buttons">
           <button
             class="secondary-button-layout"
             type="button"
@@ -51,7 +51,6 @@ const { showConfirmation } = useConfirmationOverlay();
 const { showOverlay, hideOverlay } = useLoadingOverlay();
 import { currentWorkspace, getToken, currentTask, tasks, selectedCategory, currentView, isAddTaskOverlayVisible} from "@/store/state";
 
-
 const isEditMode = ref(false); // Wird auf true gesetzt, wenn der Task bearbeitet wird
 const props = defineProps({
   status: {
@@ -82,7 +81,6 @@ dueDate.value?.clear();
 prio.value?.clear();
 subtasks.value?.clear();
 };
-
 
 const initializeForm = () => {
   if (isEditMode.value) {
@@ -128,12 +126,11 @@ if (!dueDate.value?.validate()) {
 return isValid;
 };
 
-// Funktion zum Starten der Validierung und Formular-Submit
 const handleSubmit = async () => {
-const isValid = validateForm();
-if (isValid) {
-  createTask();
-}
+  const isValid = validateForm();
+  if (isValid) {
+    createTask();
+  }
 }
 const createTaskObject = () => {
   return {
@@ -171,7 +168,6 @@ const createTask = async () => {
   closeOverlay();
 }
 
-
 const createTaskFetch = async (taskData) => {
   showOverlay();
   try {
@@ -194,7 +190,6 @@ const createTaskFetch = async (taskData) => {
     console.error("Error creating task:", error);
     return null;
   }
-  
 };
 
 const updateTaskFetch = async (taskData) => {
@@ -208,11 +203,9 @@ try {
     },
     body: JSON.stringify(taskData),
   });
-
   if (!response.ok) {
     throw new Error("Failed to create task", response);
   }
-
   const task = await response.json();
   showConfirmation("Task updated successfully");
   return task; // Antwort mit Task-Daten (z. B. ID)
@@ -224,24 +217,24 @@ try {
 </script>
 
 <style>
-.addTaskOverlay{
+.addtask-overlay{
   max-width: 100%;
 }
-.addTaskMainContent {
+.addtask-main-content {
   display: flex;
   max-width: 900px;
   flex-wrap: wrap;
   gap: 3rem;
 }
 
-.formLeft,
-.formRight {
+.form-left,
+.form-right {
   display: flex;
   flex-direction: column;
   max-width: 100%;
 }
 
-.inputContainer {
+.input-container {
   display: flex;
   flex-direction: column;
   
@@ -252,14 +245,14 @@ try {
   }
 }
 
-.formButtons {
+.form-buttons {
   display: flex;
   align-self: flex-end;
   gap: 1rem;
   margin-top: 2rem;
 }
 
-.addTaskHeadline{
+.addtask-headline{
   display: flex;
   width: 100%;
   justify-content: space-between;
@@ -272,10 +265,9 @@ try {
 }
 
 @media screen and (max-width: 1000px) {
-  .addTaskMainContent {
+  .addtask-main-content {
     justify-content: center;
   }
-  
 }
 
 </style>

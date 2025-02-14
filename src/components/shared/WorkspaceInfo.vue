@@ -20,7 +20,7 @@
     </div>
     </div>
     <div class="workspace-info-main">
-      <div class="buttonContainer">
+      <div class="button-container">
         <button
           class="main-button-layout"
           @click="setActiveModal('createWorkspace')"
@@ -68,7 +68,7 @@
       <p>Create or join workspace to get started</p>
     </div>
     <div class="workspace-info-main">
-      <div class="buttonContainer">
+      <div class="button-container">
         <button
           class="main-button-layout"
           @click="setActiveModal('createWorkspace')"
@@ -186,7 +186,7 @@ const close = () => {
   flex-direction: column;
   padding: 2rem;
   width: 40rem;
-  .buttonContainer {
+  .button-container {
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -212,8 +212,9 @@ h3 {
   font-weight: bold; /* Fett gedruckt für zusätzliche Betonung */
 }
 
-.inputFieldWorkspaceOverlay {
+.inputfield-workspace-overlay {
   width: 30rem !important;
+  align-self: flex-end;
 }
 
 @media screen and (max-width: 700px) {
@@ -238,7 +239,7 @@ h3 {
     p{
     flex-wrap: wrap;
   }
-  .inputContainer{
+  .input-container{
     margin-bottom : 1rem;
   }
   }

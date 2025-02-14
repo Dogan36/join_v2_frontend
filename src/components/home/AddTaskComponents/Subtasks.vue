@@ -1,29 +1,29 @@
 <template>
-    <div class="inputContainer">
+    <div class="input-container">
         <label class="title">Subtasks</label>
-    <div v-if="!addingNewSubtask" @click="toggleAddingNewSubtask" class="inputField dropDown">
-        <div class="dropDownOption">
-            <div class="dropDownOptionContent">Add new Subtask</div>
-            <img class="plusIcon" src="@/assets/img/plusBlackIcon.svg" alt="Add" />
+    <div v-if="!addingNewSubtask" @click="toggleAddingNewSubtask" class="inputfield dropdown">
+        <div class="dropdown-option">
+            <div class="dropdown-option-content">Add new Subtask</div>
+            <img class="plus-icon" src="@/assets/img/plusBlackIcon.svg" alt="Add" />
         </div>
     </div>
 
-    <div v-if="addingNewSubtask" class="inputField" :class="{ 'input-error': error }">
+    <div v-if="addingNewSubtask" class="inputfield" :class="{ 'input-error': error }">
         <input type="text" v-model="newSubtask" placeholder="Enter new subtask" maxlength="25">
-        <div class="iconContainer">
+        <div class="icon-container">
             <img @click="toggleAddingNewSubtask" src="@/assets/img/blackX.svg" alt="">
-            <div class="graySeperator"></div>
+            <div class="gray-seperator"></div>
             <img @click="addNewSubtask" src="@/assets/img/blackCheck.svg" alt="">
         </div>
     </div>
     <p v-if="error" class="error-message">{{ error }}</p>
     </div>
 
-    <div class="subTasksContainer">
-        <div class="subTask" v-for="subtask in subtasks" :key="subtask.id">
-            <span class="subTaskContent">{{ subtask.name }}</span>
-            <div class="iconContainerSubtask">
-                <img @click="deleteSubtask(subtask.id)" class="deleteIcon" src="@/assets/img/delete.svg" alt="Delete" />
+    <div class="subtasks-container">
+        <div class="subtask" v-for="subtask in subtasks" :key="subtask.id">
+            <span class="subtask-content">{{ subtask.name }}</span>
+            <div class="icon-container-subtask">
+                <img @click="deleteSubtask(subtask.id)" class="delete-icon" src="@/assets/img/delete.svg" alt="Delete" />
                 <input type="checkbox" v-model="subtask.is_completed" />
             </div>
             
@@ -55,7 +55,6 @@ const addNewSubtask = () => {
     toggleAddingNewSubtask();
 };
 
-
 const toggleAddingNewSubtask = () => {
     newSubtask.value = '';
     addingNewSubtask.value = !addingNewSubtask.value;
@@ -85,11 +84,11 @@ defineExpose({
 </script>
 
 <style>
-.subTasksContainer {
+.subtasks-container {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    .subTask{
+    .subtask{
         display: flex;
         justify-content: space-between;
         padding: 0.5rem;
@@ -102,13 +101,13 @@ defineExpose({
         &:hover{
             background-color: #E7E7E7;
         }
-        &:hover .iconContainerSubtask > *:first-child{
+        &:hover .icon-container-subtask > *:first-child{
             display: flex;
         }
     }
 }
 
-.iconContainerSubtask {
+.icon-container-subtask {
     display: flex;
     gap: 1rem;
     img, input {
@@ -121,6 +120,5 @@ defineExpose({
     :first-child{
         display: none;
     }
-
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
  
   <div class="wrapper">
-    <div class="logoContainer" :class="{ animate: startAnimation }">
+    <div class="logo-container" :class="{ animate: startAnimation }">
       <img class="logo-invert" src="@/assets/img/logoInvert.svg" alt="Logo Invert">
       <img class="logo-normal" src="@/assets/img/logo.svg" alt="Logo">
     </div>
@@ -22,12 +22,12 @@
       </div>
     
 
-    <div v-if="animationFinished" class="notAUserContainer">
+    <div v-if="animationFinished" class="not-a-user-container">
         <span v-if="isLogin">Not a user?</span>
         <button v-if="isLogin"  class="main-button-layout font-size16" @click="toggleSignup"><span>Sign up</span></button>
     </div>
   </div>
-  <div class="privacyLinks">
+  <div class="privacy-links">
     <a target="_blank" href="/privacy?type=privacyPolicy">Privacy Policy</a>
     <a target="_blank" href="/privacy?type=legalNotice">Legal Notice</a>
   </div>
@@ -99,7 +99,7 @@ const goToPrivacyPolicy = () => {
 }
 
 
-.logoContainer {
+.logo-container {
   position: fixed;
   top: 0;
   left: 0;
@@ -113,7 +113,7 @@ const goToPrivacyPolicy = () => {
     transition: background-color 1s ease, width 0s linear 1s, height 0s linear 1s;
 }
 
-.logoContainer.animate {
+.logo-container.animate {
   background-color: unset; /* Hintergrundfarbe wird entfernt */
   z-index: -0;
   height: 0;
@@ -173,23 +173,23 @@ const goToPrivacyPolicy = () => {
   opacity: 1;
 }
 
-.logoContainer.animate .logo-normal {
+.logo-container.animate .logo-normal {
   animation: logoNormalTransition 1s forwards;
 }
 
-.logoContainer.animate .logo-invert {
+.logo-container.animate .logo-invert {
   animation: logoInvertTransition 1s forwards;
 }
 
-.logoContainer.animate .logo-invert {
+.logo-container.animate .logo-invert {
   opacity: 0;
 }
 
-.logoContainer.animate .logo-normal {
+.logo-container.animate .logo-normal {
   opacity: 1;
 }
 
-.notAUserContainer {
+.not-a-user-container {
   height: 100%;
   display: flex;
   justify-content: end;
@@ -201,25 +201,25 @@ const goToPrivacyPolicy = () => {
 
 
 
-.notAUserContainer span:first-child {
+.not-a-user-container span:first-child {
   font-style: normal;
   font-weight: 400;
   font-size: 2rem;
   white-space: nowrap;
 }
 
-.notAUserContainer  span:last-child {
+.not-a-user-container  span:last-child {
   font-size: 16px;
 }
 
-.privacyLinks {
+.privacy-links {
   display: flex;
   justify-content: center;
   align-items: start;
   gap: 2rem;
 }
 
-.privacyLinks a {
+.privacy-links a {
   font-size: 1.6rem;
   color: #A8A8A8;
   text-decoration: none;
@@ -235,7 +235,7 @@ const goToPrivacyPolicy = () => {
   margin: 1rem 0;
 }
 
-.subHeader {
+.subheader {
   font-size: 2.1rem;
   text-align: center;
 }
@@ -280,7 +280,7 @@ const goToPrivacyPolicy = () => {
     flex-direction: column;
     margin-bottom: 1rem;
   }
-  .logoContainer.animate {
+  .logo-container.animate {
     height: 0;
     width: 0;
     justify-content: flex-start;
@@ -292,7 +292,7 @@ const goToPrivacyPolicy = () => {
   .logo-invert{
     height: 80px;
   }
-  .notAUserContainer{
+  .not-a-user-container{
     width: 100%;
     justify-content: center;
     align-items: center;
@@ -303,7 +303,7 @@ const goToPrivacyPolicy = () => {
 }
 
 @media screen and (max-width : 500px) {
-  .logoContainer{
+  .logo-container{
     padding: 1rem
   }
   .logo-normal {
@@ -314,8 +314,7 @@ const goToPrivacyPolicy = () => {
     width: 100px;
   }
 
-  .notAUserContainer{
-
+  .not-a-user-container{
     gap: 0;
     justify-content: space-around;
   }

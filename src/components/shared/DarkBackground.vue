@@ -1,6 +1,6 @@
 <template>
-    <div class="darkBackground" @click="closeModal">
-        <div class="modalContainer" @click.stop>
+    <div class="dark-background" @click="closeModal">
+        <div class="modal-container" @click.stop>
         <slot></slot>
         </div>
     </div>
@@ -16,7 +16,7 @@ const closeModal = () => {
 </script>
 
 <style scoped>
-.darkBackground {
+.dark-background {
     position: fixed;
     top: 0;
     left: 0;
@@ -28,12 +28,12 @@ const closeModal = () => {
     align-items: center;
     z-index: 99;
 }
-.modalContainer {
+
+.modal-container {
 max-width:100%;
 display:flex;
 justify-content:center;
 align-items:center;
 }
 
-  
 </style>

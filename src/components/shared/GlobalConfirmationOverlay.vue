@@ -10,7 +10,6 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
 import { useConfirmationOverlay } from "@/composables/useConfirmationOverlay";
 const closeConfirmation = useConfirmationOverlay().hideConfirmation;
 const { isConfirmationVisible, confirmationMessage } = useConfirmationOverlay();

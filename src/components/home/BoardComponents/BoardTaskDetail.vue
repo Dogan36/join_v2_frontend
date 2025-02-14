@@ -1,51 +1,54 @@
 <template>
-    <div class="boardTaskDetail">
-        <div class="activeTaskHeader">
-            <div class="activeTaskCategory" :style="{ background: category.color.hex_value }"><span :style="{color: getTextColor(category.color.hex_value)}">{{category.name}}</span></div>
-            <img @click="closeOverlay()" class="activeTaskCloseButton" src="@/assets/img/blackX.svg" alt="">
+    <div class="board-task-detail">
+        <div class="active-task-header">
+            <div class="active-task-category" :style="{ background: category.color.hex_value }">
+                <span :style="{color: getTextColor(category.color.hex_value)}">{{category.name}}</span>
+            </div>
+            <img @click="closeOverlay()" class="active-task-close-button" src="@/assets/img/blackX.svg" alt="">
         </div>
-    <div class="activeTaskTitle">{{title}}</div>
-    <div class="activeTaskDescription">{{description}}</div>
-    <div class="activeTaskDueDate">
-        <span class="acticeTaskSubHeader">Due date:</span><span>{{dueDate}}</span>
+    <div class="active-task-title">{{title}}</div>
+    <div class="active-task-description">{{description}}</div>
+    <div class="active-task-duedate">
+        <span class="actice-task-subheader">Due date:</span><span>{{dueDate}}</span>
     </div>
-    <div class="activeTaskPriority">
-        <span class="acticeTaskSubHeader">Priority:</span>
-        <div class="activeTaskPriorityButton" :style="{ background: buttonColor }"><span>{{prio}}</span><img :src="buttonImg" alt=""></div>
+    <div class="active-task-priority">
+        <span class="actice-task-subheader">Priority:</span>
+        <div class="active-task-priority-button" :style="{ background: buttonColor }">
+            <span>{{prio}}</span><img :src="buttonImg" alt=""></div>
     </div>
-    <div class ="activeTaskElement">
-    <span class="acticeTaskSubHeader">Assigned To:</span>
-    <div class="activeTaskAssignedToContainer">
-        <div v-for="contact in assignedTo" class="activeTaskAssignedTo">
-            <div class="activeTaskAvatar" :style="{ background: contact.color.hex_value }"><span :style="{color: getTextColor(contact.color.hex_value)}">{{contact.avatar}}</span></div>
+    <div class ="active-task-element">
+    <span class="actice-task-subheader">Assigned To:</span>
+    <div class="active-task-sssigned-to-container">
+        <div v-for="contact in assignedTo" class="active-task-assigned-to">
+            <div class="active-task-avatar" :style="{ background: contact.color.hex_value }">
+                <span :style="{color: getTextColor(contact.color.hex_value)}">{{contact.avatar}}</span></div>
             <span>{{contact.name}}</span>
         </div>
     </div>
     </div>
-    <div class ="activeTaskElement">
-    <span class="acticeTaskSubHeader">Subtasks:</span>
-    <div class="activeTaskSubtasksContainer">
-        <div v-for="subtask in subtasks" class="activeTaskSubtasks">
+    <div class ="active-task-element">
+    <span class="actice-task-subheader">Subtasks:</span>
+    <div class="active-task-subtasks-container">
+        <div v-for="subtask in subtasks" class="active-task-subtasks">
             <span>{{subtask.name}}</span>
             <input @click="updateSubtask(subtask)" type="checkbox" :checked="subtask.is_completed">
         </div>
-        <div v-if="subtasks.length === 0" class="subtasksEmpty">No Subtasks assigned</div>
+        <div v-if="subtasks.length === 0" class="subtasks-empty">No Subtasks assigned</div>
     </div>
     </div>
-    <div class="activeTaskChangeContainer">
-        <div class="activeTaskButtons">
-        <div @click="deleteTask" class="activeTaskDelete">
+    <div class="active-task-change-container">
+        <div class="active-task-buttons">
+        <div @click="deleteTask" class="active-task-delete">
             <img src="@/assets/img/delete.svg" alt="Delete">
         </div>
-        <div @click="editTask" class="activeTaskEdit">
+        <div @click="editTask" class="active-task-edit">
             <img src="@/assets/img/editTaskPen.svg" alt="Edit">
         </div>
         </div>
     </div>
-   
-    
     </div>
 </template>
+
 <script setup>
 import { defineProps, computed} from 'vue';
 import { categories } from '@/store/state';
@@ -143,8 +146,6 @@ const deleteTask = async() => {
     } catch (error) {
         console.error('Error deleting task:', error);
     }
-    
-    
 };
 
 const editTask = () => {
@@ -154,7 +155,7 @@ const editTask = () => {
 </script>
 <style scoped>
 
-.boardTaskDetail {
+.board-task-detail {
     display: flex;
     flex-direction: column;
     position: absolute;
@@ -172,16 +173,17 @@ const editTask = () => {
     justify-content: space-between;
 }
 
-.activeTaskSubtasksContainer::-webkit-scrollbar-track,
-.activeTaskAssignedToContainer::-webkit-scrollbar-track{
+.active-task-subtasks-container::-webkit-scrollbar-track,
+.active-task-assigned-to-container::-webkit-scrollbar-track{
   margin-block: 0px;
 }
 
-.activeTaskHeader{
+.active-task-header{
     display: flex;
     justify-content: space-between;
 }
-.activeTaskCategory {
+
+.active-task-category {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -198,7 +200,7 @@ const editTask = () => {
     }
 }
 
-.activeTaskTitle {
+.active-task-title {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -214,7 +216,7 @@ const editTask = () => {
     white-space: normal;
 }
 
-.activeTaskDescription {
+.active-task-description {
     max-width: 100%;
     font-size: 2rem;
     line-height:2rem;
@@ -223,7 +225,7 @@ const editTask = () => {
     white-space: normal;
 }
 
-.activeTaskDueDate {
+.active-task-duedate {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -243,16 +245,16 @@ const editTask = () => {
     
 }
 
-.activeTaskElement{
+.active-task-element{
     gap: 1rem;
 }
 
-.acticeTaskSubHeader{
+.actice-task-subheader{
     font-weight: 700;
     font-size: 2.1rem;
 }
 
-.activeTaskPriority {
+.active-task-priority {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -262,7 +264,7 @@ const editTask = () => {
     height: 3.3rem;
 }
 
-.activeTaskPriorityButton {
+.active-task-priority-button {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -273,9 +275,7 @@ const editTask = () => {
     background: #FF3D00;
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
-
     span {
-       
         font-size: 2.1rem;
         color: #FFFFFF;
         font-weight: 400;
@@ -286,7 +286,7 @@ const editTask = () => {
     }
 }
 
-.activeTaskAssignedToContainer {
+.active-task-assigned-to-container {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -295,7 +295,7 @@ const editTask = () => {
     max-height: 13rem;   
 }
 
-.activeTaskAssignedTo {
+.active-task-assigned-to {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -311,7 +311,8 @@ const editTask = () => {
         margin-top: 1rem;
     }
 }
-.activeTaskAvatar {
+
+.active-task-avatar {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -324,7 +325,7 @@ const editTask = () => {
     }
 }
 
-.activeTaskSubtasks {
+.active-task-subtasks {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -338,14 +339,13 @@ const editTask = () => {
     }
 }
 
-.activeTaskAssignedTo span,
-.activeTaskSubtasks span {
+.active-task-assigned-to span,
+.active-task-subtasks span {
     font-size: 2.1rem;
     color: #000000;
 }
 
-
-.activeTaskSubtasksContainer {
+.active-task-subtasks-container {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -354,7 +354,7 @@ const editTask = () => {
     max-height: 13rem;
 }
 
-.activeTaskButtons {
+.active-task-buttons {
     cursor: pointer !important;
     display: flex;
     flex-direction: row;
@@ -365,7 +365,7 @@ const editTask = () => {
 }
 
 
-.activeTaskDelete {
+.active-task-delete {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -383,7 +383,7 @@ const editTask = () => {
     }
 }
 
-.activeTaskEdit {
+.active-task-edit {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -397,14 +397,14 @@ const editTask = () => {
     }
 }
 
-.activeTaskCloseButton {
+.active-task-close-button {
     position: absolute;
     right: 3.5rem;
     top: 3.5rem;
     cursor: pointer;
 }
 
-.subtasksEmpty{
+.subtasks-empty{
   width:130px;
   height: 4.8rem;
   border-radius: 10px;

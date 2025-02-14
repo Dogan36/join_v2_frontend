@@ -1,12 +1,12 @@
 <template>
-  <div class="boardContent" @click="removeHighlight" ref="boardContentRef">
+  <div class="board-content" @click="removeHighlight" ref="boardContentRef">
    
-    <div class="headlineComponent">
+    <div class="headline-component">
       <h1>Board</h1>
-      <div class="boardHeadlineRight">
-        <div class="findTask">
+      <div class="board-headline-right">
+        <div class="find-task">
           <input placeholder="Find Task" type="text" v-model="searchQuery" />
-          <div class="graySeperator"></div>
+          <div class="gray-seperator"></div>
           <img src="@/assets/img/searchIcon.svg" alt="" />
         </div>
         <button @click="openAddTaskOverlay('todo')" class="main-button-layout">
@@ -15,18 +15,18 @@
       </div>
     </div>
 
-  <div @touchmove="onTouchMove" class="boardMainContent" ref="boardMainContentRef">
+  <div @touchmove="onTouchMove" class="board-main-content" ref="boardMainContentRef">
     <div v-if="longPressFlag" class="long-press-overlay top"
     ><img src="@/assets/img/scrollArrow.svg" alt=""></div>
     <div v-if="longPressFlag"  class="long-press-overlay bottom"
     ><img src="@/assets/img/scrollArrow.svg" alt=""></div>
-    <div v-for="column in columns" :key="column.status" :data-status="column.status" class="boardElement">
+    <div v-for="column in columns" :key="column.status" :data-status="column.status" class="board-element">
       <div v-if="draggedTask && longPressFlag" 
        class="drag-preview" 
        :style="{ top: dragPreviewPosition.y + 'px', left: dragPreviewPosition.x + 'px' }">
     <BoardCard :task="draggedTask" class="ghost" />
   </div>
-      <div class="boardElementHeader">
+      <div class="board-element-header">
         <span>{{ column.label }}</span>
         <img
           @click="openAddTaskOverlay(column.status)"
@@ -35,7 +35,7 @@
         />
       </div>
       <div
-        class="boardElementContent"
+        class="board-element-content"
         :class="{ hovered: hoveredColumn === column.status }"
         @dragover.prevent="onDragOver(column.status)"
         @dragenter.prevent="onDragEnter(column.status)"
@@ -49,29 +49,25 @@
           draggable="true"
           @dragstart="onDragStart(task)"
           @dragend="onDragEnd"
-          
           @touchstart.prevent="onTouchStart(task, $event)"
           @touchend.prevent="onTouchEnd"
           @touchcancel.prevent="onTouchEnd"
         />
-        <!-- Zeigt einen Drop-Indikator an, wenn über dieser Spalte gezogen wird -->
         <div
     v-if="draggedTask && draggedTask.status !== column.status && hoveredColumn === column.status"
     class="empty-board-card"
   >
     Move here
   </div>
-        <!-- Falls in der Spalte keine Tasks vorhanden sind -->
         <div
           v-if="tasksByStatus[column.status].length === 0 && hoveredColumn !== column.status"
-          class="boardElementEmpty"
+          class="board-element-empty"
         >
           No Task {{ column.label }}
         </div>
       </div>
     </div>
  
-
     <DarkBackground v-if="isAddTaskOverlayVisible" @close="closeOverlay">
       <AddTaskMain
       :status="choosenStatus"
@@ -329,10 +325,12 @@ const openTaskDetail = (task) => {
   currentTask.value = task; // Setzt den Status, der an das Overlay übergeben wird
   isDetailViewVisible.value = true;
 };
+
 const closeOverlay = () => {
   isAddTaskOverlayVisible.value = false;
   isDetailViewVisible.value = false;
 };
+
 </script>
 <style scoped>
 .long-press-overlay {
@@ -375,15 +373,15 @@ const closeOverlay = () => {
   width: 24px; /* Größe nach Bedarf anpassen */
   height: 24px;
 }
-.headlineComponent {
+.headline-component {
   justify-content: space-between;
   align-items: flex-start;
 }
-.boardContent {
+.board-content {
   width: 100%;
 }
 
-.addTaskOverlay {
+.addtask-overlay {
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -400,7 +398,7 @@ const closeOverlay = () => {
  
 }
 
-.boardHeadlineRight {
+.board-headline-right {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -408,7 +406,7 @@ const closeOverlay = () => {
   flex-wrap: wrap;
 }
 
-.findTask {
+.find-task {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -418,7 +416,6 @@ const closeOverlay = () => {
   background: #ffffff;
   border: 1px solid #a8a8a8;
   border-radius: 10px;
-
   input {
     border: none;
     background: none;
@@ -426,14 +423,14 @@ const closeOverlay = () => {
     font-size: 1.6rem;
   }
 
-  .graySeperator {
+  .gray-seperator {
     width: 2px;
     height: 20px;
     background: #d1d1d1;
   }
 }
 
-.boardMainContent {
+.board-main-content {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -443,17 +440,16 @@ const closeOverlay = () => {
   position: relative;
 }
 
-.boardElement {
+.board-element {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   min-width: 25.5rem;
 
-  .boardElementHeader {
+  .board-element-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
     span {
       font-weight: 700;
       font-size: 2.1rem;
@@ -464,7 +460,7 @@ const closeOverlay = () => {
     }
   }
 
-  .boardBottomDiv {
+  .board-bottom-div {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -473,7 +469,7 @@ const closeOverlay = () => {
   }
 }
 
-.boardElementContent {
+.board-element-content {
   display: flex;
   flex-direction: column;
   transition: background-color 0.2s;
@@ -483,7 +479,7 @@ const closeOverlay = () => {
   gap: 1.5rem;
 }
 
-.boardElementContent.hovered {
+.board-element-content.hovered {
   background-color: #e0e0e0;
 }
 
@@ -500,7 +496,7 @@ const closeOverlay = () => {
   border-radius: 30px;
   }
 
-.boardElementEmpty {
+.board-element-empty {
   width: 100%;
   height: 4.8rem;
   border-radius: 10px;
@@ -534,21 +530,21 @@ const closeOverlay = () => {
 }
 
 @media screen and (max-width: 700px) {
-  .boardHeadlineRight{
+  .board-headline-right{
     flex-wrap: wrap;
     justify-content: flex-end;
   }
-  .boardMainContent{
+  .board-main-content{
     justify-content: center;
     
   }
 }
 
 @media screen and (max-width: 450px) {
-  .headlineComponent{
+  .headline-component{
     flex-wrap: wrap;
   }
-  .boardHeadlineRight{
+  .board-headline-right{
     flex-wrap: wrap;
     justify-content: flex-start;
   }

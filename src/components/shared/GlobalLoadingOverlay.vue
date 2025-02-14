@@ -6,7 +6,6 @@
 
 <script setup>
 import { useLoadingOverlay } from '@/composables/useLoadingOverlay';
-import { computed } from 'vue';
 
 const { isLoading } = useLoadingOverlay();
 </script>

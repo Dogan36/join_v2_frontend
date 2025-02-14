@@ -1,70 +1,70 @@
 <template>
-      <div class="headlineComponent">
+      <div class="headline-component">
         <h1>Join 360</h1>
-        <img class="headlineSeperator" src="@/assets/img/headlineSeperator.svg" alt="">
+        <img class="headline-seperator" src="@/assets/img/headlineSeperator.svg" alt="">
         <h2>Key Metrics at a Glance</h2>
       </div>
-      <div class="contentSummary">
-        <div class="contentButtons">
-          <div class="buttonContainerRow">
-            <div @click="goToBoard()" class="buttonSummary buttonV1">
-              <div class="buttonContent">
-              <span id="summaryCountInBoard" class="buttonNumber">{{boardTasks.length}}</span>
-              <span class="buttonText ">Tasks in Board</span>
+      <div class="content-summary">
+        <div class="content-buttons">
+          <div class="button-container-row">
+            <div @click="goToBoard()" class="button-summary button-v1">
+              <div class="button-content">
+              <span class="button-number">{{boardTasks.length}}</span>
+              <span class="button-text ">Tasks in Board</span>
               </div>
             </div>
-            <div @click="goToBoard(inProgressTasks)" class="buttonSummary buttonV1">
-              <div class="buttonContent">
-              <div id="summaryCountProgress" class="buttonNumber">{{inProgressTasks.length}}</div>
-              <div class="buttonText">Tasks in Progress</div>
+            <div @click="goToBoard(inProgressTasks)" class="button-summary button-v1">
+              <div class="button-content">
+              <div class="button-number">{{inProgressTasks.length}}</div>
+              <div class="button-text">Tasks in Progress</div>
               </div>
             </div>
-            <div @click="goToBoard(awaitingFeedbackTasks)" class="buttonSummary buttonV1">
-              <div class="buttonContent">
-              <div id="summaryCountAwaiting" class="buttonNumber">{{awaitingFeedbackTasks.length}}</div>
-              <div class="buttonText">Tasks in Feedback</div>
+            <div @click="goToBoard(awaitingFeedbackTasks)" class="button-summary button-v1">
+              <div class="button-content">
+              <div class="button-number">{{awaitingFeedbackTasks.length}}</div>
+              <div class="button-text">Tasks in Feedback</div>
               </div>
             </div>
           </div>
-          <div class="buttonContainerRow">
-            <div @click="goToBoard(urgentTasks)" class="buttonSummary buttonV3">
-                <img class="urgentIcon" src="@/assets/img/prioHighRound.svg" alt="Urgent Icon"
+          <div class="button-container-row">
+            <div @click="goToBoard(urgentTasks)" class="button-summary button-v3">
+                <img class="urgent-icon" src="@/assets/img/prioHighRound.svg" alt="Urgent Icon"
                 />
-              <div class="buttonContent">
-                <span id="summaryCountUrgent"class="buttonNumber">{{urgentTasks.length}}</span>
-                <span class="buttonText">Urgent</span>
+              <div class="button-content">
+                <span class="button-number">{{urgentTasks.length}}</span>
+                <span class="button-text">Urgent</span>
               </div>
             </div>
-            <div @click="goToBoard(upcomingDeadline)" class="buttonSummary buttonV2">
-              <div class="buttonText">{{ upcomingDeadline.length > 0 ? upcomingDeadline[0].due_date : 'No' }}</div>
-              <div class="buttonV2TextBold">{{ deadlineLabel }}</div>
+            <div @click="goToBoard(upcomingDeadline)" class="button-summary button-v2">
+              <div class="button-text">{{ upcomingDeadline.length > 0 ? upcomingDeadline[0].due_date : 'No' }}</div>
+              <div class="button-v2-text-bold">{{ deadlineLabel }}</div>
             </div>
           </div>
         
-          <div class="buttonContainerRow">
-            <div @click="goToBoard(toDoTasks)" class="buttonSummary buttonV3">
-              <div class="penIcon"></div>
-              <div class="buttonContent">
-                <div id="summaryCountToDo" class="buttonNumber">{{toDoTasks.length}}</div>
-                <div class="buttonText">To-do</div>
+          <div class="button-container-row">
+            <div @click="goToBoard(toDoTasks)" class="button-summary button-v3">
+              <div class="pen-icon"></div>
+              <div class="button-content">
+                <div class="button-number">{{toDoTasks.length}}</div>
+                <div class="button-text">To-do</div>
               </div>
             </div>
-            <div @click="goToBoard(doneTasks)" class="buttonSummary buttonV3">
-              <div class="hookIcon"></div>
-              <div class="buttonContent">
-                  <div class="buttonNumber">{{doneTasks.length}}</div>
-                  <div class="buttonText">Done</div>
+            <div @click="goToBoard(doneTasks)" class="button-summary button-v3">
+              <div class="hook-icon"></div>
+              <div class="button-content">
+                  <div class="button-number">{{doneTasks.length}}</div>
+                  <div class="button-text">Done</div>
               </div>
           </div>
           </div>
         </div>
-        <div class="welcomeDesk">
-          <span id="welcomeText">{{greetingByDaytime}}</span>
-          <span id="welcomeName">{{ userName }}</span>
+        <div class="welcome-desk">
+          <span id="welcome-text">{{greetingByDaytime + ','}}</span>
+          <span id="welcome-name">{{ userName }}</span>
       </div>
-      <div v-if="!greetingDone" class="welcomeDeskOverlay">
-          <span id="welcomeText">{{greetingByDaytime}}</span>
-          <span id="welcomeName">{{ userName }}</span>
+      <div v-if="!greetingDone" class="welcome-desk-overlay">
+          <span id="welcome-text">{{greetingByDaytime + ','}}</span>
+          <span id="welcome-name">{{ userName }}</span>
       </div>
       </div>
     
@@ -136,24 +136,24 @@ const greetingByDaytime = computed(() => {
 });
 </script>
 <style scoped>
-.contentSummary {
+.content-summary {
   display: flex;
   align-items: center;
   gap: 5rem
 }
 
-.contentButtons {
+.content-buttons {
   display: flex;
   gap: 2rem;
   flex-direction: column;
 }
 
-.buttonContainerRow {
+.button-container-row {
   display: flex;
   gap: 2rem;
 }
 
-.buttonSummary {
+.button-summary {
 display: flex;
 align-items: center;
 justify-content: center;
@@ -169,27 +169,27 @@ justify-content: center;
   text-align: center;
 }
 
-.buttonContent {
+.button-content {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
 }
 
-.buttonSummary:hover {
+.button-summary:hover {
   transform: scale(1.05);
   background-color: #2A3647;
   transition: all 0.175s ease-in-out;
   color: white;
 }
 
-.buttonNumber {
+.button-number {
   font-size: 3.5rem;
   font-style: normal;
   font-weight: 600;
 }
 
-.buttonText {
+.button-text {
   font-weight: 400;
   font-size: 2rem;
   line-height: 120%;
@@ -198,30 +198,30 @@ justify-content: center;
 
 
 
-.buttonV2 {
+.button-v2 {
   width: calc((100% - 2rem) / 2);
   justify-content: space-around;
   flex-direction: column;
-  .buttonText {
+  .button-text {
     font-size: 2.1rem;
     white-space: nowrap;
   }
-  .buttonV2TextBold {
+  .button-v2-text-bold {
     font-size: 2rem;
     font-weight: 600;
   }
 }
 
-.buttonV3 {
+.button-v3 {
   width: calc((100% - 2rem) / 2);
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
 }
 
-.penIcon,
-.hookIcon,
-.urgentIcon
+.pen-icon,
+.hook-icon,
+.urgent-icon
  {
   width: 6rem;
   height: 6rem;
@@ -230,8 +230,8 @@ justify-content: center;
 
 }
 
-.penIcon::before,
-.hookIcon::before {
+.pen-icon::before,
+.hook-icon::before {
   content: '';
   display: block;
   width: 100%;
@@ -239,23 +239,23 @@ justify-content: center;
   transition: all 0.175s ease-in-out;
 }
 
-.penIcon::before {
+.pen-icon::before {
   background-image: url('@/assets/img/penIcon.svg');
 }
 
-.hookIcon::before {
+.hook-icon::before {
   background-image: url('@/assets/img/hook.svg');
 }
 
-.buttonV3:first-of-type:hover .penIcon:first-of-type::before {
+.button-v3:first-of-type:hover .penIcon:first-of-type::before {
   background-image: url('@/assets/img/penWhite.svg');
 }
 
-.buttonV3:hover .hookIcon::before {
+.button-v3:hover .hookIcon::before {
   background-image: url('@/assets/img/hookWhite.svg');
 }
 
-.welcomeDesk {
+.welcome-desk {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -274,66 +274,66 @@ justify-content: center;
   }
 }
 
-.welcomeDeskOverlay{
+.welcome-desk-overlay{
   display: none;
 }
 
 @media screen and (max-width: 1000px) {
-  .contentSummary {
+  .content-summary {
     gap: 2rem;
   }
-  .contentButtons {
+  .content-buttons {
     gap: 1rem;
   }
-  .buttonContainerRow {
+  .button-container-row {
     gap: 1rem;
   }
 
-  .buttonV2 {
+  .button-v2 {
   width: calc((100% - 1rem) / 2);
   }
-  .buttonV3 {
+  .button-v3 {
     width: calc((100% - 1rem) / 2);
   }
-  .penIcon,
-  .hookIcon,
-  .urgentIcon {
+  .pen-icon,
+  .hook-icon,
+  .urgent-icon {
     width: 4rem;
     height: 4rem;
   }
 }
 
 @media screen and (max-width: 700px) {
-  .contentSummary {
+  .content-summary {
     gap: 2rem;
     max-width: 100%;
   }
-  .contentButtons {
+  .content-buttons {
     gap: 1rem;
     width: 100%;
   }
-  .buttonContainerRow {
+  .button-container-row {
     width: 100%;
     gap: 1rem;
   }
 
-  .buttonV1{
+  .button-v1{
     width: calc((100% - 2rem)/3);
     aspect-ratio: 1/1;
   }
 
-  .penIcon,
-  .hookIcon,
-  .urgentIcon {
+  .pen-icon,
+  .hook-icon,
+  .urgent-icon {
     width: 3rem;
     height: 3rem;
   }
 
-  .welcomeDesk{
+  .welcome-desk{
     display: none;
   }
 
-  .welcomeDeskOverlay {
+  .welcome-desk-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -375,25 +375,25 @@ justify-content: center;
 
 @media screen and (max-width: 400px) {
  
-  .buttonNumber {
+  .button-number {
     font-size: 2.5rem;
   }
-  .buttonText {
+  .button-text {
     font-size: 1.5rem;
   }
 
-  .buttonV2{
+  .button-v2{
     .buttonText {
       font-size: 1.5rem;
     }
   }
-  .buttonV1{
+  .button-v1{
     width: calc((100% - 2rem)/3);
   }
  
-  .penIcon,
-  .hookIcon,
-  .urgentIcon {
+  .penI-icon,
+  .hook-icon,
+  .urgent-icon {
     width: 3rem;
     height: 3rem;
   }

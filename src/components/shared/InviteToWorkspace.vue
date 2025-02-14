@@ -10,22 +10,22 @@
         
             <p>
               <span>  Copy Code:</span></p>
-            <div @click="copyToClipboard" class="copyCode">
+            <div @click="copyToClipboard" class="copy-code">
               <div class="tooltip">
                 <img  class="clipboard" src="@/assets/img/clipboard.svg" alt="Clipboard Icon">
                 <span class="tooltiptext">{{ copyToClipboardText }}</span>
               </div>
-              <span id="join_code" class="value"> {{ currentWorkspace.join_code }}</span></div>
+              <span id="join_code"> {{ currentWorkspace.join_code }}</span></div>
             
        
         <p>Or send the code per e-mail</p>
-        <div class="inputContainer">
-            <div class="inputField" :class="{ 'input-error': error }">
-                <input id="shareCodeEmail" v-model="shareCodeEmail" type="text" placeholder="Invite per e-mail" /><img src="@/assets/img/loginMail.svg" alt="Mail Icon" />
+        <div class="input-container">
+            <div class="inputfield inputfield-workspace-overlay" :class="{ 'input-error': error }">
+                <input v-model="shareCodeEmail" type="text" placeholder="Invite per e-mail" /><img src="@/assets/img/loginMail.svg" alt="Mail Icon" />
             </div>
             <p v-if="error" class="error-message">{{ error }}</p>
         </div>
-        <div class="buttonContainer">
+        <div class="button-container">
           <button class="main-button-layout" @click="trySend">
             Send Code
           </button>
@@ -86,7 +86,6 @@ const close = () => {
 };
 
 const  copyToClipboard = () => {
-
   const textToCopy = document.getElementById("join_code").innerText;
   navigator.clipboard.writeText(textToCopy).then(() => {
   copyToClipboardText.value = "Copied!";
@@ -98,7 +97,7 @@ const  copyToClipboard = () => {
 
 <style scoped>
 
-.copyCode{
+.copy-code{
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -106,7 +105,6 @@ const  copyToClipboard = () => {
   .clipboard{
     height: 4rem;
     width: 4rem;
-    
   }
   span{
     font-size: 2.5rem;
@@ -132,7 +130,7 @@ const  copyToClipboard = () => {
     transition: opacity 0.3s;
   }
 
-  .copyCode:hover .tooltiptext {
+  .copy-code:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
   }

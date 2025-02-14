@@ -1,7 +1,7 @@
 <template>
-  <div class="inputContainer">
+  <div class="input-container">
     <label class="title" for="title">Title</label>
-    <div class="inputField"  :class="{ 'input-error': error }">
+    <div class="inputfield"  :class="{ 'input-error': error }">
       <input id="title" v-model="title" type="text" placeholder="Enter task title" maxlength="30"></input>
     </div>
   </div>
@@ -15,7 +15,6 @@ import { ref } from "vue";
 const title = ref("");
 const error = ref("");
 
-// Methode, um den Titel zu setzen (z.B. aus Props)
 const setTitle = (value) => {
   title.value = value;
 };
@@ -25,7 +24,7 @@ const clear = () => {
   error.value = "";
 };
 
-// Validierungslogik
+
 const validate = () => {
   if (!title.value.trim()) {
     error.value = 'The title is required';
@@ -42,5 +41,4 @@ defineExpose({
   title,
   clear
 });
-
 </script>

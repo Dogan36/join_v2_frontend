@@ -12,14 +12,14 @@
      
     </div>
     <div class="workspace-info-main">
-      <img class="cardContactImg" style="align-self: center;" v-if="!contactOverlayIsEditMode" src="@/assets/img/newContactIcon.svg" alt="Contact Icon" />
+      <img class="card-contact-img" style="align-self: center;" v-if="!contactOverlayIsEditMode" src="@/assets/img/newContactIcon.svg" alt="Contact Icon" />
       <div v-else
-          class="cardAvatar"
+          class="card-avatar"
           :style="{ backgroundColor: selectedContact.color?.hex_value || '#ffffff', color: textColor }"
         >
           {{ selectedContact.avatar }}
         </div>
-      <form class="inputContainer" @submit.prevent="save" novalidate>
+      <form class="input-container" @submit.prevent="save" novalidate>
         <InputField
           v-model="contactName"
           type="text"
@@ -49,7 +49,7 @@
           icon="src/assets/img/phone.svg"
         />
 
-        <div class="formButtons">
+        <div class="form-buttons">
           <div class="secondary-button-layout" @click="cancel">Cancel</div>
           <div class="main-button-layout" @click="save">
             {{ contactOverlayIsEditMode ? "Save Changes" : "Create Contact" }}
@@ -183,7 +183,7 @@ function hexToRgb(hex) {
 <style scoped>
 
 
-.contactOverlay {
+.contact-cverlay {
   display: flex;
   flex-direction: row;
   height: 500px;
@@ -192,7 +192,7 @@ function hexToRgb(hex) {
   border-radius: 30px;
   overflow: hidden;
 }
-.overlayHeader {
+.overlay-header {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -202,13 +202,12 @@ function hexToRgb(hex) {
   gap: 3rem;
   padding: 3rem;
   background: var(--main-color);
-
   color: white;
   img {
     height: 6.6rem;
     width: 5.5rem;
   }
-  .overlayHeaderText {
+  .overlay-headerText {
     display: flex;
     flex-direction: column;
 
@@ -228,7 +227,7 @@ function hexToRgb(hex) {
   }
 }
 
-.overLayContent {
+.overlay-content {
   height: 100%;
   background-color: white;
   display: flex;
@@ -238,14 +237,14 @@ function hexToRgb(hex) {
  
 }
 
-.cardContactImg{
+.card-contact-img{
   align-self: center;
   height: 6rem;
   width: 6rem;
   margin-bottom: 1rem;
 }
 
-.cardAvatar {
+.card-avatar {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -260,6 +259,4 @@ function hexToRgb(hex) {
       line-height: 120%;
       margin-bottom: 1rem;
     }
-
-
 </style>

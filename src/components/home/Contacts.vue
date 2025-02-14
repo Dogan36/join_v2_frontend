@@ -1,5 +1,5 @@
 <template>
-  <div class="contactsContent">
+  <div class="contacts-content">
     <Contactslist
       :selectedContact="selectedContact"
       @updateContact="setActiveContact"
@@ -13,7 +13,6 @@
     />
     <DarkBackground v-if="contactOverlayIsVisible" @close="closeOverlay">
       <ContactOverlay
-        
         v-if="contactOverlayIsVisible"
         @close="closeOverlay"
       />
@@ -22,16 +21,13 @@
 </template>
 
 <style scoped>
-.contactsContent {
+.contacts-content {
   display: flex;
   gap: 2rem;
   height: 100%;
   width: 100%;
 }
 
-@media screen and (max-width: 700px) {
- 
-}
 </style>
 
 <script setup>

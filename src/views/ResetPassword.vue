@@ -1,16 +1,16 @@
 <template>
   <div class="wrapper">
 
-<div class="logoContainer">
+<div class="logo-container">
   <img class="logo" src="@/assets/img/logo.svg" alt="">
 </div>
   
 <FormLayout>
-    <div class="formHeader">
+    <div class="form-header">
       <h1>Reset your password</h1>
     </div>
     <img class="seperator" src="@/assets/img/seperator.svg" alt="" />
-    <span class="subHeader">Change your account password</span>
+    <span class="subheader">Change your account password</span>
     <form class="form" @submit.prevent="tryReset" novalidate>
       <InputField
         v-model="resetPassword"
@@ -38,13 +38,13 @@
             : '',
         }"
       />
-      <div class="loginButtons">
+      <div class="login-buttons">
         <button class="main-button-layout" type="submit">Confirm</button>
       </div>
     </form>
   </FormLayout>
 
-<div class="notAUserContainer">
+<div class="not-a-user-container">
  
 </div>
 </div>
@@ -145,7 +145,3 @@ const checkIfPasswordsMatch = () => {
 };
 </script>
 
-<style>
-
-
-</style>

@@ -9,16 +9,16 @@
           </div>
         </div>
         <div class="workspace-info-main">
-        <div class="inputContent">
-        <div class="inputContainer" >
-          <div class="inputField" :class="{ 'input-error': error }">
+        <div class="input-content">
+        <div class="input-container" >
+          <div class="inputfield inputfield-workspace-overlay" :class="{ 'input-error': error }">
             <input id="title" v-model="newWorkspaceName" type="text" placeholder="Enter workspace name"></input>
           </div>
           <p v-if="error" class="error-message">{{ error }}</p>
         </div>  
         </div>
   
-    <div class="buttonContainer">
+    <div class="button-container">
       <button class="main-button-layout" @click="submitNewWorkspace">
         Create Workspace
       </button>
@@ -40,9 +40,6 @@ const emit = defineEmits(["close"]);
 
 const newWorkspaceName = ref("");
 const error = ref("");
-
-
-
 
 const submitNewWorkspace = async () => {
   if (newWorkspaceName.value.trim()) {
@@ -67,7 +64,3 @@ const close = () => {
 
 </script>
 
-<style scoped>
-@import "@/assets/base.css";
-@import "@/assets/main.css";
-</style>

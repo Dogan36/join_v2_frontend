@@ -1,5 +1,5 @@
 <template>
-  <div class="contactslistCard" 
+  <div class="contacts-list-card" 
   :class="{ active: isActive }"
   @click="$emit('select', contact)">
     <div class="avatar" :style="{ backgroundColor: contact.color.hex_value, color: textColor }">
@@ -60,7 +60,7 @@ function hexToRgb(hex) {
   border-radius: 100%;
   font-size: 16px;
 }
-.contactslistCard {
+.contacts-list-card {
   position: relative;
   display: flex;
   flex-direction: row;
@@ -91,7 +91,7 @@ function hexToRgb(hex) {
   }
 }
 
-.contactslistCard.active {
+.contacts-list-card.active {
   background-color: var(--main-color);
   &:hover {
     background: var(--main-color);

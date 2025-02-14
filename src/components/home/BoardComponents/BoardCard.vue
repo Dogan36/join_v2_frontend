@@ -1,15 +1,15 @@
 <template>
-    <div v-if="props.task" class="boardCard">
-        <div class="cardCategory" :style="{ background: category.color.hex_value, color: isDarkBackground(category.color.hex_value) ? '#fff' : '#000'  }">{{category.name}}</div>
-        <div class="cardContent">
-            <div class="cardTitle">{{ title }}</div>
-            <div class="cardDescription">{{ description }}</div>
+    <div v-if="props.task" class="board-card">
+        <div class="card-category" :style="{ background: category.color.hex_value, color: isDarkBackground(category.color.hex_value) ? '#fff' : '#000'  }">{{category.name}}</div>
+        <div class="card-content">
+            <div class="card-title">{{ title }}</div>
+            <div class="card-description">{{ description }}</div>
         </div>
-        <div  class="cardProgress">
+        <div  class="card-progress">
             <progress v-if="subtasks.length > 0" :max="subtasks.length" :value="subtasksDone"></progress>
             <div v-if="subtasks.length > 0"><span>{{subtasksDone}}</span><span>/</span><span>{{subtasks.length}}</span><span>Done</span></div>
         </div>
-        <div class="cardBottomDiv">
+        <div class="card-bottom-div">
             <!-- Übergabe des assignedTo Werts an das AssignedToAvatars-Component -->
            <AssignedToAvatars :assignedTo="assignedTo"></AssignedToAvatars>
             <img :src="buttonImg || require('@/assets/default-image.png')" alt="">
@@ -72,7 +72,7 @@ function hexToRgb(hex) {
 /* Dein Styles hier */
 </style>
 <style scoped>
-.boardCard {
+.board-card {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -86,7 +86,7 @@ function hexToRgb(hex) {
     cursor: pointer;
 }
 
-.cardCategory {
+.card-category {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -100,19 +100,15 @@ function hexToRgb(hex) {
    
 }
 
-
-
-
-.cardContent {
+.card-content {
     display: flex;
     flex-direction: column;
     gap: 10px;
     width: 100%;
     min-height: 36%;
-   
 }
 
-.cardProgress {
+.card-progress {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -121,22 +117,19 @@ function hexToRgb(hex) {
     gap: 20px;
     width: 209px;
     height: 14px;
-
     progress {
         width: 100%;
         height: 14px;
     }
-
     span {
         font-weight: 400;
         font-size: 14px;
-        
         color: #000000;
         white-space: nowrap;
     }
 }
 
-.cardBottomDiv {
+.card-bottom-div {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -144,7 +137,7 @@ function hexToRgb(hex) {
     width: 100%
 }
 
-.cardTitle {
+.card-title {
     width: 100%;
     font-weight: 700;
     font-size: 1.6rem;
@@ -154,7 +147,7 @@ function hexToRgb(hex) {
     text-overflow: ellipsis;
 }
 
-.cardDescription {
+.card-description {
     width: 100%;
     font-weight: 400;
     font-size: 16px;
@@ -169,14 +162,12 @@ function hexToRgb(hex) {
     max-height: 40px;
 }
 
-.cardBottomDiv{
+.card-bottom-div{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    
-    
     img{
         width: 20px;
         height: 20px;

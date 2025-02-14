@@ -22,7 +22,7 @@
           <span class="label">Phone:</span>
           <span class="value">{{ currentUser.phone }}</span>
         </p>
-        <div class="buttonContainer">
+        <div class="button-container">
           <button class="main-button-layout" @click="setActiveModal('editProfil')">
             Edit Profil
           </button>
@@ -44,8 +44,8 @@
 </template>
 
 <script setup>
-import { currentUser, getToken } from "@/store/state";
-import { defineEmits, onMounted, ref } from "vue";
+import { currentUser} from "@/store/state";
+import { defineEmits, ref } from "vue";
 import EditProfil from "./EditProfil.vue";
 import ChangePassword from "./ChangePassword.vue";
 const activeModal = ref('profilInfo');

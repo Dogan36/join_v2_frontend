@@ -14,8 +14,8 @@
     </div>
       
       <div class="workspace-info-main">
-        <div class="buttonContainer">
-        <select v-if="filteredWorkspaces.length > 0"  id="workspaceSelect" class="inputField inputFieldWorkspaceOverlay" v-model="selectedWorkspace">
+       
+        <select v-if="filteredWorkspaces.length > 0" class="inputfield inputfield-workspace-overlay dropdown-workspace" v-model="selectedWorkspace">
           <option  value="" selected>Bitte Workspace auswählen</option>
           <option
             v-for="workspace in filteredWorkspaces"
@@ -25,6 +25,7 @@
             {{ workspace.name }}
           </option>
         </select>
+        <div class="button-container">
         <button v-if="filteredWorkspaces.length === 0"  class="secondary-button-layout" @click="setActiveModal('createWorkspace')">
           Create New Workspace
         </button>
@@ -70,4 +71,25 @@ const close = () => {
   emit("close");
 };
 </script>
+
+<style scoped>
+.dropdown-workspace{
+    align-self: center;
+    cursor: pointer;
+    width: 20rem;
+    height: 4rem;
+    padding: 0.5rem;
+    font-size: 1.6rem;
+    box-shadow: 0px 0px 4px 0px #00000040;
+    border-radius: 5px;
+}
+
+@media screen and (max-width: 700px) {
+    .workspace-info-main {
+        .dropdown-workspace {
+            margin-bottom: 1rem;
+        }
+    }
+}
+</style>
 

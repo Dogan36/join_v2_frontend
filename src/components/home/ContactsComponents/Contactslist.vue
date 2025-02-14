@@ -1,19 +1,19 @@
 <template>
  
-  <div class="contactsList">
-    <select class="dropdown" v-model="selectedFilter">
+  <div class="contacts-list">
+    <select class="dropdown-contacts" v-model="selectedFilter">
       <option class="option" value="all"> All Contacts</option>
       <option value="own"> Own Contacts</option>
       <option value="members"> Workspace Members</option>
     </select>
-    <div @click="$emit('openOverlay', false)" class="main-button-layout contactListAddNewContact">New Contact
+    <div @click="$emit('openOverlay', false)" class="main-button-layout contact-list-add-new-contact">New Contact
         <img src="@/assets/img/addContactIcon.svg" alt="">
       </div>
     <div v-if="isEmpty">
       <p>{{ emptyMessage }}</p>
     </div>
-    <div class="letterSection" v-else v-for="(group, letter) in groupedContacts" :key="letter">
-      <h2 class="letterSeparator">{{ letter }}</h2>
+    <div class="letter-section" v-else v-for="(group, letter) in groupedContacts" :key="letter">
+      <h2 class="letter-separator">{{ letter }}</h2>
       <img src="@/assets/img/contactSeperator.svg" />
       <div v-for="contact in group" :key="contact.id">
         <!-- Nur im Parent den Klick handhaben -->
@@ -95,7 +95,7 @@ const emptyMessage = computed(() => {
 </script>
 
 <style scoped>
-.contactsList {
+.contacts-list {
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -113,16 +113,16 @@ const emptyMessage = computed(() => {
   }
 }
 
-.contactsList::-webkit-scrollbar {
+.contacts-list::-webkit-scrollbar {
     width: 10px; /* Breite des Scrollbars */
     border-radius: 100px;
 }
-.contactsList::-webkit-scrollbar-thumb {
+.contacts-list::-webkit-scrollbar-thumb {
     background-color: var(--main-color); /* Farbe des Scrollbar-Daumen */
     border-radius: 5px; /* Rundung des Scrollbar-Daumen */
 }
 
-.letterSeparator {
+.letter-separator {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -132,7 +132,8 @@ const emptyMessage = computed(() => {
   font-size: 2.1rem;
 }
 
-.dropdown {
+.dropdown-contacts {
+  align-self: center;
     cursor: pointer;
     width: 20rem;
     height: 4rem;
@@ -141,12 +142,12 @@ const emptyMessage = computed(() => {
     box-shadow: 0px 0px 4px 0px #00000040;
     border-radius: 5px;
 }
-.contactListAddNewContact{
+.contact-list-add-new-contact{
   display: none;
 }
 
 @media screen and (max-width: 1000px) {
-  .contactsList {
+  .contacts-list {
     margin: -2rem 0 -2rem -2rem;
     width: 320px;
   }
@@ -154,13 +155,13 @@ const emptyMessage = computed(() => {
 }
 
 @media screen and (max-width: 700px) {
-  .contactsList {
+  .contacts-list {
     position: absolute;
     height: 100%;
     margin: -1rem -1rem -1rem -1rem;
     width: 100%;
   }
-  .contactListAddNewContact{
+  .contact-list-add-new-contact{
     display: flex;
   }
 }

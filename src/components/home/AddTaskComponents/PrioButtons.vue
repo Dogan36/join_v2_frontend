@@ -1,10 +1,10 @@
 <template>
 
-<div class="inputContainer">
+<div class="input-container">
           <label class="title">Prio</label>
         
-    <div class="prioButtons">
-        <div class="prioButton" 
+    <div class="prio-buttons">
+        <div class="prio-button" 
         :style="currentPrio === 'high' ? { backgroundColor: '#ff3c00', color: 'white' } : { backgroundColor: 'unset', color: 'unset' }" 
         @click="updatePrio('high')">
             <span>Urgent</span>
@@ -15,7 +15,7 @@
                 alt="" />
         </div>
 
-        <div class="prioButton"
+        <div class="prio-button"
         :style="currentPrio === 'medium' ? { backgroundColor: '#ffa800', color: 'white' } : { backgroundColor: 'unset', color: 'unset' }"
         @click="updatePrio('medium')">
             <span>Medium</span>
@@ -26,7 +26,7 @@
                 alt="" />
         </div>
 
-        <div class="prioButton"
+        <div class="prio-button"
         :style="currentPrio === 'low' ? { backgroundColor: '#7ae229', color: 'white' } : { backgroundColor: 'unset', color: 'unset' }"
         @click="updatePrio('low')">
             <span>Low</span>
@@ -37,20 +37,19 @@
                 alt="" />
         </div>
     </div>
-    
-        </div>
+    </div>
     <p class="error-message"></p>
 </template>
 
 <style scoped>
-.prioButtons{
+.prio-buttons{
     display: flex;
     gap: 10px;
     margin-top: 5px;
     flex-wrap: wrap;
 }
 
-.prioButton{
+.prio-button{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -62,7 +61,6 @@
     gap: 10px;
     font-size: 21px;
     cursor: pointer;
-    
     span{
         font-size: 21px;
     }
@@ -70,7 +68,6 @@
         width: 20px;
     }
 }
-
 </style>
 
 <script setup>
@@ -94,12 +91,9 @@ const clear = () => {
 };
 
 function updatePrio(newPrio) {
-
     currentPrio.value = newPrio;
     emit('update:modelValue', newPrio);
 }
-
-
 
 defineExpose({
     currentPrio,

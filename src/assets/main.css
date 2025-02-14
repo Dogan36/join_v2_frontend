@@ -90,7 +90,7 @@
   }
 }
 
-.formHeader{
+.form-header{
   display: flex;
   width: 100%;
   flex-direction: row;
@@ -109,9 +109,12 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  max-width: 100%;
 }
+
 h1{font-weight: 700;
-  font-size: 4rem;}
+  font-size: 4rem;
+}
 
 .headline{
   text-wrap: nowrap;
@@ -138,14 +141,14 @@ p{
   font-weight: 400;
 }
 
-.headlineComponent{
+.headline-component{
     display: flex;
     align-items: center;
     gap: 1rem;
     margin-bottom: 2rem;
 }
 
-.graySeperator {
+.gray-seperator {
   width: 2px;
   height: 20px;
   background: #D1D1D1;
@@ -165,18 +168,17 @@ p.error-message {
   max-height: 10px !important; /* Höhe des Scrollbars */
   margin-left: -10px !important;
 }
+
 ::-webkit-scrollbar-track{
 margin-block: 20px;
 }
+
 ::-webkit-scrollbar-thumb {
   background-color: var(--main-color); /* Farbe des Scrollbar-Daumen */
   border-radius: 5px; /* Rundung des Scrollbar-Daumen */
- 
 }
 
 span {
-  /* Standardmäßig soll der Cursor "default" sein */
   cursor: default;
-  /* Damit das Span keine Mausereignisse empfängt und "unsichtbar" für den Mauszeiger wird */
   pointer-events: none;
 }
