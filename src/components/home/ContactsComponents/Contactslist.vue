@@ -161,7 +161,7 @@ const emptyMessage = computed(() => {
     width: 100%;
   }
   .contactListAddNewContact{
-    display: block;
+    display: flex;
   }
 }
 

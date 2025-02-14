@@ -81,18 +81,14 @@ const goToPrivacyPolicy = () => {
 };
 </script>
 
-<style scoped>
+<style>
 :root {
   --final-logo-top: 5rem;
   --final-logo-left: 5rem;
   --final-logo-width: 100px;
   --initial-logo-width: 150px;
 }
-h2 {
-  font-size: 60px;
-  font-weight: 400;
-  margin-top: 20px;
-}
+
 .wrapper {
   width: 100%;
   height: 90%;

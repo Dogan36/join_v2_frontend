@@ -23,7 +23,7 @@
       />
 
       <div class="loginButtons">
-        <button class="main-button-layout" type="submit">Log in</button>
+        <button class="main-button-layout" type="submit">Submit</button>
       </div>
     </form>
   </FormLayout>

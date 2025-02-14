@@ -274,6 +274,10 @@ justify-content: center;
   }
 }
 
+.welcomeDeskOverlay{
+  display: none;
+}
+
 @media screen and (max-width: 1000px) {
   .contentSummary {
     gap: 2rem;

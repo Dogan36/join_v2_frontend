@@ -16,7 +16,7 @@
     </div>
   </div>
   
-  <DarkBackground v-if="currentWorkspace == null|| isWorkspaceOverlayVisible" @close="closeOverlay">
+  <DarkBackground v-if="currentWorkspace == null || isWorkspaceOverlayVisible" @close="closeOverlay">
     <WorkspaceInfo @close="closeOverlay"></WorkspaceInfo>
   </DarkBackground>
   <DarkBackground v-if="isProfilOverlayVisible" @close="closeOverlay">
@@ -98,7 +98,10 @@ main {
   }
   main {
     padding: 2rem;
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    justify-content: space-evenly;
   }
 }
 @media screen and (max-width: 700px) {

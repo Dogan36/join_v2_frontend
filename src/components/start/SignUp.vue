@@ -73,6 +73,7 @@ import FormLayout from "../shared/FormLayout.vue";
 import InputField from "../shared/InputField.vue";
 import { useLoadingOverlay } from '@/composables/useLoadingOverlay';
 import { useConfirmationOverlay } from "@/composables/useConfirmationOverlay";
+import router from "@/router";
 const { showOverlay, hideOverlay } = useLoadingOverlay();
 const { showConfirmation } = useConfirmationOverlay();
 
@@ -117,9 +118,8 @@ async function signUp(name, email, password) {
       const data = await response.json();
       localStorage.setItem("join_token", data.token);
       localStorage.setItem("join_user", JSON.stringify(data.user))
-      
       showConfirmation('Sign up successful!');
-      emit("toggle");
+      router.push('/home');
     } else {
       const errorData = await response.json();
       if (errorData.email) {

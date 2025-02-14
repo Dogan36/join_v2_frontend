@@ -10,6 +10,7 @@
 <style scoped>
 
 .form-layout {
+    width: 45rem;
     max-width: 100vw;
     padding: 3rem;
     display: flex;
