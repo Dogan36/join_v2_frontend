@@ -6,36 +6,57 @@ let autoCloseTimer = null; // zum Merken des Timers
 import { useLoadingOverlay } from './useLoadingOverlay';
 const AUTO_CLOSE_DURATION = 1500;  
 
+/**
+ * Provides functionality to display and automatically hide a confirmation overlay.
+ * 
+ * Uses `useLoadingOverlay` to hide any loading overlays before showing the confirmation message.
+ * The confirmation overlay will auto-close after a predefined duration.
+ * 
+ * @returns {{
+*   isConfirmationVisible: import('vue').Ref<boolean>,
+*   confirmationMessage: import('vue').Ref<string>,
+*   showConfirmation: (message: string) => void,
+*   hideConfirmation: () => void
+* }}
+*/
 export function useConfirmationOverlay() {
-  const { hideOverlay } = useLoadingOverlay();
-  function showConfirmation(message) {
-    hideOverlay();
-    if (autoCloseTimer) {
-      clearTimeout(autoCloseTimer);
-      autoCloseTimer = null;
-    }
-    confirmationMessage.value = message;
-    isConfirmationVisible.value = true;
+ const { hideOverlay } = useLoadingOverlay();
 
-    // Timer starten, damit es nach AUTO_CLOSE_DURATION schließt
-    autoCloseTimer = setTimeout(() => {
-      hideConfirmation();
-    }, AUTO_CLOSE_DURATION);
-  }
+ /**
+  * Displays a confirmation message and automatically hides it after a set duration.
+  * 
+  * @param {string} message - The confirmation message to display.
+  */
+ function showConfirmation(message) {
+   hideOverlay();
+   if (autoCloseTimer) {
+     clearTimeout(autoCloseTimer);
+     autoCloseTimer = null;
+   }
+   confirmationMessage.value = message;
+   isConfirmationVisible.value = true;
 
-  function hideConfirmation() {
-    isConfirmationVisible.value = false;
-    confirmationMessage.value = '';
-    if (autoCloseTimer) {
-      clearTimeout(autoCloseTimer);
-      autoCloseTimer = null;
-    }
-  }
+   autoCloseTimer = setTimeout(() => {
+     hideConfirmation();
+   }, AUTO_CLOSE_DURATION);
+ }
 
-  return {
-    isConfirmationVisible,
-    confirmationMessage,
-    showConfirmation,
-    hideConfirmation
-  };
+ /**
+  * Hides the confirmation overlay and clears the message.
+  */
+ function hideConfirmation() {
+   isConfirmationVisible.value = false;
+   confirmationMessage.value = "";
+   if (autoCloseTimer) {
+     clearTimeout(autoCloseTimer);
+     autoCloseTimer = null;
+   }
+ }
+
+ return {
+   isConfirmationVisible,
+   confirmationMessage,
+   showConfirmation,
+   hideConfirmation
+ };
 }

@@ -90,7 +90,17 @@ const newPasswordRepeatError = ref(false);
 const passwordMatchError = ref(false);
 const oldPasswordIncorrectError = ref(false);
 
-const changePassword = async () => {
+/**
+ * Asynchronously changes the user's password.
+ *
+ * This function first validates password input errors. If validation passes, it sends a request to 
+ * update the user's password. In case of an error, an error flag is set.
+ * A confirmation message is displayed on success.
+ *
+ * @async
+ * @returns {Promise<void>} Resolves when the password change process is complete.
+ */
+ const changePassword = async () => {
   if (checkForPasswordErrors()) {
     return;
   }
@@ -108,37 +118,39 @@ const changePassword = async () => {
         newPassword: newPassword.value,
       }),
     });
-
-    // Überprüfe, ob der Request erfolgreich war
     if (!response.ok) {
-        oldPasswordIncorrectError.value = true;
-        
+      oldPasswordIncorrectError.value = true;
       return;
     }
-
     const data = await response.json();
     showConfirmation("Password changed successfully!");
     emit("setActiveModal");
   } catch (error) {
     console.error("Error changing password", error);
-    // Hier kannst du einen globalen Fehlerstatus setzen, falls der Request komplett fehlschlägt
-  }
-  finally {
+  } finally {
     hideOverlay();
   }
 };
 
-const resetPasswordErrors = () => {
+/**
+ * Resets all password-related error states.
+ */
+ const resetPasswordErrors = () => {
   oldPasswordError.value = false;
   newPasswordError.value = false;
   newPasswordRepeatError.value = false;
   oldPasswordLengthError.value = false;
   newPasswordLengthError.value = false;
   passwordMatchError.value = false;
-  oldPasswordIncorrectError.value = false;  
+  oldPasswordIncorrectError.value = false;
 };
 
-const checkForPasswordErrors = () =>{
+/**
+ * Checks for password input errors and resets previous error states.
+ * 
+ * @returns {boolean} `true` if there are errors, `false` otherwise.
+ */
+ const checkForPasswordErrors = () => {
   resetPasswordErrors();
   const isOldPasswordValid = checkIfOldPasswordEmpty();
   const isNewPasswordValid = checkIfNewPasswordEmpty();
@@ -153,42 +165,76 @@ const checkForPasswordErrors = () =>{
     isNewPasswordLengthValid &&
     isNewPasswordRepeatValid &&
     isPasswordMatch
-    );
+  );
 };
 
-const checkIfOldPasswordEmpty = () => {
-    oldPasswordError.value = !oldPassword.value;
-    return oldPasswordError.value;
+/**
+ * Checks if the old password field is empty and updates the corresponding error state.
+ * 
+ * @returns {boolean} `true` if the old password is empty, otherwise `false`.
+ */
+ const checkIfOldPasswordEmpty = () => {
+  oldPasswordError.value = !oldPassword.value;
+  return oldPasswordError.value;
 };
 
+/**
+ * Checks if the new password field is empty and updates the corresponding error state.
+ * 
+ * @returns {boolean} `true` if the new password is empty, otherwise `false`.
+ */
 const checkIfNewPasswordEmpty = () => {
-    newPasswordError.value = !newPassword.value;
-    return newPasswordError.value;
+  newPasswordError.value = !newPassword.value;
+  return newPasswordError.value;
 };
 
+/**
+ * Checks if the new password repeat field is empty and updates the corresponding error state.
+ * 
+ * @returns {boolean} `true` if the new password repeat is empty, otherwise `false`.
+ */
 const checkIfNewPasswordRepeatEmpty = () => {
-    newPasswordRepeatError.value = !newPasswordRepeat.value;
-    return newPasswordRepeatError.value;
+  newPasswordRepeatError.value = !newPasswordRepeat.value;
+  return newPasswordRepeatError.value;
 };
 
+/**
+ * Checks if the old password meets the minimum length requirement.
+ * 
+ * @returns {boolean} `true` if the old password is too short, otherwise `false`.
+ */
 const checkOldPasswordLength = () => {
-    oldPasswordLengthError.value = oldPassword.value.length < 6;
-    return oldPasswordLengthError.value;
+  oldPasswordLengthError.value = oldPassword.value.length < 6;
+  return oldPasswordLengthError.value;
 };
 
+/**
+ * Checks if the new password meets the minimum length requirement.
+ * 
+ * @returns {boolean} `true` if the new password is too short, otherwise `false`.
+ */
 const checkNewPasswordLength = () => {
-    newPasswordLengthError.value = newPassword.value.length < 6;
-    return newPasswordLengthError.value;
+  newPasswordLengthError.value = newPassword.value.length < 6;
+  return newPasswordLengthError.value;
 };
 
+/**
+ * Checks if the new password and the repeated password match.
+ * 
+ * @returns {boolean} `true` if the passwords do not match, otherwise `false`.
+ */
 const checkIfPasswordsMatch = () => {
   passwordMatchError.value = newPassword.value !== newPasswordRepeat.value;
   return passwordMatchError.value;
 };
 
+/**
+ * Closes the modal by emitting the "setActiveModal" event.
+ */
 const close = () => {
   emit("setActiveModal");
 };
+
 
 
 </script>

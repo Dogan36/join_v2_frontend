@@ -82,10 +82,16 @@ const passwordLengthError = ref(false);
 const passwordIncorrectError = ref(false);
 const emit = defineEmits();
 
+/**
+ * Emits an event to toggle the forgot password view.
+ */
 const forgotPassword = () => {
-  emit('toggleForgotPassword');
+  emit("toggleForgotPassword");
 };
 
+/**
+ * Loads remembered email from localStorage if the "remember me" option was previously selected.
+ */
 onMounted(() => {
   if (localStorage.getItem("join_remember")) {
     loginEmail.value = localStorage.getItem("join_remember");
@@ -93,6 +99,16 @@ onMounted(() => {
   }
 });
 
+/**
+ * Attempts to log in a user with the provided email and password.
+ * 
+ * If successful, stores authentication details in localStorage and redirects the user.
+ * Handles errors such as incorrect credentials or non-existent users.
+ * 
+ * @async
+ * @param {string} email - The user's email address.
+ * @param {string} password - The user's password.
+ */
 async function login(email, password) {
   console.log("Login with", email, password);
   showOverlay();
@@ -109,29 +125,32 @@ async function login(email, password) {
     if (response.ok) {
       const data = await response.json();
       localStorage.setItem("join_token", data.token);
-      localStorage.setItem("join_user", JSON.stringify(data.user))
+      localStorage.setItem("join_user", JSON.stringify(data.user));
       if (rememberMe.value) {
         localStorage.setItem("join_remember", email);
       } else {
         localStorage.removeItem("join_remember");
       }
-      showConfirmation('Login successful!');
-      window.location.href = "/home"; // Beispiel: Weiterleitung
+      showConfirmation("Login successful!");
+      window.location.href = "/home";
     } else {
       const errorData = await response.json();
       if (errorData.error === "User does not exist") {
         emailNotFoundError.value = true;
       } else if (errorData.error === "Incorrect password") {
         passwordIncorrectError.value = true;
-        }
       }
-    } catch (error) {
-      console.error("Fehler beim Login:", error);
-    } finally {
-      hideOverlay();
     }
+  } catch (error) {
+    console.error("Error during login:", error);
+  } finally {
+    hideOverlay();
+  }
 }
 
+/**
+ * Attempts to log in the user after validating input fields.
+ */
 const tryLogin = () => {
   resetErrors();
   if (!checkForErrors()) {
@@ -139,6 +158,9 @@ const tryLogin = () => {
   }
 };
 
+/**
+ * Resets all login-related error states.
+ */
 const resetErrors = () => {
   emailError.value = false;
   emailFormatError.value = false;
@@ -148,11 +170,16 @@ const resetErrors = () => {
   passwordIncorrectError.value = false;
 };
 
+/**
+ * Validates login input fields.
+ * 
+ * @returns {boolean} `true` if validation errors exist, otherwise `false`.
+ */
 const checkForErrors = () => {
   const isEmailValid = checkIfEmailEmpty();
-  const isEmailFormatValid = isEmailValid && checkEmailFormat(); // Nur prüfen, wenn E-Mail nicht leer
+  const isEmailFormatValid = isEmailValid && checkEmailFormat();
   const isPasswordValid = checkIfPasswordEmpty();
-  const isPasswordLengthValid = isPasswordValid && checkPasswordLength(); // Nur prüfen, wenn Passwort nicht leer
+  const isPasswordLengthValid = isPasswordValid && checkPasswordLength();
 
   return (
     !isEmailValid ||
@@ -162,33 +189,54 @@ const checkForErrors = () => {
   );
 };
 
+/**
+ * Checks if the email field is empty and updates the corresponding error state.
+ * 
+ * @returns {boolean} `true` if the email is not empty, otherwise `false`.
+ */
 const checkIfEmailEmpty = () => {
   emailError.value = !loginEmail.value;
-  return !emailError.value; // Gibt true zurück, wenn kein Fehler vorliegt
+  return !emailError.value;
 };
 
+/**
+ * Validates the email format and updates the corresponding error state.
+ * 
+ * @returns {boolean} `true` if the email format is valid, otherwise `false`.
+ */
 const checkEmailFormat = () => {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  emailFormatError.value =
-    loginEmail.value && !emailPattern.test(loginEmail.value);
+  emailFormatError.value = loginEmail.value && !emailPattern.test(loginEmail.value);
   return !emailFormatError.value;
 };
 
-
+/**
+ * Checks if the password field is empty and updates the corresponding error state.
+ * 
+ * @returns {boolean} `true` if the password is not empty, otherwise `false`.
+ */
 const checkIfPasswordEmpty = () => {
   passwordError.value = !loginPassword.value;
   return !passwordError.value;
 };
 
+/**
+ * Checks if the password meets the minimum length requirement (6 characters).
+ * 
+ * @returns {boolean} `true` if the password length is valid, otherwise `false`.
+ */
 const checkPasswordLength = () => {
-  passwordLengthError.value =
-    loginPassword.value && loginPassword.value.length < 6;
+  passwordLengthError.value = loginPassword.value && loginPassword.value.length < 6;
   return !passwordLengthError.value;
 };
 
+/**
+ * Logs in a guest user with predefined credentials.
+ */
 const guestLogin = () => {
-  login("guest@join.dogan-celik.de", "Guest1234")
+  login("guest@join.dogan-celik.de", "Guest1234");
 };
+
 </script>
 
 <style>

@@ -41,7 +41,15 @@ const emit = defineEmits(["close"]);
 const newWorkspaceName = ref("");
 const error = ref("");
 
-const submitNewWorkspace = async () => {
+/**
+ * Submits a new workspace if the name is valid.
+ * 
+ * If the workspace name is empty, an error message is set.
+ * Otherwise, it attempts to create the workspace and emits a "close" event upon success.
+ * 
+ * @async
+ */
+ const submitNewWorkspace = async () => {
   if (newWorkspaceName.value.trim()) {
     error.value = "";
     try {
@@ -51,16 +59,15 @@ const submitNewWorkspace = async () => {
       error.value = e.message;
     }
   } else {
-    error.value = 'The workspace name is required';
+    error.value = "The workspace name is required";
   }
 };
 
-
-
+/**
+ * Closes the modal by emitting the "close" event.
+ */
 const close = () => {
   emit("close");
 };
-
-
 </script>
 

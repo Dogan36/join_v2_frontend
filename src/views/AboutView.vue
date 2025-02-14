@@ -26,15 +26,22 @@
   onMounted(() => {
   setCurrentViewFromURL(); // Setze `currentView`, wenn die Komponente geladen wird
 });
-function setCurrentViewFromURL() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const type = urlParams.get('type');
 
-  if (type === 'privacyPolicy') {
-    currentView.value = 'privacy';
-  } else if (type === 'legalNotice') {
-    currentView.value = 'legalNotice';
+/**
+ * Sets the current view based on the URL query parameter "type".
+ * 
+ * If "type" is "privacyPolicy", the view is set to "privacy".
+ * If "type" is "legalNotice", the view is set to "legalNotice".
+ */
+ function setCurrentViewFromURL() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const type = urlParams.get("type");
+
+  if (type === "privacyPolicy") {
+    currentView.value = "privacy";
+  } else if (type === "legalNotice") {
+    currentView.value = "legalNotice";
   }
 }
-  </script>
-  <style scoped></style>
+
+</script>

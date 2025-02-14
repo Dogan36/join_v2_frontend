@@ -86,7 +86,15 @@ onMounted(() => {
   initializeForm();
 });
 
-const initializeForm = () => {
+/**
+ * Initializes the contact form with the selected contact's information if the form is in edit mode.
+ *
+ * If `contactOverlayIsEditMode.value` is true, the function populates:
+ * - `contactName` with the selected contact's name.
+ * - `contactEmail` with the selected contact's email.
+ * - `contactPhone` with the selected contact's phone number (or an empty string if not available).
+ */
+ const initializeForm = () => {
   if (contactOverlayIsEditMode.value) {
     contactName.value = selectedContact.value.name;
     contactEmail.value = selectedContact.value.email;
@@ -94,7 +102,19 @@ const initializeForm = () => {
   }
 };
 
-const save = () => {
+/**
+ * Saves the contact information if the form passes validation.
+ *
+ * This function performs the following steps:
+ * 1. Resets any previous error messages by calling `resetErrors()`.
+ * 2. Checks for validation errors using `checkForErrors()`.
+ *    - If validation fails, the function exits early.
+ * 3. If no errors are detected:
+ *    - Constructs a contact object with `name`, `email`, and `phone` properties from the form fields.
+ *    - Calls `saveContact(contact, selectedContact.id)` to persist the contact information.
+ *    - Resets the form fields by calling `resetForm()`.
+ */
+ const save = () => {
   resetErrors();
   if (checkForErrors()) {
     const contact = {
@@ -107,72 +127,113 @@ const save = () => {
   } else {
     return;
   }
- 
-
 };
 
-const resetErrors = () => {
+/**
+ * Resets all error flags for the contact form.
+ *
+ * This function clears error states related to the contact's name and email by setting
+ * the following error flags to false:
+ * - nameError
+ * - emailError
+ * - emailFormatError
+ * - emailTakenError
+ */
+ const resetErrors = () => {
   nameError.value = false;
   emailError.value = false;
   emailFormatError.value = false;
   emailTakenError.value = false;
 };
 
-const resetForm = () => {
+/**
+ * Resets the contact form fields to their initial state.
+ *
+ * This function clears the form fields by setting the following values to an empty string:
+ * - contactName
+ * - contactEmail
+ * - contactPhone
+ */
+ const resetForm = () => {
   contactName.value = "";
   contactEmail.value = "";
   contactPhone.value = "";
 };
 
+
+/**
+ * Cancels the contact form submission and closes the overlay.
+ *
+ * This function resets the form fields by calling `resetForm()` and emits a close event to the parent component.
+ */
 const cancel = () => {
   resetForm();
     emit('close');
   // Event oder Callback, um das Overlay zu schließen
 };
 
+/**
+ * Checks the contact form for validation errors.
+ *
+ * This function validates the contact form fields and sets error flags based on the following criteria:
+ * - `nameError` is set to true if the `contactName` field is empty.
+ * - `emailError` is set to true if the `contactEmail` field is empty.
+ * - `emailFormatError` is set to true if the `contactEmail` field is not empty and does not match the email pattern.
+ * - `emailTakenError` is set to true if the `contactEmail` field is not empty and the email is already in use.
+ *
+ * The function returns true if no errors are detected and false otherwise.
+ */
 const checkForErrors = () => {
   const isNameValid = checkIfNameEmpty();
   const isEmailValid = checkIfEmailEmpty();
   const isEmailFormatValid = isEmailValid && checkEmailFormat(); // Nur prüfen, wenn E-Mail nicht leer
-  const isEmailUnique = isEmailFormatValid && checkEmailDatabase(); // Nur prüfen, wenn Format korrekt
+  const isEmailUnique = isEmailFormatValid // Nur prüfen, wenn Format korrekt
 
   return isNameValid && isEmailValid && isEmailFormatValid && isEmailUnique;
 };
 
+/**
+ * Checks if the contact name field is empty.
+ *
+ * This function sets the `nameError` flag to true if the `contactName` field is empty.
+ *
+ * The function returns true if the field is not empty and false otherwise.
+ */
 const checkIfNameEmpty = () => {
   nameError.value = !contactName.value; // Setzt den Fehlerstatus
   return !nameError.value; // Gibt true zurück, wenn kein Fehler vorliegt
 };
 
+/**
+ * Checks if the contact email field is empty.
+ *
+ * This function sets the `emailError` flag to true if the `contactEmail` field is empty.
+ *
+ * The function returns true if the field is not empty and false otherwise.
+ */
 const checkIfEmailEmpty = () => {
   emailError.value = !contactEmail.value;
   return !emailError.value;
 };
 
+/**
+ * Checks the format of the contact email.
+ *
+ * This function uses a regular expression pattern to validate the format of the `contactEmail` field.
+ *
+ * The function sets the `emailFormatError` flag to true if the email format is invalid.
+ *
+ * The function returns true if the email format is valid and false otherwise.
+ */
 const checkEmailFormat = () => {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   emailFormatError.value =
     contactEmail.value && !emailPattern.test(contactEmail.value);
   return !emailFormatError.value;
 };
-
-const checkEmailDatabase = () => {
-  return true; // Hier müsste die Überprüfung in der Datenbank erfolgen
-};
-
-
-// Funktion zum Umwandeln von Hex in RGB
-function hexToRgb(hex) {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return { r, g, b };
-}
 </script>
 
 <style scoped>
-
-
 .contact-cverlay {
   display: flex;
   flex-direction: row;

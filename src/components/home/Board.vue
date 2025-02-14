@@ -116,59 +116,96 @@ function getMainElement() {
   return document.querySelector('main');
 }
 
-function startScrolling(direction, e) {
+/**
+ * Starts scrolling the main element in a specified direction while updating the drag preview position.
+ *
+ * This function:
+ * - Stops any current scrolling by calling `stopScrolling()`.
+ * - Sets up an interval (`scrollInterval`) that:
+ *   - Retrieves the main element using `getMainElement()` and scrolls it by a fixed offset:
+ *     - Scrolls up by 220 pixels if the direction is 'up'.
+ *     - Scrolls down by 200 pixels otherwise.
+ *   - Uses smooth scrolling behavior.
+ * - Updates the drag preview position based on the first touch point relative to the `boardMainContentRef` element's position.
+ *
+ * @param {string} direction - The direction to scroll ('up' for upward scrolling; any other value for downward scrolling).
+ * @param {TouchEvent} e - The touch event that provides the current touch position for updating the drag preview.
+ */
+ function startScrolling(direction, e) {
   stopScrolling();
   scrollInterval = setInterval(() => {
     const mainElement = getMainElement();
     if (mainElement) {
       mainElement.scrollBy({
-        top: direction === 'up' ? -220 : 200, // Geschwindigkeit anpassen
+        top: direction === 'up' ? -220 : 200, // Adjust speed accordingly
         behavior: 'smooth'
       });
     }
     
-    // Aktualisiere die Drag-Preview-Position relativ zum boardMainContent
+    // Update the drag preview position relative to boardMainContent
     const rect = boardMainContentRef.value.getBoundingClientRect();
     dragPreviewPosition.value = {
       x: e.touches[0].clientX - rect.left,
       y: e.touches[0].clientY - rect.top
     };
-  }, 50); // Intervall anpassen
+  }, 50); // Adjust interval accordingly
 }
 
-function stopScrolling() {
+
+/**
+ * Stops the scrolling interval if it is active.
+ *
+ * If a scrolling interval is currently set (via `scrollInterval`), this function clears it and resets `scrollInterval` to null.
+ */
+ function stopScrolling() {
   if (scrollInterval) {
     clearInterval(scrollInterval);
     scrollInterval = null;
   }
 }
 
-function onTouchStart(task, e) {
+
+/**
+ * Handles the touch start event for a task.
+ * Initializes the drag preview position and starts a timer for long press detection.
+ * If the touch lasts longer than 500ms, it triggers the drag start.
+ *
+ * @param {Object} task - The task object associated with the touch event.
+ * @param {TouchEvent} e - The touch event object.
+ */
+ function onTouchStart(task, e) {
   const mainElement = getMainElement();
   maxScroll = mainElement.scrollHeight - mainElement.clientHeight;
   touchedTask.value = task;
+
   const rect = boardMainContentRef.value.getBoundingClientRect();
   dragPreviewPosition.value = {
     x: e.touches[0].clientX - rect.left,
     y: e.touches[0].clientY - rect.top
   };
+
   touchTimer = setTimeout(() => {
     longPressFlag.value = true;
     onDragStart(task);
   }, 500);
 }
 
-function onTouchMove(e) {
+/**
+ * Handles the touch move event.
+ * Updates the drag preview position and hovered column based on touch position.
+ * Initiates scrolling if the touch is near the top or bottom of the screen.
+ *
+ * @param {TouchEvent} e - The touch event object.
+ */
+ function onTouchMove(e) {
   const mainElement = getMainElement();
-  
+
   if (longPressFlag.value && boardMainContentRef.value) {
     const rect = boardMainContentRef.value.getBoundingClientRect();
     dragPreviewPosition.value = {
       x: e.touches[0].clientX - rect.left,
       y: e.touches[0].clientY - rect.top
     };
-
-    // Aktualisiere hoveredColumn anhand der Touch-Position
     updateHoveredColumn(e);
 
     if (e.touches[0].clientY < 100) {
@@ -179,12 +216,16 @@ function onTouchMove(e) {
       stopScrolling();
     }
   }
-}
-
-function onTouchEnd(e) {
+ }
+/**
+ * Handles the touch end event.
+ * Stops scrolling, clears the touch timer, and handles task drop or task detail opening.
+ *
+ * @param {TouchEvent} e - The touch event object.
+ */
+ function onTouchEnd(e) {
   stopScrolling();
   clearTimeout(touchTimer);
-  
   if (longPressFlag.value) {
     if (hoveredColumn.value) {
       onDrop(hoveredColumn.value);
@@ -193,18 +234,18 @@ function onTouchEnd(e) {
     }
     longPressFlag.value = false;
   } else if (touchedTask.value) {
-    // Bei kurzem Tippen: Öffne die Task-Detailansicht
     openTaskDetail(touchedTask.value);
   }
-  
   touchedTask.value = null;
 }
 
-function updateHoveredColumn(e) {
-  const elem = document.elementFromPoint(
-    e.touches[0].clientX,
-    e.touches[0].clientY
-  );
+/**
+ * Updates the hovered column based on the touch position.
+ *
+ * @param {TouchEvent} e - The touch event object.
+ */
+ function updateHoveredColumn(e) {
+  const elem = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
   if (elem) {
     const boardElement = elem.closest('.boardElement');
     if (boardElement) {
@@ -219,19 +260,34 @@ onBeforeUnmount(() => {
   removeHighlight();
 });
 
-const isHighlighted = (task) => {
-  if(!selectedTasks.value) {
+/**
+ * Checks if a task is highlighted by comparing its ID with selected tasks.
+ *
+ * @param {Object} task - The task to check.
+ * @returns {boolean} - True if the task is highlighted, otherwise false.
+ */
+ const isHighlighted = (task) => {
+  if (!selectedTasks.value) {
     return false;
   }
   return selectedTasks.value.some(selectedTask => selectedTask.id === task.id);
 };
 
-const removeHighlight = () => {
+/**
+ * Removes the highlight by clearing the selected tasks array.
+ */
+ const removeHighlight = () => {
   selectedTasks.value = [];
 };
 
 
-const filteredTasks = computed(() => {
+/**
+ * Filters tasks based on the search query.
+ * Matches task name, description, or category name.
+ *
+ * @returns {Array} - The filtered list of tasks.
+ */
+ const filteredTasks = computed(() => {
   if (!searchQuery.value.trim()) {
     return tasks.value;
   }
@@ -246,13 +302,18 @@ const filteredTasks = computed(() => {
   });
 });
 
-const tasksByStatus = computed(() => {
+/**
+ * Groups filtered tasks by their status into predefined categories.
+ *
+ * @returns {Object} - An object containing tasks grouped by status.
+ */
+ const tasksByStatus = computed(() => {
   const groups = {
     todo: [],
     inProgress: [],
     awaitingFeedback: [],
     done: []
-  };  
+  };
   filteredTasks.value.forEach(task => {
     if (groups[task.status]) {
       groups[task.status].push(task);
@@ -261,21 +322,43 @@ const tasksByStatus = computed(() => {
   return groups;
 });
 
-function onDragStart(task) {
+/**
+ * Handles the drag start event for a task.
+ * Sets the dragged task to the provided task object.
+ *
+ * @param {Object} task - The task being dragged.
+ */
+ function onDragStart(task) {
   draggedTask.value = task;
 }
 
-function onDragEnd() {
+/**
+ * Handles the drag end event.
+ * Resets the dragged task and hovered column.
+ */
+ function onDragEnd() {
   draggedTask.value = null;
   hoveredColumn.value = null;
 }
 
+/**
+ * Handles the drag over event.
+ * Updates the hovered column if a task is being dragged.
+ *
+ * @param {string} status - The status of the column being hovered over.
+ */
 function onDragOver(status) {
   if (draggedTask.value) {
     hoveredColumn.value = status;
   }
 }
 
+/**
+ * Handles the drag enter event.
+ * Updates the hovered column if a task is being dragged.
+ *
+ * @param {string} status - The status of the column being entered.
+ */
 function onDragEnter(status) {
   if (draggedTask.value) {
     hoveredColumn.value = status;
@@ -283,10 +366,15 @@ function onDragEnter(status) {
 }
 
 
-async function onDrop(status) {
+/**
+ * Handles the drop event for a task.
+ * Updates the task's status via a PATCH request and updates the local task list.
+ *
+ * @param {string} status - The new status of the task.
+ */
+ async function onDrop(status) {
   if (draggedTask.value) {
     try {
-      // Beispiel-PATCH-Anfrage an deine API (passe URL und Authentifizierung ggf. an)
       const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/${currentWorkspace.value.id}/tasks/${draggedTask.value.id}/`, {
         method: 'PATCH',
         headers: {
@@ -305,7 +393,6 @@ async function onDrop(status) {
         }
         return task;
       });
-      // Optional: Aktualisiere hier deine lokale Taskliste oder hole neue Daten
     } catch (error) {
       console.error('Error updating task status:', error);
     }
@@ -314,18 +401,32 @@ async function onDrop(status) {
   draggedTask.value = null;
 }
 
-const openAddTaskOverlay = (status) => {
+/**
+ * Opens the add task overlay and sets the chosen status.
+ *
+ * @param {string} status - The status to pre-select in the add task overlay.
+ */
+ const openAddTaskOverlay = (status) => {
   if (status) {
-    choosenStatus = status
-    currentTask.value = null;}
+    choosenStatus = status;
+    currentTask.value = null;
+  }
   isAddTaskOverlayVisible.value = true;
 };
 
+/**
+ * Opens the task detail view for the specified task.
+ *
+ * @param {Object} task - The task to display in the detail view.
+ */
 const openTaskDetail = (task) => {
-  currentTask.value = task; // Setzt den Status, der an das Overlay übergeben wird
+  currentTask.value = task;
   isDetailViewVisible.value = true;
 };
 
+/**
+ * Closes all overlays (add task and detail view).
+ */
 const closeOverlay = () => {
   isAddTaskOverlayVisible.value = false;
   isDetailViewVisible.value = false;

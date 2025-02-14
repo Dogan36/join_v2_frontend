@@ -51,12 +51,16 @@ onMounted(async () => {
   
 });
 
-
-
-function getUser() { 
-    currentUser.value = JSON.parse(localStorage.getItem("join_user"));
+/**
+ * Retrieves the current user from localStorage and updates the "currentUser" state.
+ */
+ function getUser() { 
+  currentUser.value = JSON.parse(localStorage.getItem("join_user"));
 }
 
+/**
+ * Closes both the profile and workspace overlays.
+ */
 function closeOverlay() {
   isProfilOverlayVisible.value = false;
   isWorkspaceOverlayVisible.value = false;

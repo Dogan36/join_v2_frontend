@@ -120,15 +120,22 @@ import SwitchWorkspace from "./SwitchWorkspace.vue";
 import InviteToWorkspace from "./InviteToWorkspace.vue";
 import LeaveWorkspaceConfirmation from "./LeaveWorkspaceConfirmation.vue";
 import JoinWorkspace from "./JoinWorkspace.vue";
-
 import {currentWorkspace } from '@/store/state';
-
 const activeModal = ref('workspaceInfo');
-const setActiveModal = (modalName) => {
-  activeModal.value = modalName;
-};
 const emit = defineEmits(["close"]);
 
+/**
+ * Sets the currently active modal.
+ * 
+ * @param {string} modalName - The name of the modal to activate.
+ */
+ const setActiveModal = (modalName) => {
+  activeModal.value = modalName;
+};
+
+/**
+ * Closes the modal by emitting the "close" event.
+ */
 const close = () => {
   emit("close");
 };
@@ -166,8 +173,6 @@ const close = () => {
     line-height: 1.5;
     display: flex;
     justify-content: space-between;
-
-   
 }
   p span.label {
     font-weight: bold; /* Fett gedruckt für Labels */

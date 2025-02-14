@@ -97,18 +97,20 @@
 <script setup>
 import { currentView } from "@/store/state";
 import { useRoute } from 'vue-router';
-
 const route = useRoute();
 
-function changeView(view) {
+/**
+ * Changes the current view to the specified one.
+ * 
+ * @param {string} view - The name of the view to switch to.
+ */
+ function changeView(view) {
   currentView.value = view;
 }
-
 
 </script>
 
 <style scoped>
-
 .menu {
   min-width: 250px;
   background-color: var(--main-color);

@@ -51,11 +51,19 @@ import ChangePassword from "./ChangePassword.vue";
 const activeModal = ref('profilInfo');
 const emit = defineEmits(["close"]);
 
-const close = () => {
+/**
+ * Closes the modal by emitting the "close" event.
+ */
+ const close = () => {
   emit("close");
 };
 
-const setActiveModal = (modalName) => {
+/**
+ * Sets the currently active modal.
+ * 
+ * @param {string} modalName - The name of the modal to activate.
+ */
+ const setActiveModal = (modalName) => {
   activeModal.value = modalName;
 };
 </script>

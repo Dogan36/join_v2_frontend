@@ -69,24 +69,32 @@ const emailError = ref(false);
 const emailFormatError = ref(false);
 const emailTakenError = ref(false);
 
-
-
+/**
+ * Initializes the profile form fields with the current user's data when the component is mounted.
+ */
 onMounted(() => {
   newName.value = currentUser.value.name;
   newEmail.value = currentUser.value.email;
   newPhone.value = currentUser.value.phone;
 });
 
-
-
+/**
+ * Asynchronously updates the user's profile.
+ * 
+ * If validation fails, the function exits early. Otherwise, it sends an API request to update the profile.
+ * If the request is successful, the local user data is updated, and a confirmation message is shown.
+ * If the email is already taken, an error flag is set.
+ * 
+ * @async
+ */
 const updateProfile = async () => {
-  if(!checkForProfilErrors()) {
+  if (!checkForProfilErrors()) {
     return;
   }
   showOverlay();
   try {
     const response = await fetch(`${API_BASE_URL}/user/update-profile/`, {
-      method: "POST", // Oder "PUT", falls deine API das verlangt
+      method: "POST",
       headers: {
         "Authorization": `Token ${getToken()}`,
         "Content-Type": "application/json",
@@ -103,25 +111,25 @@ const updateProfile = async () => {
       console.error("Profile update failed:", errorData.error);
       if (errorData.error === "email_taken") {
         emailTakenError.value = true;
-  
       }
       return;
     }
 
     const data = await response.json();
     showConfirmation("Profile updated successfully!");
-    localStorage.setItem("join_user", JSON.stringify(data.user))
+    localStorage.setItem("join_user", JSON.stringify(data.user));
     emit("setActiveModal");
     currentUser.value = data.user;
   } catch (error) {
     console.error("Error updating profile", error);
-    // Hier kannst du einen globalen Fehlerstatus setzen, falls der Request komplett fehlschlägt
-  }
-  finally {
+  } finally {
     hideOverlay();
   }
 };
 
+/**
+ * Resets all profile-related error states.
+ */
 const resetProfilErrors = () => {
   nameError.value = false;
   emailError.value = false;
@@ -129,38 +137,54 @@ const resetProfilErrors = () => {
   emailTakenError.value = false;
 };
 
-
-
+/**
+ * Checks for profile input errors and resets previous error states.
+ * 
+ * @returns {boolean} `true` if there are errors, otherwise `false`.
+ */
 const checkForProfilErrors = () => {
   resetProfilErrors();
   const isNameValid = checkIfNameEmpty();
   const isEmailValid = checkIfEmailEmpty();
   const isEmailFormatValid = checkEmailFormat();
-  return (
-    !isNameValid ||
-    !isEmailValid ||
-    !isEmailFormatValid
-  )
-}
+  return !isNameValid || !isEmailValid || !isEmailFormatValid;
+};
 
+/**
+ * Checks if the name field is empty and updates the corresponding error state.
+ * 
+ * @returns {boolean} `true` if the name is empty, otherwise `false`.
+ */
 const checkIfNameEmpty = () => {
   nameError.value = !newName.value;
-  return nameError.value; // Gibt true zurück, wenn kein Fehler vorliegt
+  return nameError.value;
 };
 
+/**
+ * Checks if the email field is empty and updates the corresponding error state.
+ * 
+ * @returns {boolean} `true` if the email is empty, otherwise `false`.
+ */
 const checkIfEmailEmpty = () => {
   emailError.value = !newEmail.value;
-  return emailError.value; // Gibt true zurück, wenn kein Fehler vorliegt
+  return emailError.value;
 };
 
+/**
+ * Validates the email format and updates the corresponding error state.
+ * 
+ * @returns {boolean} `true` if the email format is invalid, otherwise `false`.
+ */
 const checkEmailFormat = () => {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   emailFormatError.value = !emailPattern.test(newEmail.value);
   return emailFormatError.value;
 };
 
+/**
+ * Closes the modal by emitting the "setActiveModal" event.
+ */
 const close = () => {
   emit("setActiveModal");
 };
-
 </script>

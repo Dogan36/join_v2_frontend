@@ -39,21 +39,29 @@ import { defineEmits, computed, ref } from "vue";
 import useWorkspaces from "@/composables/useWorkspaces";
 import { currentUser, currentWorkspace } from "@/store/state";
 const { deleteWorkspace, leaveWorkspace } = useWorkspaces();
-
-
-
 const emit = defineEmits(["close", "setActiveModal"]);
 
-const confirmDelete = () => {
+/**
+ * Confirms and executes the deletion of the current workspace.
+ * After deletion, the modal is closed.
+ */
+ const confirmDelete = () => {
   deleteWorkspace(currentWorkspace.id);
   emit("close");
 };
 
+/**
+ * Confirms and executes leaving the current workspace.
+ * After leaving, the modal is closed.
+ */
 const confirmLeave = () => {
   leaveWorkspace(currentWorkspace.id);
   emit("close");
 };
 
+/**
+ * Closes the modal by emitting the "close" event.
+ */
 const close = () => {
   emit("close");
 };

@@ -31,17 +31,33 @@ const props = defineProps({
     required: true
   }
 });
-const assignedTo = computed(() => {
+
+/**
+ * Computes a list of members assigned to a specific task or item.
+ *
+ * @type {import('vue').ComputedRef<Array<Object>>}
+ */
+ const assignedTo = computed(() => {
   return members.value.filter(member => props.assignedTo.includes(member.id));
 });
 
+/**
+ * Computes a reduced list of assigned members, limited to a maximum of 4.
+ *
+ * @type {import('vue').ComputedRef<Array<Object>>}
+ */
 const assignedToReduced = computed(() => {
-  return assignedTo.value.slice(0, 4); // Nimmt nur die ersten 4 Kontakte
+  return assignedTo.value.slice(0, 4); // Takes only the first 4 contacts
 });
 
+/**
+ * Computes the number of remaining assigned contacts that are not included in `assignedToReduced`.
+ *
+ * @type {import('vue').ComputedRef<number>}
+ */
 const remainingContacts = computed(() => {
-  return assignedTo.value.length - 4; // Gibt die Anzahl der verbleibenden Kontakte zurück
-}); 
+  return assignedTo.value.length - 4; // Returns the count of remaining contacts
+});
 </script>
 
 <style scoped>

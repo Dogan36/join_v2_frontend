@@ -31,21 +31,27 @@ import { useRoute } from 'vue-router';
 const router = useRouter();
 const route = useRoute();
 const showUserMenu = ref(false);
-
-
-
-function openWorkspaceInfo() {
+let closeUserMenuTimeout = null;
+/**
+ * Opens the workspace information overlay and closes the user menu.
+ */
+ function openWorkspaceInfo() {
   closeUserMenu();
   isWorkspaceOverlayVisible.value = true;
 }
 
+/**
+ * Navigates to the profile overlay and closes the user menu.
+ */
 function goToProfile() {
   isProfilOverlayVisible.value = true;
   closeUserMenu();
 }
 
-let closeUserMenuTimeout = null;
-
+/**
+ * Toggles the visibility of the user menu.
+ * If opened, it automatically closes after 2 seconds.
+ */
 function toggleUserMenu() {
   showUserMenu.value = !showUserMenu.value;
   clearTimeout(closeUserMenuTimeout);
@@ -54,21 +60,32 @@ function toggleUserMenu() {
   }, 2000);
 }
 
+/**
+ * Cancels the automatic closing of the user menu when the mouse enters.
+ */
 function onUserMenuMouseEnter() {
   clearTimeout(closeUserMenuTimeout);
 }
 
+/**
+ * Starts a timeout to close the user menu when the mouse leaves.
+ */
 function onUserMenuMouseLeave() {
   closeUserMenuTimeout = setTimeout(() => {
     closeUserMenu();
   }, 2000);
 }
 
+/**
+ * Closes the user menu.
+ */
 function closeUserMenu() {
   showUserMenu.value = false;
 }
 
-
+/**
+ * Logs the user out by removing authentication tokens and redirecting to the start page.
+ */
 function logout() {
   closeUserMenu();
   localStorage.removeItem("join_token");
@@ -76,12 +93,17 @@ function logout() {
   router.push("/start");
 }
 
+/**
+ * Changes the current view to the specified one.
+ * 
+ * @param {string} view - The name of the view to switch to.
+ */
 function changeView(view) {
   currentView.value = view;
 }
 </script>
-<style>
 
+<style>
 .header {
   display: flex;
   flex-direction: row;

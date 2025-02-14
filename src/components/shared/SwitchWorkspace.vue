@@ -12,9 +12,7 @@
         <p>Choose a workspace to switch to</p>
       </div>
     </div>
-      
       <div class="workspace-info-main">
-       
         <select v-if="filteredWorkspaces.length > 0" class="inputfield inputfield-workspace-overlay dropdown-workspace" v-model="selectedWorkspace">
           <option  value="" selected>Bitte Workspace auswählen</option>
           <option
@@ -53,20 +51,38 @@ import {currentWorkspace, workspaces } from '@/store/state';
 
 const emit = defineEmits(["close", "setActiveModal"]);
 const selectedWorkspace = ref('');
-const filteredWorkspaces = computed(() => {
+/**
+ * Computes a filtered list of workspaces, excluding the currently active workspace.
+ * 
+ * @constant
+ */
+ const filteredWorkspaces = computed(() => {
   return workspaces.value.filter(
     (workspace) => workspace.id !== currentWorkspace.value.id
   );
 });
+
+/**
+ * Confirms and executes the switch to the selected workspace.
+ * After switching, the modal is closed.
+ */
 const confirmSwitch = () => {
   changeWorkspace(selectedWorkspace.value);
   emit("close");
 };
 
+/**
+ * Sets the currently active modal by emitting an event.
+ * 
+ * @param {string} modalName - The name of the modal to activate.
+ */
 const setActiveModal = (modalName) => {
   emit("setActiveModal", modalName);
 };
 
+/**
+ * Closes the modal by emitting the "close" event.
+ */
 const close = () => {
   emit("close");
 };

@@ -59,44 +59,69 @@ const emit = defineEmits(['update:modelValue', 'iconClick']);
 // Lokale Variablen
 const isPasswordVisible = ref(false);
 
-const errorMessage = computed(() => {
+/**
+ * Computes the first available error message from the provided error messages object.
+ * 
+ * @constant
+ */
+ const errorMessage = computed(() => {
   return Object.values(props.errorMessages).find((msg) => msg) || "";
 });
 
+/**
+ * Computes the appropriate password icon source based on the input state.
+ * 
+ * @constant
+ */
 const passwordIconSrc = computed(() => {
   if (!props.modelValue) {
-    return loginPasswordSvg;; // Schloss-Icon
+    return loginPasswordSvg; // Lock icon
   }
-  return isPasswordVisible.value
-    ? notVisibleIconSvg : visibleIconSvg;
+  return isPasswordVisible.value ? notVisibleIconSvg : visibleIconSvg;
 });
 
+/**
+ * Computes the alt text for the password icon.
+ * 
+ * @constant
+ */
 const passwordIconAlt = computed(() => {
-  if (!props.modelValue) return 'Lock icon';
-  return isPasswordVisible.value
-    ? 'Hide password'
-    : 'Show password';
+  if (!props.modelValue) return "Lock icon";
+  return isPasswordVisible.value ? "Hide password" : "Show password";
 });
 
+/**
+ * Computes the CSS class for the password icon based on its type.
+ * 
+ * @constant
+ */
 const passwordIconClass = computed(() => {
-  return passwordIconSrc.value.includes('loginPassword') // Passwortfeld
-    ? 'input-icon' // Standard-Stil für das Schloss-Icon
-    : 'input-icon cursor-pointer'; // Stil für Auge-Icons
+  return passwordIconSrc.value.includes("loginPassword") // Password field
+    ? "input-icon" // Default style for lock icon
+    : "input-icon cursor-pointer"; // Style for eye icons
 });
 
-// Eingabe-Event
+/**
+ * Emits an event when the input value changes.
+ * 
+ * @param {Event} event - The input event.
+ */
 const onInput = (event) => {
-  emit('update:modelValue', event.target.value);
+  emit("update:modelValue", event.target.value);
 };
 
-// Passwort-Sichtbarkeit umschalten
+/**
+ * Toggles the visibility of the password.
+ */
 const togglePasswordVisibility = () => {
   isPasswordVisible.value = !isPasswordVisible.value;
 };
 
-// Anderes Icon-Klick-Event
+/**
+ * Emits an event when the password icon is clicked.
+ */
 const emitIconClick = () => {
-  emit('iconClick');
+  emit("iconClick");
 };
 </script>
 

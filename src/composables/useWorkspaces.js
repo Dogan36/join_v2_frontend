@@ -14,174 +14,240 @@ import { getToken, currentWorkspace, workspaces, currentUser } from '@/store/sta
 const token = getToken();
 const { loadWorkspaceData } = useWorkspaceData();
 
-
-
-
+/**
+ * Provides functionality for managing workspaces, including loading, creating, switching, leaving, and deleting workspaces.
+ * Also includes functionality to send email invitations.
+ * 
+ * Uses `useConfirmationOverlay` for confirmation messages and `useLoadingOverlay` for loading states.
+ * 
+ * @returns {{
+*   loadCurrentWorkspace: (workspaceId: number) => Promise<void>,
+*   loadWorkspaces: () => Promise<void>,
+*   addWorkspace: (name: string) => Promise<void>,
+*   determineInitialWorkspace: () => Promise<void>,
+*   setCurrentWorkspace: () => void,
+*   createWorkspace: (name: string) => Promise<void>,
+*   changeWorkspace: (workspace: Object) => void,
+*   leaveWorkspace: () => Promise<void>,
+*   deleteWorkspace: () => Promise<void>,
+*   invitePerEmail: (email: string, join_code: string) => Promise<void>
+* }}
+*/
 export default function useWorkspaces() {
-  const { showConfirmation } = useConfirmationOverlay();  
-  const { showOverlay, hideOverlay } = useLoadingOverlay();
+ const { showConfirmation } = useConfirmationOverlay();
+ const { showOverlay, hideOverlay } = useLoadingOverlay();
 
-  const determineInitialWorkspace = async () => {
-    if (token) {
-    const currentWorkspaceId = Number(localStorage.getItem('currentWorkspaceId'));
-    if (currentWorkspaceId) {
-      const foundWorkspace = workspaces.value.find(ws => ws.id === currentWorkspaceId);
-      if (foundWorkspace) {
-        currentWorkspace.value = await fetchWorkspaceById(currentWorkspaceId);
-      } else {
-        console.warn("Kein Workspace mit der gespeicherten ID gefunden, lade ersten verfügbaren Workspace.");
-        currentWorkspace.value = await fetchFirstWorkspace();
+ /**
+  * Determines the initial workspace to load.
+  * If a workspace ID is stored in localStorage, it tries to load it.
+  * Otherwise, it loads the first available workspace.
+  * 
+  * @async
+  */
+ const determineInitialWorkspace = async () => {
+   if (token) {
+     const currentWorkspaceId = Number(localStorage.getItem("currentWorkspaceId"));
+     if (currentWorkspaceId) {
+       const foundWorkspace = workspaces.value.find(ws => ws.id === currentWorkspaceId);
+       if (foundWorkspace) {
+         currentWorkspace.value = await fetchWorkspaceById(currentWorkspaceId);
+       } else {
+         console.warn("No workspace found with the stored ID, loading the first available workspace.");
+         currentWorkspace.value = await fetchFirstWorkspace();
+       }
+     } else {
+       currentWorkspace.value = await fetchFirstWorkspace();
+     }
+   }
+ };
 
-      }
-    } else {
-      currentWorkspace.value = await fetchFirstWorkspace();
-    }
-  }
-  };
+ /**
+  * Loads a specific workspace by its ID.
+  * 
+  * @async
+  * @param {number} workspaceId - The ID of the workspace to load.
+  */
+ const loadCurrentWorkspace = async (workspaceId) => {
+   try {
+     const workspace = await fetchWorkspaceById(workspaceId);
+     if (!workspace) {
+       console.warn("No workspace found.");
+       currentWorkspace.value = null;
+       return;
+     }
+     currentWorkspace.value = workspace;
+   } catch (err) {
+     console.error("Error loading workspace:", err);
+   }
+ };
 
-  
+ /**
+  * Loads all available workspaces and sets the initial workspace.
+  * 
+  * @async
+  */
+ const loadWorkspaces = async () => {
+   if (token) {
+     try {
+       workspaces.value = await fetchWorkspaces(token);
+       await determineInitialWorkspace();
+     } catch (error) {
+       console.error("Error loading workspaces:", error);
+     }
+   }
+   console.log(currentWorkspace);
+ };
 
-  const loadCurrentWorkspace = async (workspaceId) => {
-    try {
-      const workspace = await fetchWorkspaceById(workspaceId);
-      if (!workspace) {
-        console.warn("Kein Workspace gefunden");
-        currentWorkspace.value = null;
-        return;
-      }
-      currentWorkspace.value = workspace;
-    } catch (err) {
-      console.error("Fehler beim Laden des Workspaces:", err);
-    }
-  };
+ /**
+  * Adds a new workspace and sets it as the current workspace.
+  * 
+  * @async
+  * @param {string} name - The name of the workspace to create.
+  */
+ const addWorkspace = async (name) => {
+   if (token) {
+     try {
+       const newWorkspace = await createWorkspace(token, name);
+       workspaces.value.push(newWorkspace);
+       currentWorkspace.value = newWorkspace;
+     } catch (error) {
+       console.error("Error creating workspace:", error);
+     }
+   }
+ };
 
-  const loadWorkspaces = async () => {
-    if (token) {
-      try {
-        workspaces.value = await fetchWorkspaces(token);
-        await determineInitialWorkspace();
-      } catch (error) {
-        console.error('Fehler beim Laden der Workspaces:', error);
-      }
-    }
-    console.log(currentWorkspace)
-  };
+ /**
+  * Creates a new workspace, updates the workspaces list, and sets it as the current workspace.
+  * 
+  * @async
+  * @param {string} name - The name of the new workspace.
+  */
+ const createWorkspace = async (name) => {
+   showOverlay();
+   try {
+     const newWorkspace = await createWorkspaceAPI(name);
+     workspaces.value.push(newWorkspace);
+     currentWorkspace.value = newWorkspace;
+     showConfirmation(`Workspace "${newWorkspace.name}" created`);
+   } catch (err) {
+     console.error("Error creating workspace:", err);
+   } finally {
+     hideOverlay();
+   }
+ };
 
-  const addWorkspace = async (name) => {
-    if (token) {
-      try {
-        const newWorkspace = await createWorkspace(token, name);
-        workspaces.value.push(newWorkspace);
-        currentWorkspace.value = newWorkspace;
-      } catch (error) {
-        console.error('Fehler beim Erstellen des Workspaces:', error);
-      }
-    }
-  };
+ /**
+  * Changes the current workspace and displays a confirmation message.
+  * 
+  * @param {Object} workspace - The workspace object to switch to.
+  */
+ const changeWorkspace = (workspace) => {
+   currentWorkspace.value = workspace;
+   showConfirmation(`Switched to workspace "${workspace.name}"`);
+ };
 
- 
-  const createWorkspace = async (name) => {
-    showOverlay();
-    try {
-      const newWorkspace = await createWorkspaceAPI(name);
-      workspaces.value.push(newWorkspace); // Neuen Workspace zur Liste hinzufügen
-      currentWorkspace.value = newWorkspace;
-      console.log(currentWorkspace.value)
-      showConfirmation(`Workspace "${newWorkspace.name}" created`);// Diese Funktion speichert den aktuellen Workspace in LocalStorage
-    } catch (err) {
-      console.error("Fehler beim Erstellen des Workspaces:", err);
-    } finally {
-      hideOverlay();
-    }
-  };
+ /**
+  * Allows the user to leave the current workspace.
+  * If the user is a guest in a restricted workspace, they cannot leave.
+  * 
+  * @async
+  */
+ const leaveWorkspace = async () => {
+   if (currentWorkspace.value.id === "93" && currentUser.value.id === "29") {
+     alert("Guest cannot leave this workspace.");
+     hideOverlay();
+     return;
+   }
+   showOverlay();
+   try {
+     if (!token) {
+       throw new Error("No token found. User is not authenticated.");
+     }
+     await leaveWorkspaceAPI(token, currentWorkspace.value.id);
+     showConfirmation("Successfully left workspace.");
+     currentWorkspace.value = null;
+     await loadWorkspaces();
+   } catch (error) {
+     console.error("Error leaving workspace:", error);
+   } finally {
+     hideOverlay();
+   }
+ };
 
-  const changeWorkspace = (workspace) => {
-    currentWorkspace.value = workspace;
-    showConfirmation(`Switched to workspace "${workspace.name}"`);
-    
-  };
+ /**
+  * Deletes the current workspace.
+  * If the user is a guest in a restricted workspace, deletion is not allowed.
+  * 
+  * @async
+  */
+ const deleteWorkspace = async () => {
+   showOverlay();
+   if (currentWorkspace.value.id === "108") {
+     alert("Guests cannot delete this workspace.");
+     hideOverlay();
+     return;
+   }
+   try {
+     if (!token) throw new Error("No token found. User is not authenticated.");
+     await deleteWorkspaceAPI(token, currentWorkspace.value.id);
+     showConfirmation("Workspace successfully deleted.");
+     currentWorkspace.value = null;
+     await loadWorkspaces();
+   } catch (error) {
+     console.error("Error deleting workspace:", error);
+   } finally {
+     hideOverlay();
+   }
+ };
 
+ /**
+  * Sends an invitation email to join the workspace using a join code.
+  * 
+  * @async
+  * @param {string} email - The email address to send the invitation to.
+  * @param {string} join_code - The workspace join code.
+  */
+ const invitePerEmail = async (email, join_code) => {
+   showOverlay();
+   try {
+     await invitePerEmailAPI(email, join_code);
+     showConfirmation("Invitation sent successfully.");
+   } catch (error) {
+     console.error("Error sending invitation:", error);
+   } finally {
+     hideOverlay();
+   }
+ };
 
-  const leaveWorkspace = async () => {
-    
-    if (currentWorkspace.value.id == "93" && currentUser.value.id == "29") {
-      alert("Guest cannot leave this workspaces");
-      hideOverlay();
-      return;
-    }
-    showOverlay();
-    try {
-      if (!token) {
-        throw new Error("Kein Token gefunden. Der Benutzer ist nicht authentifiziert.");
-      }
-      await leaveWorkspaceAPI(token, currentWorkspace.value.id);
-      showConfirmation('Workspace erfolgreich verlassen.');
-      currentWorkspace.value = null;
-      await loadWorkspaces(); // Stelle sicher, dass diese Funktion definiert ist
-    } catch (error) {
-      console.error('Fehler beim Verlassen des Workspaces:', error);
-    } finally {
-      hideOverlay();
-    }
-  };
-
-  const deleteWorkspace = async () => {
-    showOverlay();
-    if (currentWorkspace.value.id == "108") {
-      alert("Guests cannot delete this workspaces");
-      hideOverlay();
-      return;
-    }
-    try {
-      if (!token) throw new Error("Kein Token gefunden. Der Benutzer ist nicht authentifiziert.");
-      await deleteWorkspaceAPI(token, currentWorkspace.value.id);
-      showConfirmation("Workspace erfolgreich gelöscht.");
-      currentWorkspace.value = null; // Setzen Sie den aktuellen Workspace zurück
-      await loadWorkspaces(); // Laden Sie die Liste der verbleibenden Workspaces neu
-    } catch (error) {
-      console.error('Fehler beim Löschen des Workspaces:', error);
-    } finally {
-      hideOverlay();
-    }
-  };
-
-  const invitePerEmail = async (email, join_code) => {
-    showOverlay();
-    try {
-      await invitePerEmailAPI(email, join_code);
-      showConfirmation("Einladung erfolgreich verschickt.");
-    }
-    catch (error) {
-      console.error("Fehler beim Versenden der Einladung:", error);
-    }
-    finally {
-      hideOverlay();
-    }
-  }
-
-  return {
-   
-    loadCurrentWorkspace,
-    loadWorkspaces,
-    addWorkspace,
-    determineInitialWorkspace,
-    setCurrentWorkspace,
-    createWorkspace,
-    changeWorkspace,
-    leaveWorkspace,
-    deleteWorkspace,
-    invitePerEmail
-  };
+ return {
+   loadCurrentWorkspace,
+   loadWorkspaces,
+   addWorkspace,
+   determineInitialWorkspace,
+   setCurrentWorkspace,
+   createWorkspace,
+   changeWorkspace,
+   leaveWorkspace,
+   deleteWorkspace,
+   invitePerEmail,
+ };
 }
+
+/**
+* Watches for changes in the current workspace and updates the stored workspace ID.
+*/
 watch(currentWorkspace, async (newWorkspace, oldWorkspace) => {
-  if(newWorkspace !== oldWorkspace) {
-    setCurrentWorkspace();
-    await loadWorkspaceData(newWorkspace);
-  }
+ if (newWorkspace !== oldWorkspace) {
+   setCurrentWorkspace();
+   await loadWorkspaceData(newWorkspace);
+ }
 });
 
+/**
+* Stores the current workspace ID in localStorage.
+*/
 const setCurrentWorkspace = () => {
-  if (currentWorkspace.value && currentWorkspace.value.id) {
-    localStorage.setItem('currentWorkspaceId', currentWorkspace.value.id.toString());
-  }
-}
+ if (currentWorkspace.value && currentWorkspace.value.id) {
+   localStorage.setItem("currentWorkspaceId", currentWorkspace.value.id.toString());
+ }
+};

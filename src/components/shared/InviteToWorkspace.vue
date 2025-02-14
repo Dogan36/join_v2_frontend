@@ -47,26 +47,41 @@ const emit = defineEmits(["close"]);
 const shareCodeEmail = ref("");
 const error = ref("");
 const copyToClipboardText = ref("Copy to Clipboard");
-const trySend = async() => {
+
+
+/**
+ * Attempts to send an invitation via email.
+ * 
+ * If there are validation errors, the function exits early. Otherwise, it sends the invitation 
+ * and closes the modal upon success.
+ * 
+ * @async
+ */
+ const trySend = async () => {
   resetErrors();
   if (checkForErrors()) {
     return;
-  } else {
-    try {
+  }
+  try {
     await invitePerEmail(shareCodeEmail.value, currentWorkspace.value.join_code);
     emit("close");
-    } catch (e) {
-      error.value = e.message;
-    }
+  } catch (e) {
+    error.value = e.message;
   }
 };
 
-
-
+/**
+ * Resets the error message.
+ */
 const resetErrors = () => {
   error.value = "";
 };
 
+/**
+ * Validates the email input and sets an error message if necessary.
+ * 
+ * @returns {boolean} `true` if there are validation errors, otherwise `false`.
+ */
 const checkForErrors = () => {
   if (!shareCodeEmail.value) {
     error.value = "Please enter an email address.";
@@ -79,20 +94,29 @@ const checkForErrors = () => {
   return false;
 };
 
-
-
+/**
+ * Closes the modal by emitting the "close" event.
+ */
 const close = () => {
   emit("close");
 };
 
-const  copyToClipboard = () => {
+/**
+ * Copies the workspace join code to the clipboard.
+ * 
+ * If successful, updates the UI to indicate that the text has been copied.
+ */
+const copyToClipboard = () => {
   const textToCopy = document.getElementById("join_code").innerText;
-  navigator.clipboard.writeText(textToCopy).then(() => {
-  copyToClipboardText.value = "Copied!";
-  }).catch(err => {
-    console.error('Fehler beim Kopieren des Textes: ', err);
-  });
-}
+  navigator.clipboard.writeText(textToCopy)
+    .then(() => {
+      copyToClipboardText.value = "Copied!";
+    })
+    .catch(err => {
+      console.error("Error copying text:", err);
+    });
+};
+
 </script>
 
 <style scoped>

@@ -21,7 +21,6 @@
           emailNotFoundError: emailNotFoundError ? 'Email not found' : '',
         }"
       />
-
       <div class="login-buttons">
         <button class="main-button-layout" type="submit">Submit</button>
       </div>
@@ -49,7 +48,16 @@ const emailFormatError = ref(false);
 const emailNotFoundError = ref(false);
 
 
-async function requestPasswordReset(email) {
+/**
+ * Sends a password reset request for the given email.
+ * 
+ * Displays an overlay during the request and handles potential errors such as 
+ * invalid emails or network issues. If successful, a confirmation message is shown.
+ * 
+ * @async
+ * @param {string} email - The email address for which to request a password reset.
+ */
+ async function requestPasswordReset(email) {
   showOverlay();
   try {
     const response = await fetch(`${API_BASE_URL}/user/password-reset-request/`, {
@@ -57,33 +65,30 @@ async function requestPasswordReset(email) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ "email": email }),
+      body: JSON.stringify({ email }),
     });
-
     if (response.ok) {
       const data = await response.json();
       showConfirmation(data.message);
       emit("toggle");
     } else {
-      // Falls das Backend einen Fehler (z.B. 400 oder 404) schickt:
       const errorData = await response.json();
-      console.error("Fehler beim Anfordern des Reset-Links:", errorData);
-
-      // Beispiel: wenn der Server bei einer ungültigen E-Mail "User with this email does not exist" zurückgibt
-      if (errorData.error == "User with this email does not exist") {
+      console.error("Error requesting password reset:", errorData);
+      if (errorData.error === "User with this email does not exist") {
         emailNotFoundError.value = true;
       } else {
-        alert("Unbekannter Fehler beim Zurücksetzen des Passworts.");
+        alert("Unknown error while resetting password.");
       }
     }
   } catch (error) {
-    // Netzwerkfehler oder Server nicht erreichbar
- 
-    alert("Netzwerkfehler. Bitte später erneut versuchen.");
+    alert("Network error. Please try again later.");
   }
   hideOverlay();
 }
 
+/**
+ * Attempts to send a password reset request if no validation errors exist.
+ */
 const tryRequest = () => {
   resetErrors();
   if (!checkForErrors()) {
@@ -91,29 +96,47 @@ const tryRequest = () => {
   }
 };
 
+/**
+ * Resets all password reset-related error states.
+ */
 const resetErrors = () => {
   emailError.value = false;
   emailFormatError.value = false;
   emailNotFoundError.value = false;
 };
+
+/**
+ * Checks for errors in the email input field.
+ * 
+ * @returns {boolean} `true` if there are validation errors, otherwise `false`.
+ */
 const checkForErrors = () => {
   const isEmailValid = checkIfEmailEmpty();
-  const isEmailFormatValid = isEmailValid && checkEmailFormat(); // Nur prüfen, wenn E-Mail nicht leer
-
+  const isEmailFormatValid = isEmailValid && checkEmailFormat();
   return !isEmailValid || !isEmailFormatValid;
 };
 
+/**
+ * Checks if the email field is empty and updates the corresponding error state.
+ * 
+ * @returns {boolean} `true` if the email is not empty, otherwise `false`.
+ */
 const checkIfEmailEmpty = () => {
   emailError.value = !forgotEmail.value;
-  return !emailError.value; // Gibt true zurück, wenn kein Fehler vorliegt
+  return !emailError.value;
 };
 
+/**
+ * Validates the email format and updates the corresponding error state.
+ * 
+ * @returns {boolean} `true` if the email format is valid, otherwise `false`.
+ */
 const checkEmailFormat = () => {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  emailFormatError.value =
-    forgotEmail.value && !emailPattern.test(forgotEmail.value);
+  emailFormatError.value = forgotEmail.value && !emailPattern.test(forgotEmail.value);
   return !emailFormatError.value;
 };
+
 </script>
 
 <style>

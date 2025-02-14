@@ -1,5 +1,4 @@
 <template>
- 
   <div class="wrapper">
     <div class="logo-container" :class="{ animate: startAnimation }">
       <img class="logo-invert" src="@/assets/img/logoInvert.svg" alt="Logo Invert">
@@ -20,8 +19,6 @@
         <ForgotPassword
         @toggle="toggleForgotPassword"/>
       </div>
-    
-
     <div v-if="animationFinished" class="not-a-user-container">
         <span v-if="isLogin">Not a user?</span>
         <button v-if="isLogin"  class="main-button-layout font-size16" @click="toggleSignup"><span>Sign up</span></button>
@@ -55,30 +52,44 @@ const animationFinished = ref(false);
 const isLogin = ref(true);
 const isSignup = ref(false);
 const isForgotPassword = ref(false);
-// Funktion zum Umschalten des Formulars
-const toggleSignup = () => {
+
+/**
+ * Toggles between login and signup views.
+ */
+ const toggleSignup = () => {
   isLogin.value = !isLogin.value;
   isSignup.value = !isSignup.value;
 };
 
+/**
+ * Toggles between login and forgot password views.
+ */
 const toggleForgotPassword = () => {
   isLogin.value = !isLogin.value;
-  isForgotPassword.value = !isForgotPassword.value
+  isForgotPassword.value = !isForgotPassword.value;
 };
 
+/**
+ * Checks if the user is already logged in by verifying the presence of a token in localStorage.
+ * If the user is logged in, their data is loaded, and they are redirected to the home page.
+ * If not, the login animation is marked as finished.
+ */
 const checkIfUserIsLoggedIn = () => {
-  if (localStorage.getItem('join_token')) {
-    currentUser.value = JSON.parse(localStorage.getItem('join_user'));
-    window.location.href = '/home';
-  }
-  else {
+  if (localStorage.getItem("join_token")) {
+    currentUser.value = JSON.parse(localStorage.getItem("join_user"));
+    window.location.href = "/home";
+  } else {
     animationFinished.value = true;
   }
 };
 
+/**
+ * Opens the privacy policy page in a new tab.
+ */
 const goToPrivacyPolicy = () => {
-  window.open('/privacy?type=privacyPolicy', '_blank');
+  window.open("/privacy?type=privacyPolicy", "_blank");
 };
+
 </script>
 
 <style>

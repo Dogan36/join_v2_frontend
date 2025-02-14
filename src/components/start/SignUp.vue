@@ -94,14 +94,31 @@ const passwordMatchError = ref(false);
 const privacyError = ref(false);
 
 const emit = defineEmits();
-const goBack = () => {
+/**
+ * Emits an event to toggle the current view (e.g., back to login).
+ */
+ const goBack = () => {
   emit("toggle");
 };
 
+/**
+ * Emits an event to display the privacy policy.
+ */
 const showPrivacyPolicy = () => {
   emit("privacyPolicy");
 };
 
+/**
+ * Registers a new user with the provided name, email, and password.
+ * 
+ * If successful, stores authentication details in localStorage and redirects to the home page.
+ * If the email is already taken, an error flag is set.
+ * 
+ * @async
+ * @param {string} name - The user's full name.
+ * @param {string} email - The user's email address.
+ * @param {string} password - The user's password.
+ */
 async function signUp(name, email, password) {
   showOverlay();
   try {
@@ -111,13 +128,12 @@ async function signUp(name, email, password) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ name, email, password })
-     
     });
 
     if (response.ok) {
       const data = await response.json();
       localStorage.setItem("join_token", data.token);
-      localStorage.setItem("join_user", JSON.stringify(data.user))
+      localStorage.setItem("join_user", JSON.stringify(data.user));
       showConfirmation('Sign up successful!');
       router.push('/home');
     } else {
@@ -127,13 +143,15 @@ async function signUp(name, email, password) {
       }
     }
   } catch (error) {
-    console.error('Netzwerkfehler:', error);
-  }
-  finally {
+    console.error('Network error:', error);
+  } finally {
     hideOverlay();
   }
 }
 
+/**
+ * Attempts to sign up the user after validating input fields.
+ */
 const trySignup = () => {
   resetErrors();
   if (!checkForErrors()) {
@@ -141,6 +159,9 @@ const trySignup = () => {
   }
 };
 
+/**
+ * Resets all sign-up-related error states.
+ */
 const resetErrors = () => {
   nameError.value = false;
   emailError.value = false;
@@ -152,6 +173,11 @@ const resetErrors = () => {
   privacyError.value = false;
 };
 
+/**
+ * Validates sign-up input fields.
+ * 
+ * @returns {boolean} `true` if validation errors exist, otherwise `false`.
+ */
 const checkForErrors = () => {
   const isNameValid = checkIfNameEmpty();
   const isEmailValid = checkIfEmailEmpty();
@@ -160,7 +186,7 @@ const checkForErrors = () => {
   const isPasswordValid = checkIfPasswordEmpty();
   const isPasswordLengthValid = isPasswordValid && checkPasswordLength();
   const isPasswordRepeatValid = checkIfPasswordRepeatEmpty();
-  const arePasswordsMatching =isPasswordRepeatValid &&  checkIfPasswordsMatch();
+  const arePasswordsMatching = isPasswordRepeatValid && checkIfPasswordsMatch();
   const isPrivacyAccepted = checkPrivacyAccepted();
 
   return (
@@ -175,61 +201,100 @@ const checkForErrors = () => {
   );
 };
 
+/**
+ * Checks if the name field is empty and updates the corresponding error state.
+ * 
+ * @returns {boolean} `true` if the name is not empty, otherwise `false`.
+ */
 const checkIfNameEmpty = () => {
   nameError.value = !signupName.value;
   return !nameError.value;
 };
 
+/**
+ * Checks if the email field is empty and updates the corresponding error state.
+ * 
+ * @returns {boolean} `true` if the email is not empty, otherwise `false`.
+ */
 const checkIfEmailEmpty = () => {
   emailError.value = !signupEmail.value;
   return !emailError.value;
 };
 
+/**
+ * Validates the email format and updates the corresponding error state.
+ * 
+ * @returns {boolean} `true` if the email format is valid, otherwise `false`.
+ */
 const checkEmailFormat = () => {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  emailFormatError.value =
-    signupEmail.value && !emailPattern.test(signupEmail.value);
+  emailFormatError.value = signupEmail.value && !emailPattern.test(signupEmail.value);
   return !emailFormatError.value;
 };
 
+/**
+ * Checks if the email is already taken based on a predefined email database.
+ * 
+ * @returns {boolean} `true` if the email is unique, otherwise `false`.
+ */
 const checkEmailDatabase = () => {
-  const emailDatabase = ["user@example.com", "admin@example.com"]; // Beispielhafte Datenbank
+  const emailDatabase = ["user@example.com", "admin@example.com"]; // Example database
   emailTakenError.value = emailDatabase.includes(signupEmail.value);
   return !emailTakenError.value;
 };
 
+/**
+ * Checks if the password field is empty and updates the corresponding error state.
+ * 
+ * @returns {boolean} `true` if the password is not empty, otherwise `false`.
+ */
 const checkIfPasswordEmpty = () => {
   passwordError.value = !signupPassword.value;
   return !passwordError.value;
 };
 
+/**
+ * Checks if the password meets the minimum length requirement (6 characters).
+ * 
+ * @returns {boolean} `true` if the password length is valid, otherwise `false`.
+ */
 const checkPasswordLength = () => {
-  passwordLengthError.value =
-    signupPassword.value && signupPassword.value.length < 6;
+  passwordLengthError.value = signupPassword.value && signupPassword.value.length < 6;
   return !passwordLengthError.value;
 };
 
+/**
+ * Checks if the repeated password field is empty and updates the corresponding error state.
+ * 
+ * @returns {boolean} `true` if the repeated password is not empty, otherwise `false`.
+ */
 const checkIfPasswordRepeatEmpty = () => {
   passwordMatchError.value = !signupPasswordRepeat.value;
-  return !passwordError.value;
+  return !passwordMatchError.value;
 };
 
+/**
+ * Checks if the passwords match and updates the corresponding error state.
+ * 
+ * @returns {boolean} `true` if the passwords match, otherwise `false`.
+ */
 const checkIfPasswordsMatch = () => {
   passwordMatchError.value = signupPassword.value !== signupPasswordRepeat.value;
   return !passwordMatchError.value;
 };
 
+/**
+ * Checks if the privacy policy has been accepted and updates the corresponding error state.
+ * 
+ * @returns {boolean} `true` if the privacy policy is accepted, otherwise `false`.
+ */
 const checkPrivacyAccepted = () => {
   privacyError.value = !readPrivacy.value;
   return !privacyError.value;
 };
-
-
 </script>
 
 <style>
-
-
 .signup-options {
   display: flex;
   flex-direction: row;
@@ -253,5 +318,4 @@ const checkPrivacyAccepted = () => {
     }
   }
 }
-
 </style>

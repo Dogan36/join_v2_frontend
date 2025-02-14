@@ -75,54 +75,95 @@ import { computed, onMounted } from 'vue';
 import { currentView, selectedTasks } from '@/store/state';
 import { greetingDone } from '@/store/state';
 
-onMounted(() => {
+/**
+ * Sets greetingDone to true after a 3-second delay when the component is mounted.
+ */
+ onMounted(() => {
   setTimeout(() => {
     greetingDone.value = true;
   }, 3000);
 });
 
+/**
+ * Navigates to the board view and optionally filters tasks.
+ *
+ * @param {Array} filter - The filter to apply to the tasks.
+ */
 const goToBoard = (filter) => {
   currentView.value = 'board';
   if (filter) {
     selectedTasks.value = filter;
-
   }
 };
+
+/**
+ * Computes the first name of the current user.
+ */
 const userName = computed(() => {
   return currentUser.value.name ? currentUser.value.name.split(' ')[0] : '';
 });
 
+/**
+ * Returns all tasks for the board view.
+ */
 const boardTasks = computed(() => tasks.value);
-const inProgressTasks = computed(() => tasks.value.filter(task => task.status === 'inProgress'))
-const awaitingFeedbackTasks = computed(() => tasks.value.filter(task => task.status === 'awaitingFeedback'))
-const urgentTasks = computed(() => tasks.value.filter(task => task.prio === 'high'))
+
+/**
+ * Filters tasks with the status 'inProgress'.
+ */
+const inProgressTasks = computed(() => tasks.value.filter(task => task.status === 'inProgress'));
+
+/**
+ * Filters tasks with the status 'awaitingFeedback'.
+ */
+const awaitingFeedbackTasks = computed(() => tasks.value.filter(task => task.status === 'awaitingFeedback'));
+
+/**
+ * Filters tasks with high priority.
+ */
+const urgentTasks = computed(() => tasks.value.filter(task => task.prio === 'high'));
+
+/**
+ * Computes tasks with the earliest upcoming deadline, excluding done tasks.
+ */
 const upcomingDeadline = computed(() => {
-  // Filtere Tasks mit due_date, die nicht den Status 'done' haben
   const tasksWithDeadline = tasks.value.filter(task => task.due_date && task.status !== 'done');
   if (tasksWithDeadline.length === 0) {
     return [];
   }
-  // Sortiere die Tasks anhand des Fälligkeitsdatums
   tasksWithDeadline.sort((a, b) => new Date(a.due_date) - new Date(b.due_date));
-  // Ermittle das früheste Fälligkeitsdatum
   const earliestDeadline = tasksWithDeadline[0].due_date;
-  // Gib alle Tasks zurück, die genau dieses Datum haben
   return tasksWithDeadline.filter(task => task.due_date === earliestDeadline);
 });
+
+/**
+ * Computes the label for the upcoming or missed deadline.
+ */
 const deadlineLabel = computed(() => {
   if (upcomingDeadline.value.length === 0) {
-    return "Upcoming Deadline"; // oder alternativ einen anderen Standardtext
+    return "Upcoming Deadline";
   }
   const earliestDeadline = upcomingDeadline.value[0].due_date;
-  // Vergleiche das Datum: Liegt das früheste Datum in der Vergangenheit?
   if (new Date(earliestDeadline) < new Date()) {
     return "Missed Deadline";
   } else {
     return "Upcoming Deadline";
   }
 });
-const toDoTasks = computed(() => tasks.value.filter(task => task.status === 'todo'))
-const doneTasks = computed(() => tasks.value.filter(task => task.status === 'done'))
+
+/**
+ * Filters tasks with the status 'todo'.
+ */
+const toDoTasks = computed(() => tasks.value.filter(task => task.status === 'todo'));
+
+/**
+ * Filters tasks with the status 'done'.
+ */
+const doneTasks = computed(() => tasks.value.filter(task => task.status === 'done'));
+
+/**
+ * Computes a greeting based on the current time of day.
+ */
 const greetingByDaytime = computed(() => {
   const date = new Date();
   const hours = date.getHours();
