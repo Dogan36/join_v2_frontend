@@ -110,7 +110,19 @@ const buttonColor = computed(() => {
   return ''; // Return a default or empty string if no match
 });
 
-const updateSubtask = async(subtask) => {
+/**
+ * Updates the completion status of a given subtask by toggling its `is_completed` property.
+ *
+ * Sends a PATCH request to update the subtask on the server. If the request is successful,
+ * it toggles the `is_completed` property locally. In case of an error, the error is logged to the console.
+ *
+ * @async
+ * @param {Object} subtask - The subtask object to update.
+ * @param {number|string} subtask.id - The unique identifier of the subtask.
+ * @param {boolean} subtask.is_completed - The current completion status of the subtask.
+ * @returns {Promise<void>} A promise that resolves when the update operation is complete.
+ */
+ const updateSubtask = async (subtask) => {
     try {
         const token = getToken();
         await fetch(`${API_BASE_URL}/workspaces/workspaces/${currentWorkspace.value.id}/subtasks/${subtask.id}/`, {
@@ -129,7 +141,23 @@ const updateSubtask = async(subtask) => {
     }
 };
 
-const deleteTask = async() => {
+/**
+ * Deletes a task from the current workspace.
+ *
+ * This async function performs the following steps:
+ * 1. Displays an overlay to indicate the process has started.
+ * 2. Retrieves the authentication token.
+ * 3. Sends a DELETE request to the API to remove the specified task.
+ * 4. Updates the local tasks array by removing the deleted task.
+ * 5. Shows a confirmation message upon successful deletion.
+ * 6. Closes the overlay.
+ *
+ * If an error occurs during the process, it logs the error to the console.
+ *
+ * @async
+ * @returns {Promise<void>} A promise that resolves when the task deletion is complete.
+ */
+ const deleteTask = async () => {
     showOverlay();
     try {
         const token = getToken();
@@ -148,13 +176,20 @@ const deleteTask = async() => {
     }
 };
 
-const editTask = () => {
+/**
+ * Initiates the task editing process.
+ *
+ * This function performs the following actions:
+ * - Closes the current overlay.
+ * - Emits an 'edit' event to signal that the task should be edited.
+ */
+ const editTask = () => {
     closeOverlay();
     emit('edit');
 };
 </script>
-<style scoped>
 
+<style scoped>
 .board-task-detail {
     display: flex;
     flex-direction: column;

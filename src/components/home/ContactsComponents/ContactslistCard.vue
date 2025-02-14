@@ -2,7 +2,7 @@
   <div class="contacts-list-card" 
   :class="{ active: isActive }"
   @click="$emit('select', contact)">
-    <div class="avatar" :style="{ backgroundColor: contact.color.hex_value, color: textColor }">
+    <div class="avatar" :style="{ backgroundColor: contact.color.hex_value, color: getTextColor(contact.color.hex_value) }">
       {{ contact.avatar }}
     </div>
     <div class="info">
@@ -17,24 +17,15 @@
 
 <script setup>
 import { defineProps, computed } from "vue";
-
+import  useTextColor  from '@/composables/useTextColor';
+import { get } from "http";
+const { getTextColor } = useTextColor();
 const props = defineProps({
   contact: Object,
   isActive: Boolean,
 });
 
 // Berechnung der Textfarbe abhängig von der Hintergrundfarbe
-const textColor = computed(() => {
-  return isDarkBackground.value ? '#fff' : '#000'; // Weiß bei dunklem Hintergrund, Schwarz bei hellem
-});
-
-// Berechnung, ob der Hintergrund dunkel oder hell ist
-const isDarkBackground = computed(() => {
-  const hex = props.contact.color.hex_value;
-  const rgb = hexToRgb(hex);
-  const yiq = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
-  return yiq < 128; // Dunkel: Textfarbe weiß, hell: Textfarbe schwarz
-});
 
 // Funktion zum Umwandeln von Hex in RGB
 function hexToRgb(hex) {

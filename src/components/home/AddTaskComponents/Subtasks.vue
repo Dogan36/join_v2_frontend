@@ -43,7 +43,18 @@ const error = ref('');
 
 const subtasks = ref([]);
 
-const addNewSubtask = () => {
+/**
+ * Adds a new subtask to the subtasks list.
+ *
+ * This function performs the following steps:
+ * 1. Checks if the new subtask input is empty (after trimming whitespace). If it is empty,
+ *    an error message is set and the function returns early.
+ * 2. If the input is valid, it appends a new subtask object (with `name` and `completed` status) to the subtasks array.
+ * 3. Resets the new subtask input and error message.
+ * 4. Emits an event to update the parent component with the updated subtasks list.
+ * 5. Toggles the UI state for adding a new subtask.
+ */
+ const addNewSubtask = () => {
     if (!newSubtask.value.trim()) {
         error.value = 'New subtask cannot be empty';
         return;
@@ -55,25 +66,53 @@ const addNewSubtask = () => {
     toggleAddingNewSubtask();
 };
 
-const toggleAddingNewSubtask = () => {
+/**
+ * Toggles the UI state for adding a new subtask.
+ *
+ * This function clears the current input for a new subtask and toggles the boolean flag
+ * that indicates whether the UI for adding a new subtask is active.
+ */
+ const toggleAddingNewSubtask = () => {
     newSubtask.value = '';
     addingNewSubtask.value = !addingNewSubtask.value;
-}
+};
 
-const setSubtasks = (newSubtasks) => {
+/**
+ * Sets the subtasks array to the provided list.
+ *
+ * @param {Array} newSubtasks - The new list of subtasks.
+ */
+ const setSubtasks = (newSubtasks) => {
     subtasks.value = newSubtasks;
 };
 
-const clear = () => {
+/**
+ * Clears all subtasks by resetting the subtasks array to an empty array.
+ */
+ const clear = () => {
     subtasks.value = [];
 };
 
-const deleteSubtask = (index) => {
+/**
+ * Deletes a subtask at the specified index from the subtasks array.
+ *
+ * After removing the subtask, it emits an event to update the parent component with the updated subtasks list.
+ *
+ * @param {number} index - The index of the subtask to be removed.
+ */
+ const deleteSubtask = (index) => {
   subtasks.value.splice(index, 1);
   emit("update:subtasks", subtasks.value);
 };
 
-watch(subtasks, (newSubtasks) => {
+/**
+ * Watches the `subtasks` array for changes and emits an update event with the new subtasks.
+ *
+ * This ensures that any change in the `subtasks` array is immediately communicated to the parent component.
+ *
+ * @param {Array} newSubtasks - The updated list of subtasks.
+ */
+ watch(subtasks, (newSubtasks) => {
   emit("update:subtasks", newSubtasks);
 });
 

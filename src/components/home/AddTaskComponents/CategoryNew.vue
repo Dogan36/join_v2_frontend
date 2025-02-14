@@ -39,11 +39,24 @@ const workspaceId = currentWorkspace.value.id;
 
 const emit = defineEmits(["toggle"]);
 
-const chooseColor = (index) => {
+/**
+ * Selects a color for the new category based on the provided index.
+ *
+ * @param {number} index - The index of the desired color in the colors array.
+ */
+ const chooseColor = (index) => {
   newCategoryColor.value = colors.value[index];
 };
 
-const checkNewCategoryName = () => {
+/**
+ * Checks if a new category name has been provided.
+ *
+ * If no name is entered, it sets an error message and returns false, indicating that
+ * the new category name is invalid.
+ *
+ * @returns {boolean} Returns true if a new category name is provided, otherwise false.
+ */
+ const checkNewCategoryName = () => {
   if (!newCategoryName.value) {
     error.value = "Please enter a category name";
     return false;
@@ -51,7 +64,15 @@ const checkNewCategoryName = () => {
   return true;
 };
 
-const checkCatgeoriesLength = () => {
+/**
+ * Checks if the maximum number of categories has been reached.
+ *
+ * If the number of categories is exactly 20, it sets an error message and returns false,
+ * indicating that no more categories can be added.
+ *
+ * @returns {boolean} Returns true if fewer than 20 categories exist, otherwise false.
+ */
+ const checkCatgeoriesLength = () => {
   if (categories.value.length === 20) {
     error.value = "Reached maximum number of categories";
     return false;
@@ -59,7 +80,16 @@ const checkCatgeoriesLength = () => {
   return true;
 };
 
-const checkCatgeoriesNameTaken = () => {
+/**
+ * Checks if the new category name is already taken.
+ *
+ * Iterates through the existing categories to determine if any category already has
+ * the name provided in `newCategoryName.value`. If a matching category is found, it sets
+ * an error message and returns false, indicating that the name is already in use.
+ *
+ * @returns {boolean} Returns true if the new category name is unique, otherwise false.
+ */
+ const checkCatgeoriesNameTaken = () => {
   if (categories.value.find(category => category.name === newCategoryName.value)) {
     error.value = "Category name already taken";
     return false;
@@ -67,8 +97,23 @@ const checkCatgeoriesNameTaken = () => {
   return true;
 };
 
-
-const loadColors = async () => {
+/**
+ * Loads available colors from an API and sets them for a new category.
+ *
+ * This async function performs the following steps:
+ * 1. Fetches the colors data using `fetchColors()`.
+ * 2. Determines which colors are already in use by mapping the `color.id` from the current categories.
+ * 3. Filters out the colors that are already used.
+ * 4. Randomly shuffles the available colors.
+ * 5. Selects up to 5 colors from the shuffled list and updates the `colors` value.
+ * 6. Sets the first color in the list as the default new category color, or `null` if no color is available.
+ *
+ * If an error occurs during the fetch process, it logs the error message.
+ *
+ * @async
+ * @returns {Promise<void>} A promise that resolves when the colors have been loaded.
+ */
+ const loadColors = async () => {
   try {
     const colorsData = await fetchColors();
     const usedColorIds = categories.value.map(category => category.color.id);
@@ -81,7 +126,16 @@ const loadColors = async () => {
   }
 };
 
-const fetchColors = async () => {
+/**
+ * Fetches the list of colors from the API.
+ *
+ * This async function sends a GET request to the colors endpoint and returns the parsed JSON data.
+ * If the response is not OK, it throws an error. Any errors encountered during the fetch process are logged.
+ *
+ * @async
+ * @returns {Promise<Object[]|undefined>} A promise that resolves to an array of color objects, or undefined if an error occurs.
+ */
+ const fetchColors = async () => {
   try {
     const response = await fetch(`${API_BASE_URL}/colors/colors`, {
       method: 'GET',
@@ -93,20 +147,53 @@ const fetchColors = async () => {
     console.error('Error fetching colors:', error.message);
   }
 };
+
 onMounted(loadColors);
 
-const addNewCategoryToList = (createdCategory) => {
-  categories.value.push(createdCategory); // Fügt die neue Kategorie inkl. ID hinzu
+/**
+ * Adds a newly created category to the categories list and selects it.
+ *
+ * This function takes the newly created category object (which should include its ID)
+ * and appends it to the existing list of categories. It then sets this new category as
+ * the currently selected category.
+ *
+ * @param {Object} createdCategory - The new category object, including its unique ID.
+ */
+ const addNewCategoryToList = (createdCategory) => {
+  categories.value.push(createdCategory); // Adds the new category including its ID
   selectedCategory.value = createdCategory;
 };
-const addNewCategory = async () => {
+
+/**
+ * Adds a new category after performing necessary validations.
+ *
+ * This async function performs the following steps:
+ * 1. Validates the new category name, checks that the maximum number of categories hasn't been reached,
+ *    and ensures the category name is unique using:
+ *    - checkNewCategoryName()
+ *    - checkCatgeoriesLength()
+ *    - checkCatgeoriesNameTaken()
+ * 2. If validations pass, it creates a new category object with the provided name and selected color.
+ * 3. Displays an overlay while the new category is being added.
+ * 4. Sends a POST request to the API to create the new category.
+ * 5. On successful creation, it shows a confirmation message, adds the new category to the local list via
+ *    addNewCategoryToList(createdCategory), and emits a "toggle" event to close the modal or view.
+ * 6. If an error occurs, it logs the error message.
+ * 7. Finally, it hides the overlay regardless of the outcome.
+ *
+ * @async
+ * @returns {Promise<void>} A promise that resolves when the operation is complete.
+ */
+ const addNewCategory = async () => {
   if (!checkNewCategoryName() || !checkCatgeoriesLength() || !checkCatgeoriesNameTaken()) {
     return;
   }
+  
   const newCategory = {
     name: newCategoryName.value,
     color: newCategoryColor.value,
-  }
+  };
+  
   showOverlay();
   try {
     const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/${workspaceId}/categories/`, {
@@ -120,16 +207,15 @@ const addNewCategory = async () => {
     showConfirmation('Category added successfully');
     if (!response.ok) throw new Error('Failed to add new category');
     const createdCategory = await response.json();
-    addNewCategoryToList(createdCategory)
-    emit("toggle"); // Schließe ggf. das Modal oder die Ansicht
+    addNewCategoryToList(createdCategory);
+    emit("toggle"); // Closes the modal or view if necessary
   } catch (error) {
     console.error('Error adding new category:', error.message);
   }
   finally {
     hideOverlay();
   }
-}
-
+};
 
 </script>
 

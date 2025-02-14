@@ -60,28 +60,44 @@ const props = defineProps({
 });
 
 const emit =  defineEmits(["close"]);
-
+/**
+ * Lifecycle hook executed when the component is mounted.
+ * 
+ * - Checks if a task is currently selected (i.e., if a task is being edited) and sets
+ *   the edit mode accordingly.
+ * - Initializes the form.
+ */
 onMounted(() => {
 isEditMode.value = !!currentTask.value; // Überprüfe, ob ein Task bearbeitet wird
 initializeForm();
 });
 
-
+/**
+ * Closes the overlay by clearing the form and emitting a "close" event.
+ */
 const closeOverlay = () => {
 clearForm();
 emit("close");
 };
 
-const clearForm = () => {
-title.value?.clear();
-description.value?.clear();
-category.value?.clear();
-assignContacts.value?.clear();
-dueDate.value?.clear();
-prio.value?.clear();
-subtasks.value?.clear();
+/**
+ * Clears all form fields by calling the `clear()` method on each field, if available.
+ */
+ const clearForm = () => {
+  title.value?.clear();
+  description.value?.clear();
+  category.value?.clear();
+  assignContacts.value?.clear();
+  dueDate.value?.clear();
+  prio.value?.clear();
+  subtasks.value?.clear();
 };
 
+/**
+ * Initializes the form fields based on the current mode.
+ * In edit mode, this function populates the form with the current task's data
+ * If not in edit mode, it resets the selected category by setting `selectedCategory` to null.
+ */
 const initializeForm = () => {
   if (isEditMode.value) {
     title.value?.setTitle(currentTask.value.name); // 'title' -> 'name'
@@ -108,10 +124,20 @@ const subtasks = ref(null);
 const status = props.status;
 const subtasksData = ref([]); // Sammle die Subtasks
 
+/**
+ * Updates the current subtasks data with the new subtasks array.
+ *
+ * @param {Array} newSubtasks - An array containing the new subtask data.
+ */
 const updateSubtasks = (newSubtasks) => {
 subtasksData.value = newSubtasks;
 };
 
+/**
+ * Validates the form by checking if the title, category, and due date fields pass their respective validations.
+ *
+ * @returns {boolean} Returns true if all validations pass; otherwise, returns false.
+ */
 const validateForm = () => {
 let isValid = true;
 if (!title.value?.validate()) {
@@ -126,12 +152,28 @@ if (!dueDate.value?.validate()) {
 return isValid;
 };
 
+/**
+ * Handles the form submission by validating the form and creating a new task if the form is valid.
+ *
+ * This async function:
+ * - Validates the form using `validateForm()`.
+ * - If the form is valid, it calls `createTask()` to create a new task.
+ *
+ * @async
+ * @returns {Promise<void>} A promise that resolves once the form submission handling is complete.
+ */
 const handleSubmit = async () => {
   const isValid = validateForm();
   if (isValid) {
     createTask();
   }
 }
+
+/**
+ * Creates a task object based on the form data.
+ *
+ * @returns {Object} A task object containing the form data.
+ */
 const createTaskObject = () => {
   return {
     name: title.value?.title || "", // 'title' -> 'name'
@@ -145,6 +187,16 @@ const createTaskObject = () => {
   };
 };
 
+/**
+ * Creates a new task by sending a POST request to the API.
+ *
+ * This async function:
+ * - Calls `createTaskObject()` to create a task object based on the form data.
+ * - Sends a POST request to the API to create a new task.
+ * - If the request is successful, adds the new task to the tasks list.
+ * - If the request is successful and the form is in edit mode, updates the existing task in the tasks list.
+ * - If an error occurs, logs the error to the console.
+ */
 const createTask = async () => {  
   try {
     const taskData = createTaskObject();
@@ -168,6 +220,12 @@ const createTask = async () => {
   closeOverlay();
 }
 
+/**
+ * Sends a POST request to create a new task.
+ *
+ * @param {Object} taskData - The task data to be sent in the request body.
+ * @returns {Promise<Object|null>} A promise that resolves with the task data if the request is successful; otherwise, resolves with null.
+ */
 const createTaskFetch = async (taskData) => {
   showOverlay();
   try {
@@ -192,6 +250,12 @@ const createTaskFetch = async (taskData) => {
   }
 };
 
+/**
+ * Sends a PUT request to update an existing task.
+ *
+ * @param {Object} taskData - The task data to be sent in the request body.
+ * @returns {Promise<Object|null>} A promise that resolves with the updated task data if the request is successful; otherwise, resolves with null.
+ */
 const updateTaskFetch = async (taskData) => {
 showOverlay();
 try {

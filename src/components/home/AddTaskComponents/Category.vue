@@ -64,7 +64,14 @@ const workspaceId = currentWorkspace.value.id;
 const error = ref('');
 const token = getToken();
 
-
+/**
+ * Sets the selected category based on the provided category ID.
+ *
+ * Iterates through the list of categories and, if a category with a matching ID is found,
+ * assigns it to `selectedCategory.value`.
+ *
+ * @param {number} categoryId - The ID of the category to select.
+ */
 const setCategory = (categoryId) => {
   categories.value.forEach((category) => {
     if (category.id === categoryId) {
@@ -73,6 +80,14 @@ const setCategory = (categoryId) => {
   });
 };
 
+/**
+ * Clears the selected category and resets related error and selection state.
+ *
+ * This function resets the category selection by:
+ * - Setting the selected category to null.
+ * - Clearing any error messages.
+ * - Indicating that category selection is no longer in progress.
+ */
 const clear = () => {
   selectedCategory.value = null;
   error.value = '';
@@ -80,16 +95,40 @@ const clear = () => {
 };
 
 const emit = defineEmits(['toggle']);
-const toggleSelectCategory = () => {
-    selectingCategory.value = !selectingCategory.value
+
+/**
+ * Toggles the category selection mode.
+ *
+ * If category selection is currently active, it deactivates it; otherwise, it activates it.
+ */
+ const toggleSelectCategory = () => {
+  selectingCategory.value = !selectingCategory.value;
 };
 
-
+/**
+ * Sets the selected category.
+ *
+ * @param {Object} category - The category object to be selected.
+ */
 const selectCategory = (category) => {
     selectedCategory.value = category;
-   
 };
 
+/**
+ * Deletes a category from the current workspace.
+ *
+ * This async function sends a DELETE request to the API to remove the specified category.
+ * Upon a successful deletion:
+ * - It filters the deleted category out of the `categories` array.
+ * - If the deleted category was selected, it resets `selectedCategory` to null.
+ * - A confirmation message is displayed.
+ *
+ * In case of an error, it logs the error message to the console.
+ *
+ * @async
+ * @param {string|number} categoryId - The ID of the category to delete.
+ * @returns {Promise<void>} A promise that resolves when the operation is complete.
+ */
 const deleteCategory = async (categoryId) => {
   showOverlay();
   try {
@@ -114,13 +153,24 @@ const deleteCategory = async (categoryId) => {
   hideOverlay();
 };
 
-
+/**
+ * Toggles the state for adding a new category.
+ *
+ * If adding a new category is currently enabled, it will disable it, and vice versa.
+ */
 const toggleAddingNewCategory = () => {
   addingNewCategory.value = !addingNewCategory.value
 };
 
-
-
+/**
+ * Validates the category selection.
+ *
+ * Checks if a category is selected. If no category is selected, it sets an error message
+ * and returns false indicating invalid state. Otherwise, it clears any error message and
+ * returns true.
+ *
+ * @returns {boolean} Returns true if a category is selected, otherwise false.
+ */
 const validate = () => {
   if (!selectedCategory.value) {
     error.value = 'The category is required';

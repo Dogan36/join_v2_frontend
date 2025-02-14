@@ -17,14 +17,26 @@ import { ref } from "vue";
 const description = ref("");
 const errorMessage = ref("");
 
-const setDescription = (value) => {
+/**
+ * Sets the description to the provided value.
+ *
+ * @param {string} value - The new description value.
+ */
+ const setDescription = (value) => {
   description.value = value;
 };
 
-const clear = () => {
+/**
+ * Clears the description and any error message.
+ *
+ * This function resets the description to an empty string and clears the error message,
+ * providing a clean state.
+ */
+ const clear = () => {
   description.value = "";
   errorMessage.value = "";
 };
+
 defineExpose({
   setDescription,
   description,

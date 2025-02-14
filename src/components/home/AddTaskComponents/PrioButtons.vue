@@ -86,13 +86,22 @@ const props = defineProps({
 // Debugging hinzufügen, um sicherzustellen, dass der Standardwert korrekt ist
 const currentPrio = ref(props.modelValue || 'medium');
 
-const clear = () => {
+
+/**
+ * Resets the current priority value to 'medium'.
+ */
+ const clear = () => {
     currentPrio.value = 'medium';
 };
 
-function updatePrio(newPrio) {
-    currentPrio.value = newPrio;
-    emit('update:modelValue', newPrio);
+/**
+ * Updates the current priority value and emits an update event.
+ *
+ * @param {string} newPrio - The new priority value to set.
+ */
+ function updatePrio(newPrio) {
+  currentPrio.value = newPrio;
+  emit('update:modelValue', newPrio);
 }
 
 defineExpose({

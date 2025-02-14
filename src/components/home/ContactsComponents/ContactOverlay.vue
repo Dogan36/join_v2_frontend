@@ -15,7 +15,7 @@
       <img class="card-contact-img" style="align-self: center;" v-if="!contactOverlayIsEditMode" src="@/assets/img/newContactIcon.svg" alt="Contact Icon" />
       <div v-else
           class="card-avatar"
-          :style="{ backgroundColor: selectedContact.color?.hex_value || '#ffffff', color: textColor }"
+          :style="{ backgroundColor: selectedContact.color?.hex_value || '#ffffff', color: getTextColor(selectedContact.color?.hex_value || '#ffffff') }"
         >
           {{ selectedContact.avatar }}
         </div>
@@ -67,7 +67,8 @@ import InputField from "@/components/shared/InputField.vue";
 import useContacts from "@/composables/useContacts";
 const { saveContact } = useContacts();
 import { selectedContact, contactOverlayIsEditMode } from "@/store/state";
-
+import  useTextColor  from '@/composables/useTextColor';
+const { getTextColor } = useTextColor();
 
 const emit = defineEmits(["close"]);
 
@@ -159,17 +160,6 @@ const checkEmailDatabase = () => {
   return true; // Hier müsste die Überprüfung in der Datenbank erfolgen
 };
 
-const textColor = computed(() => {
-  return isDarkBackground.value ? '#fff' : '#000'; // Weiß bei dunklem Hintergrund, Schwarz bei hellem
-});
-
-// Berechnung, ob der Hintergrund dunkel oder hell ist
-const isDarkBackground = computed(() => {
-  const hex = selectedContact.value.color.hex_value;
-  const rgb = hexToRgb(hex);
-  const yiq = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
-  return yiq < 128; // Dunkel: Textfarbe weiß, hell: Textfarbe schwarz
-});
 
 // Funktion zum Umwandeln von Hex in RGB
 function hexToRgb(hex) {

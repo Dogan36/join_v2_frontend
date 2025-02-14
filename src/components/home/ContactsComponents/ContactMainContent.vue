@@ -13,7 +13,7 @@
       <div class="card-header">
         <div
           class="card-avatar"
-          :style="{ backgroundColor: selectedContact.color.hex_value, color: textColor }"
+          :style="{ backgroundColor: selectedContact.color.hex_value, color: getTextColor(selectedContact.color.hex_value) }"
         >
           {{ selectedContact.avatar }}
         </div>
@@ -61,21 +61,12 @@ import { computed } from "vue";
 import { selectedContact } from "@/store/state";
 import { defineEmits } from "vue";
 import  useContacts  from "@/composables/useContacts";
+import  useTextColor  from '@/composables/useTextColor';
+const { getTextColor } = useTextColor();
 const { deleteContact } = useContacts();
 const emit = defineEmits(["openOverlay", "close"]); // Definiere ein Event für das Parent
 
-const textColor = computed(() => {
-  return isDarkBackground.value ? '#fff' : '#000';
-});
 
-// Berechnung, ob der Hintergrund dunkel oder hell ist
-const isDarkBackground = computed(() => {
-  if(selectedContact === null) return false;
-  const hex = selectedContact.value.color.hex_value;
-  const rgb = hexToRgb(hex);
-  const yiq = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
-  return yiq < 128; // Dunkel: Textfarbe weiß, hell: Textfarbe schwarz
-});
 
 // Funktion zum Umwandeln von Hex in RGB
 function hexToRgb(hex) {
