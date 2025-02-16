@@ -46,30 +46,30 @@
 </template>
   
 <script setup>
-
-
 import { ref } from 'vue';
 import CategoryNew from './CategoryNew.vue';
 import { API_BASE_URL } from '@/config';
-import { defineEmits, defineExpose} from 'vue';
+import { defineEmits, defineExpose } from 'vue';
 import { categories, getToken, currentWorkspace, selectedCategory } from '@/store/state';
 import { useConfirmationOverlay } from '@/composables/useConfirmationOverlay';
 import { useLoadingOverlay } from '@/composables/useLoadingOverlay';
+
 const { showConfirmation } = useConfirmationOverlay();
 const { showOverlay, hideOverlay } = useLoadingOverlay();
-const selectingCategory = ref(false);
-const addingNewCategory = ref(false);
+
+const selectingCategory = ref(false); // Indicates whether the category selection is active
+const addingNewCategory = ref(false); // Indicates whether a new category is being added
 
 const workspaceId = currentWorkspace.value.id;
-const error = ref('');
+const error = ref(''); // Holds error message related to category selection
 const token = getToken();
 
 /**
- * Sets the selected category based on the provided category ID.
- *
- * Iterates through the list of categories and, if a category with a matching ID is found,
+ * @vue-method {Function} setCategory - Sets the selected category based on the provided category ID.
+ * 
+ * This function iterates through the list of categories and, if a category with a matching ID is found,
  * assigns it to `selectedCategory.value`.
- *
+ * 
  * @param {number} categoryId - The ID of the category to select.
  */
 const setCategory = (categoryId) => {
@@ -81,12 +81,12 @@ const setCategory = (categoryId) => {
 };
 
 /**
- * Clears the selected category and resets related error and selection state.
- *
- * This function resets the category selection by:
- * - Setting the selected category to null.
- * - Clearing any error messages.
- * - Indicating that category selection is no longer in progress.
+ * @vue-method {Function} clear - Clears the selected category and resets the related error and selection state.
+ * 
+ * This function:
+ * - Sets the selected category to null.
+ * - Clears any error messages.
+ * - Sets `selectingCategory` to false to indicate that category selection is no longer active.
  */
 const clear = () => {
   selectedCategory.value = null;
@@ -97,16 +97,16 @@ const clear = () => {
 const emit = defineEmits(['toggle']);
 
 /**
- * Toggles the category selection mode.
- *
- * If category selection is currently active, it deactivates it; otherwise, it activates it.
+ * @vue-method {Function} toggleSelectCategory - Toggles the category selection mode.
+ * 
+ * If category selection is active, it deactivates it; otherwise, it activates it.
  */
  const toggleSelectCategory = () => {
   selectingCategory.value = !selectingCategory.value;
 };
 
 /**
- * Sets the selected category.
+ * @vue-method {Function} selectCategory - Sets the selected category.
  *
  * @param {Object} category - The category object to be selected.
  */
@@ -115,14 +115,14 @@ const selectCategory = (category) => {
 };
 
 /**
- * Deletes a category from the current workspace.
- *
+ * @vue-method {Function} deleteCategory - Deletes a category from the current workspace.
+ * 
  * This async function sends a DELETE request to the API to remove the specified category.
- * Upon a successful deletion:
- * - It filters the deleted category out of the `categories` array.
+ * Upon successful deletion:
+ * - Filters the deleted category out of the `categories` array.
  * - If the deleted category was selected, it resets `selectedCategory` to null.
- * - A confirmation message is displayed.
- *
+ * - Displays a confirmation message.
+ * 
  * In case of an error, it logs the error message to the console.
  *
  * @async
@@ -154,8 +154,8 @@ const deleteCategory = async (categoryId) => {
 };
 
 /**
- * Toggles the state for adding a new category.
- *
+ * @vue-method {Function} toggleAddingNewCategory - Toggles the state for adding a new category.
+ * 
  * If adding a new category is currently enabled, it will disable it, and vice versa.
  */
 const toggleAddingNewCategory = () => {
@@ -163,21 +163,20 @@ const toggleAddingNewCategory = () => {
 };
 
 /**
- * Validates the category selection.
- *
- * Checks if a category is selected. If no category is selected, it sets an error message
- * and returns false indicating invalid state. Otherwise, it clears any error message and
- * returns true.
+ * @vue-method {Function} validate - Validates the category selection.
+ * 
+ * This function checks if a category is selected. If no category is selected, it sets an error message
+ * and returns false indicating an invalid state. Otherwise, it clears any error message and returns true.
  *
  * @returns {boolean} Returns true if a category is selected, otherwise false.
  */
 const validate = () => {
   if (!selectedCategory.value) {
     error.value = 'The category is required';
-    return false; // ungültig
+    return false; // invalid
   } else {
     error.value = "";
-    return true; // gültig
+    return true; // valid
   }
 };
 
@@ -187,8 +186,8 @@ defineExpose({
   selectedCategory,
   clear
 });
-
 </script>
+
 
 <style>
 

@@ -38,21 +38,43 @@
 import { defineEmits, computed, ref } from "vue";
 import useWorkspaces from "@/composables/useWorkspaces";
 import { currentUser, currentWorkspace } from "@/store/state";
+
+// Importing the functions to delete or leave a workspace
+/**
+ * @vue-method {Function} deleteWorkspace - A function to delete a workspace.
+ * 
+ * This function is imported from `useWorkspaces` and is used to send a request to delete the current workspace.
+ */
 const { deleteWorkspace, leaveWorkspace } = useWorkspaces();
+
+// Event emitter to close the modal or set the active modal
+/**
+ * @vue-method {Function} emit - Emits events like "close" and "setActiveModal".
+ * 
+ * This function allows for closing the modal and setting an active modal.
+ * 
+ * @returns {void}
+ */
 const emit = defineEmits(["close", "setActiveModal"]);
 
 /**
- * Confirms and executes the deletion of the current workspace.
- * After deletion, the modal is closed.
+ * @vue-method {Function} confirmDelete - Confirms and executes the deletion of the current workspace.
+ * 
+ * This function calls `deleteWorkspace` to delete the current workspace and closes the modal.
+ * 
+ * @returns {void}
  */
- const confirmDelete = () => {
+const confirmDelete = () => {
   deleteWorkspace(currentWorkspace.id);
   emit("close");
 };
 
 /**
- * Confirms and executes leaving the current workspace.
- * After leaving, the modal is closed.
+ * @vue-method {Function} confirmLeave - Confirms and executes leaving the current workspace.
+ * 
+ * This function calls `leaveWorkspace` to leave the current workspace and closes the modal.
+ * 
+ * @returns {void}
  */
 const confirmLeave = () => {
   leaveWorkspace(currentWorkspace.id);
@@ -60,9 +82,14 @@ const confirmLeave = () => {
 };
 
 /**
- * Closes the modal by emitting the "close" event.
+ * @vue-method {Function} close - Closes the modal by emitting the "close" event.
+ * 
+ * This function emits the "close" event to close the modal.
+ * 
+ * @returns {void}
  */
 const close = () => {
   emit("close");
 };
 </script>
+

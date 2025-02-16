@@ -100,15 +100,18 @@ import { useRoute } from 'vue-router';
 const route = useRoute();
 
 /**
- * Changes the current view to the specified one.
+ * @vue-method {Function} changeView - Changes the current view to the specified one.
+ * 
+ * This function updates the `currentView` state to the provided view name, which switches the displayed view in the application.
  * 
  * @param {string} view - The name of the view to switch to.
+ * @returns {void}
  */
- function changeView(view) {
+function changeView(view) {
   currentView.value = view;
 }
-
 </script>
+
 
 <style scoped>
 .menu {

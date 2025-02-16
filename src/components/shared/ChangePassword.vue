@@ -91,7 +91,7 @@ const passwordMatchError = ref(false);
 const oldPasswordIncorrectError = ref(false);
 
 /**
- * Asynchronously changes the user's password.
+ * @vue-method {Function} changePassword - Asynchronously changes the user's password.
  *
  * This function first validates password input errors. If validation passes, it sends a request to 
  * update the user's password. In case of an error, an error flag is set.
@@ -133,9 +133,13 @@ const oldPasswordIncorrectError = ref(false);
 };
 
 /**
- * Resets all password-related error states.
+ * @vue-method {Function} resetPasswordErrors - Resets all password-related error states.
+ *
+ * This function clears all the error flags related to the password input fields, setting them to false.
+ *
+ * @returns {void}
  */
- const resetPasswordErrors = () => {
+const resetPasswordErrors = () => {
   oldPasswordError.value = false;
   newPasswordError.value = false;
   newPasswordRepeatError.value = false;
@@ -146,11 +150,14 @@ const oldPasswordIncorrectError = ref(false);
 };
 
 /**
- * Checks for password input errors and resets previous error states.
- * 
+ * @vue-method {Function} checkForPasswordErrors - Checks for password input errors and resets previous error states.
+ *
+ * This function checks each password-related field for errors (empty fields, length issues, and matching passwords) 
+ * and returns `true` if any errors are found.
+ *
  * @returns {boolean} `true` if there are errors, `false` otherwise.
  */
- const checkForPasswordErrors = () => {
+const checkForPasswordErrors = () => {
   resetPasswordErrors();
   const isOldPasswordValid = checkIfOldPasswordEmpty();
   const isNewPasswordValid = checkIfNewPasswordEmpty();
@@ -169,17 +176,17 @@ const oldPasswordIncorrectError = ref(false);
 };
 
 /**
- * Checks if the old password field is empty and updates the corresponding error state.
+ * @vue-method {Function} checkIfOldPasswordEmpty - Checks if the old password field is empty and updates the corresponding error state.
  * 
  * @returns {boolean} `true` if the old password is empty, otherwise `false`.
  */
- const checkIfOldPasswordEmpty = () => {
+const checkIfOldPasswordEmpty = () => {
   oldPasswordError.value = !oldPassword.value;
   return oldPasswordError.value;
 };
 
 /**
- * Checks if the new password field is empty and updates the corresponding error state.
+ * @vue-method {Function} checkIfNewPasswordEmpty - Checks if the new password field is empty and updates the corresponding error state.
  * 
  * @returns {boolean} `true` if the new password is empty, otherwise `false`.
  */
@@ -189,7 +196,7 @@ const checkIfNewPasswordEmpty = () => {
 };
 
 /**
- * Checks if the new password repeat field is empty and updates the corresponding error state.
+ * @vue-method {Function} checkIfNewPasswordRepeatEmpty - Checks if the new password repeat field is empty and updates the corresponding error state.
  * 
  * @returns {boolean} `true` if the new password repeat is empty, otherwise `false`.
  */
@@ -199,7 +206,7 @@ const checkIfNewPasswordRepeatEmpty = () => {
 };
 
 /**
- * Checks if the old password meets the minimum length requirement.
+ * @vue-method {Function} checkOldPasswordLength - Checks if the old password meets the minimum length requirement.
  * 
  * @returns {boolean} `true` if the old password is too short, otherwise `false`.
  */
@@ -209,7 +216,7 @@ const checkOldPasswordLength = () => {
 };
 
 /**
- * Checks if the new password meets the minimum length requirement.
+ * @vue-method {Function} checkNewPasswordLength - Checks if the new password meets the minimum length requirement.
  * 
  * @returns {boolean} `true` if the new password is too short, otherwise `false`.
  */
@@ -219,7 +226,7 @@ const checkNewPasswordLength = () => {
 };
 
 /**
- * Checks if the new password and the repeated password match.
+ * @vue-method {Function} checkIfPasswordsMatch - Checks if the new password and the repeated password match.
  * 
  * @returns {boolean} `true` if the passwords do not match, otherwise `false`.
  */
@@ -229,12 +236,13 @@ const checkIfPasswordsMatch = () => {
 };
 
 /**
- * Closes the modal by emitting the "setActiveModal" event.
+ * @vue-method {Function} close - Closes the modal by emitting the "setActiveModal" event.
+ * 
+ * This function emits an event to close the modal where the password change process occurs.
+ *
+ * @returns {void}
  */
 const close = () => {
   emit("setActiveModal");
 };
-
-
-
 </script>

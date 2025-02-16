@@ -39,31 +39,52 @@
 
   <EditProfil v-if="activeModal === 'editProfil'" @setActiveModal="setActiveModal('profilInfo')" />
   <ChangePassword v-if="activeModal === 'changePassword'" @setActiveModal="setActiveModal('profilInfo')" />
-  
-  
 </template>
 
 <script setup>
-import { currentUser} from "@/store/state";
+import { currentUser } from "@/store/state";
 import { defineEmits, ref } from "vue";
 import EditProfil from "./EditProfil.vue";
 import ChangePassword from "./ChangePassword.vue";
+
+// Reactive property to track the active modal
+/**
+ * @vue-data {string} activeModal - The currently active modal.
+ * 
+ * This reactive property holds the name of the currently active modal (e.g., 'profilInfo').
+ */
 const activeModal = ref('profilInfo');
+
+// Event emitter to close the modal
+/**
+ * @vue-method {Function} emit - Emits the "close" event.
+ * 
+ * This function is used to close the modal by emitting the "close" event.
+ * 
+ * @returns {void}
+ */
 const emit = defineEmits(["close"]);
 
 /**
- * Closes the modal by emitting the "close" event.
+ * @vue-method {Function} close - Closes the modal by emitting the "close" event.
+ * 
+ * This function emits the "close" event to close the modal.
+ * 
+ * @returns {void}
  */
- const close = () => {
+const close = () => {
   emit("close");
 };
 
 /**
- * Sets the currently active modal.
+ * @vue-method {Function} setActiveModal - Sets the currently active modal.
+ * 
+ * This function sets the `activeModal` to the provided modal name, which switches the currently active modal.
  * 
  * @param {string} modalName - The name of the modal to activate.
+ * @returns {void}
  */
- const setActiveModal = (modalName) => {
+const setActiveModal = (modalName) => {
   activeModal.value = modalName;
 };
 </script>

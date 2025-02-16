@@ -51,15 +51,15 @@ const { showConfirmation } = useConfirmationOverlay();
 const { showOverlay, hideOverlay } = useLoadingOverlay();
 import { currentWorkspace, getToken, currentTask, tasks, selectedCategory, currentView, isAddTaskOverlayVisible} from "@/store/state";
 
-const isEditMode = ref(false); // Wird auf true gesetzt, wenn der Task bearbeitet wird
+const isEditMode = ref(false); // Set to true if the task is being edited
 const props = defineProps({
   status: {
     type: String,
-    default: "todo", // Standardstatus für neuen Task
+    default: "todo", // Default status for a new task
 },
 });
 
-const emit =  defineEmits(["close"]);
+const emit = defineEmits(["close"]);
 /**
  * Lifecycle hook executed when the component is mounted.
  * 
@@ -68,16 +68,16 @@ const emit =  defineEmits(["close"]);
  * - Initializes the form.
  */
 onMounted(() => {
-isEditMode.value = !!currentTask.value; // Überprüfe, ob ein Task bearbeitet wird
-initializeForm();
+  isEditMode.value = !!currentTask.value; // Check if a task is being edited
+  initializeForm();
 });
 
 /**
  * Closes the overlay by clearing the form and emitting a "close" event.
  */
 const closeOverlay = () => {
-clearForm();
-emit("close");
+  clearForm();
+  emit("close");
 };
 
 /**
@@ -95,7 +95,7 @@ emit("close");
 
 /**
  * Initializes the form fields based on the current mode.
- * In edit mode, this function populates the form with the current task's data
+ * In edit mode, this function populates the form with the current task's data.
  * If not in edit mode, it resets the selected category by setting `selectedCategory` to null.
  */
 const initializeForm = () => {
@@ -109,11 +109,11 @@ const initializeForm = () => {
     subtasks.value?.setSubtasks(currentTask.value.subtasks || []);
   }
   else {
-    selectedCategory.value = null
+    selectedCategory.value = null;
   }
 };
 
-// Referenzen für die Validierung der Komponenten
+// References for field validation
 const title = ref(null);
 const description = ref(null);
 const category = ref(null);
@@ -122,7 +122,7 @@ const dueDate = ref(null);
 const prio = ref(null);
 const subtasks = ref(null);
 const status = props.status;
-const subtasksData = ref([]); // Sammle die Subtasks
+const subtasksData = ref([]); // Collect subtasks
 
 /**
  * Updates the current subtasks data with the new subtasks array.
@@ -130,7 +130,7 @@ const subtasksData = ref([]); // Sammle die Subtasks
  * @param {Array} newSubtasks - An array containing the new subtask data.
  */
 const updateSubtasks = (newSubtasks) => {
-subtasksData.value = newSubtasks;
+  subtasksData.value = newSubtasks;
 };
 
 /**
@@ -139,17 +139,17 @@ subtasksData.value = newSubtasks;
  * @returns {boolean} Returns true if all validations pass; otherwise, returns false.
  */
 const validateForm = () => {
-let isValid = true;
-if (!title.value?.validate()) {
-  isValid = false;
-}
-if (!category.value?.validate()) {
-  isValid = false;
-}
-if (!dueDate.value?.validate()) {
-  isValid = false;
-}
-return isValid;
+  let isValid = true;
+  if (!title.value?.validate()) {
+    isValid = false;
+  }
+  if (!category.value?.validate()) {
+    isValid = false;
+  }
+  if (!dueDate.value?.validate()) {
+    isValid = false;
+  }
+  return isValid;
 };
 
 /**
@@ -167,7 +167,7 @@ const handleSubmit = async () => {
   if (isValid) {
     createTask();
   }
-}
+};
 
 /**
  * Creates a task object based on the form data.
@@ -203,22 +203,22 @@ const createTask = async () => {
     if (!isEditMode.value) {
       const task = await createTaskFetch(taskData);
       tasks.value.push(task);
-      currentView.value = "board" // Füge den neuen Task zur Liste hinzu
+      currentView.value = "board"; // Add the new task to the list
     }
     else if (isEditMode.value) {
       const task = await updateTaskFetch(taskData);
       tasks.value = tasks.value.map((t) => {
-      if (t.id === currentTask.value.id) {
-        return task;
-      }
-      return t;
-    });
+        if (t.id === currentTask.value.id) {
+          return task;
+        }
+        return t;
+      });
     }
   } catch (error) {
-    console.error("Fehler beim Erstellen:", error);
+    console.error("Error while creating:", error);
   }
   closeOverlay();
-}
+};
 
 /**
  * Sends a POST request to create a new task.
@@ -229,11 +229,11 @@ const createTask = async () => {
 const createTaskFetch = async (taskData) => {
   showOverlay();
   try {
-    const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/${currentWorkspace.value.id}/tasks/`, { // Korrekte URL mit workspaceId
+    const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/${currentWorkspace.value.id}/tasks/`, { // Correct URL with workspaceId
       method: "POST",
       headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Token ${getToken()}`,
+        "Content-Type": "application/json",
+        "Authorization": `Token ${getToken()}`,
       },
       body: JSON.stringify(taskData),
     });
@@ -243,7 +243,7 @@ const createTaskFetch = async (taskData) => {
     }
     const task = await response.json();
     showConfirmation("Task added successfully");
-    return task; // Antwort mit Task-Daten (z. B. ID)
+    return task; // Response with task data (e.g., ID)
   } catch (error) {
     console.error("Error creating task:", error);
     return null;
@@ -257,28 +257,29 @@ const createTaskFetch = async (taskData) => {
  * @returns {Promise<Object|null>} A promise that resolves with the updated task data if the request is successful; otherwise, resolves with null.
  */
 const updateTaskFetch = async (taskData) => {
-showOverlay();
-try {
-  const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/${currentWorkspace.value.id}/tasks/${currentTask.value.id}/`, { // Korrekte URL mit workspaceId
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Token ${getToken()}`,
-    },
-    body: JSON.stringify(taskData),
-  });
-  if (!response.ok) {
-    throw new Error("Failed to create task", response);
+  showOverlay();
+  try {
+    const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/${currentWorkspace.value.id}/tasks/${currentTask.value.id}/`, { // Correct URL with workspaceId
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Token ${getToken()}`,
+      },
+      body: JSON.stringify(taskData),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to update task", response);
+    }
+    const task = await response.json();
+    showConfirmation("Task updated successfully");
+    return task; // Response with updated task data (e.g., ID)
+  } catch (error) {
+    console.error("Error updating task:", error);
+    return null;
   }
-  const task = await response.json();
-  showConfirmation("Task updated successfully");
-  return task; // Antwort mit Task-Daten (z. B. ID)
-} catch (error) {
-  console.error("Error creating task:", error);
-  return null;
-}
 };
 </script>
+
 
 <style>
 .addtask-overlay{

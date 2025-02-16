@@ -13,8 +13,7 @@
     </div>
   </div>
 </template>
-  <script setup>
-  
+ <script setup>
   import LegalNotice from '@/components/shared/LegalNotice.vue';
   import PrivacyPolicy from '@/components/shared/PrivacyPolicy.vue';
   import MenuContainer from '@/components/shared/MenuContainer.vue';
@@ -23,25 +22,32 @@
   import { currentView } from '@/store/state';
   
   import { onMounted } from 'vue';
-  onMounted(() => {
-  setCurrentViewFromURL(); // Setze `currentView`, wenn die Komponente geladen wird
-});
 
-/**
- * Sets the current view based on the URL query parameter "type".
- * 
- * If "type" is "privacyPolicy", the view is set to "privacy".
- * If "type" is "legalNotice", the view is set to "legalNotice".
- */
- function setCurrentViewFromURL() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const type = urlParams.get("type");
+  /**
+   * Sets the current view based on the URL query parameter "type".
+   * 
+   * This function checks the "type" parameter in the URL. If the value is "privacyPolicy",
+   * it sets the `currentView` to "privacy". If the value is "legalNotice", it sets the
+   * `currentView` to "legalNotice".
+   *
+   * @returns {void}
+   */
+  function setCurrentViewFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const type = urlParams.get("type");
 
-  if (type === "privacyPolicy") {
-    currentView.value = "privacy";
-  } else if (type === "legalNotice") {
-    currentView.value = "legalNotice";
+    if (type === "privacyPolicy") {
+      currentView.value = "privacy";
+    } else if (type === "legalNotice") {
+      currentView.value = "legalNotice";
+    }
+    else if (type === "help") {
+      currentView.value = "help";
+    }
   }
-}
 
+  onMounted(() => {
+    setCurrentViewFromURL(); // Set the `currentView` when the component is mounted
+  });
 </script>
+

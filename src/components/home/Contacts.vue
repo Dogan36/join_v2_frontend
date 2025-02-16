@@ -36,45 +36,65 @@ import Contactslist from "./ContactsComponents/Contactslist.vue";
 import ContactMainContent from "./ContactsComponents/ContactMainContent.vue";
 import DarkBackground from "../shared/DarkBackground.vue";
 import ContactOverlay from "./ContactsComponents/ContactOverlay.vue";
-import {selectedContact, contactOverlayIsEditMode, contactOverlayIsVisible } from "@/store/state";
+import { selectedContact, contactOverlayIsEditMode, contactOverlayIsVisible } from "@/store/state";
 
 /**
- * Tracks whether the current viewport is mobile (width < 700px).
+ * @vue-data {boolean} isMobile - Tracks whether the current viewport is mobile (width < 700px).
+ * 
+ * This reactive property is updated whenever the window is resized.
  */
- const isMobile = ref(window.innerWidth < 700);
+const isMobile = ref(window.innerWidth < 700);
+
+/**
+ * Updates the `isMobile` value whenever the window is resized.
+ * 
+ * @returns {void}
+ */
 window.addEventListener('resize', () => {
   isMobile.value = window.innerWidth < 700;
 });
 
 /**
- * Determines whether the main content should be shown.
- * On mobile, it is shown only if a contact is selected.
+ * @vue-computed {boolean} showMainContent - Determines whether the main content should be shown.
+ * 
+ * On mobile, the main content is shown only if a contact is selected.
+ * 
+ * @returns {boolean} - `true` if the main content should be shown, otherwise `false`.
  */
 const showMainContent = computed(() => {
   return !isMobile.value || selectedContact.value;
 });
 
 /**
- * Determines whether the contact list should be shown.
- * On mobile, it is hidden when a contact is selected.
+ * @vue-computed {boolean} showList - Determines whether the contact list should be shown.
+ * 
+ * On mobile, the contact list is hidden when a contact is selected.
+ * 
+ * @returns {boolean} - `true` if the contact list should be shown, otherwise `false`.
  */
 const showList = computed(() => {
   return !isMobile.value || !selectedContact.value;
 });
 
 /**
- * Sets the currently selected contact.
+ * @vue-method {Function} setActiveContact - Sets the currently selected contact.
+ * 
+ * This function updates the `selectedContact` reactive property with the provided contact.
  *
  * @param {Object} contact - The contact to set as active.
+ * @returns {void}
  */
 const setActiveContact = (contact) => {
   selectedContact.value = contact;
 };
 
 /**
- * Opens the contact overlay in either edit or view mode.
- *
+ * @vue-method {Function} openOverlay - Opens the contact overlay in either edit or view mode.
+ * 
+ * This function updates the `contactOverlayIsEditMode` and `contactOverlayIsVisible` reactive properties.
+ * 
  * @param {boolean} isEditMode - Whether the overlay should be in edit mode.
+ * @returns {void}
  */
 const openOverlay = (isEditMode) => {
   contactOverlayIsEditMode.value = isEditMode;
@@ -82,9 +102,14 @@ const openOverlay = (isEditMode) => {
 };
 
 /**
- * Closes the contact overlay.
+ * @vue-method {Function} closeOverlay - Closes the contact overlay.
+ * 
+ * This function sets `contactOverlayIsVisible` to `false`, hiding the overlay.
+ * 
+ * @returns {void}
  */
 const closeOverlay = () => {
   contactOverlayIsVisible.value = false;
 };
 </script>
+

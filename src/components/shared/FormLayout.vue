@@ -4,11 +4,7 @@
 </div>
 </template>
 
-<script setup>
-</script>
-
 <style scoped>
-
 .form-layout {
     width: 45rem;
     max-width: 100vw;

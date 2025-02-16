@@ -46,25 +46,53 @@
 import { defineEmits, computed, ref, onMounted } from "vue";
 import useWorkspaces from "@/composables/useWorkspaces";
 
-const { changeWorkspace } = useWorkspaces();
-import {currentWorkspace, workspaces } from '@/store/state';
-
-const emit = defineEmits(["close", "setActiveModal"]);
-const selectedWorkspace = ref('');
+// Importing function to change workspace
 /**
- * Computes a filtered list of workspaces, excluding the currently active workspace.
+ * @vue-method {Function} changeWorkspace - A function to switch to a different workspace.
  * 
- * @constant
+ * This function is imported from `useWorkspaces` and is used to switch to the selected workspace.
  */
- const filteredWorkspaces = computed(() => {
+const { changeWorkspace } = useWorkspaces();
+
+import { currentWorkspace, workspaces } from '@/store/state';
+
+// Event emitter to close the modal or set the active modal
+/**
+ * @vue-method {Function} emit - Emits events like "close" and "setActiveModal".
+ * 
+ * This function allows for closing the modal and setting an active modal.
+ * 
+ * @returns {void}
+ */
+const emit = defineEmits(["close", "setActiveModal"]);
+
+// Reactive property for selected workspace
+/**
+ * @vue-data {string} selectedWorkspace - The ID of the selected workspace.
+ * 
+ * This reactive property holds the ID of the workspace that the user selects to switch to.
+ */
+const selectedWorkspace = ref('');
+
+/**
+ * @vue-computed {Array} filteredWorkspaces - Computes a filtered list of workspaces, excluding the currently active workspace.
+ * 
+ * This computed property filters out the current workspace from the list of workspaces, providing only other available workspaces.
+ * 
+ * @returns {Array} - A filtered list of workspaces.
+ */
+const filteredWorkspaces = computed(() => {
   return workspaces.value.filter(
     (workspace) => workspace.id !== currentWorkspace.value.id
   );
 });
 
 /**
- * Confirms and executes the switch to the selected workspace.
- * After switching, the modal is closed.
+ * @vue-method {Function} confirmSwitch - Confirms and executes the switch to the selected workspace.
+ * 
+ * This function switches to the selected workspace and then closes the modal.
+ * 
+ * @returns {void}
  */
 const confirmSwitch = () => {
   changeWorkspace(selectedWorkspace.value);
@@ -72,16 +100,23 @@ const confirmSwitch = () => {
 };
 
 /**
- * Sets the currently active modal by emitting an event.
+ * @vue-method {Function} setActiveModal - Sets the currently active modal by emitting an event.
+ * 
+ * This function activates the modal by emitting the name of the modal to be displayed.
  * 
  * @param {string} modalName - The name of the modal to activate.
+ * @returns {void}
  */
 const setActiveModal = (modalName) => {
   emit("setActiveModal", modalName);
 };
 
 /**
- * Closes the modal by emitting the "close" event.
+ * @vue-method {Function} close - Closes the modal by emitting the "close" event.
+ * 
+ * This function closes the modal by emitting the "close" event.
+ * 
+ * @returns {void}
  */
 const close = () => {
   emit("close");

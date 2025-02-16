@@ -29,34 +29,35 @@ import { API_BASE_URL } from "@/config";
 import { categories, getToken, currentWorkspace, selectedCategory } from '@/store/state';
 import { useLoadingOverlay } from "@/composables/useLoadingOverlay";
 import { useConfirmationOverlay } from "@/composables/useConfirmationOverlay";
+
 const { showConfirmation } = useConfirmationOverlay();
 const { showOverlay, hideOverlay } = useLoadingOverlay();
-const colors = ref([]);
-const error = ref("");
-const newCategoryName = ref(null);
-const newCategoryColor = ref(null);
+
+const colors = ref([]); // Holds the available colors for the new category
+const error = ref(""); // Holds any error messages related to category creation
+const newCategoryName = ref(null); // Holds the name of the new category
+const newCategoryColor = ref(null); // Holds the color of the new category
 const workspaceId = currentWorkspace.value.id;
 
 const emit = defineEmits(["toggle"]);
 
 /**
- * Selects a color for the new category based on the provided index.
- *
+ * @vue-method {Function} chooseColor - Selects a color for the new category based on the provided index.
+ * 
  * @param {number} index - The index of the desired color in the colors array.
  */
- const chooseColor = (index) => {
+const chooseColor = (index) => {
   newCategoryColor.value = colors.value[index];
 };
 
 /**
- * Checks if a new category name has been provided.
- *
- * If no name is entered, it sets an error message and returns false, indicating that
- * the new category name is invalid.
- *
+ * @vue-method {Function} checkNewCategoryName - Checks if a new category name has been provided.
+ * 
+ * If no name is entered, it sets an error message and returns false, indicating that the new category name is invalid.
+ * 
  * @returns {boolean} Returns true if a new category name is provided, otherwise false.
  */
- const checkNewCategoryName = () => {
+const checkNewCategoryName = () => {
   if (!newCategoryName.value) {
     error.value = "Please enter a category name";
     return false;
@@ -65,14 +66,13 @@ const emit = defineEmits(["toggle"]);
 };
 
 /**
- * Checks if the maximum number of categories has been reached.
- *
- * If the number of categories is exactly 20, it sets an error message and returns false,
- * indicating that no more categories can be added.
- *
+ * @vue-method {Function} checkCatgeoriesLength - Checks if the maximum number of categories has been reached.
+ * 
+ * If the number of categories is exactly 20, it sets an error message and returns false, indicating no more categories can be added.
+ * 
  * @returns {boolean} Returns true if fewer than 20 categories exist, otherwise false.
  */
- const checkCatgeoriesLength = () => {
+const checkCatgeoriesLength = () => {
   if (categories.value.length === 20) {
     error.value = "Reached maximum number of categories";
     return false;
@@ -81,15 +81,14 @@ const emit = defineEmits(["toggle"]);
 };
 
 /**
- * Checks if the new category name is already taken.
- *
- * Iterates through the existing categories to determine if any category already has
- * the name provided in `newCategoryName.value`. If a matching category is found, it sets
- * an error message and returns false, indicating that the name is already in use.
- *
+ * @vue-method {Function} checkCatgeoriesNameTaken - Checks if the new category name is already taken.
+ * 
+ * Iterates through the existing categories to determine if any category already has the name provided in `newCategoryName.value`.
+ * If a matching category is found, it sets an error message and returns false, indicating the name is already in use.
+ * 
  * @returns {boolean} Returns true if the new category name is unique, otherwise false.
  */
- const checkCatgeoriesNameTaken = () => {
+const checkCatgeoriesNameTaken = () => {
   if (categories.value.find(category => category.name === newCategoryName.value)) {
     error.value = "Category name already taken";
     return false;
@@ -98,22 +97,20 @@ const emit = defineEmits(["toggle"]);
 };
 
 /**
- * Loads available colors from an API and sets them for a new category.
- *
- * This async function performs the following steps:
+ * @vue-method {Function} loadColors - Loads available colors from an API and sets them for a new category.
+ * 
+ * This async function:
  * 1. Fetches the colors data using `fetchColors()`.
  * 2. Determines which colors are already in use by mapping the `color.id` from the current categories.
  * 3. Filters out the colors that are already used.
  * 4. Randomly shuffles the available colors.
  * 5. Selects up to 5 colors from the shuffled list and updates the `colors` value.
  * 6. Sets the first color in the list as the default new category color, or `null` if no color is available.
- *
- * If an error occurs during the fetch process, it logs the error message.
- *
+ * 
  * @async
  * @returns {Promise<void>} A promise that resolves when the colors have been loaded.
  */
- const loadColors = async () => {
+const loadColors = async () => {
   try {
     const colorsData = await fetchColors();
     const usedColorIds = categories.value.map(category => category.color.id);
@@ -127,15 +124,15 @@ const emit = defineEmits(["toggle"]);
 };
 
 /**
- * Fetches the list of colors from the API.
- *
+ * @vue-method {Function} fetchColors - Fetches the list of colors from the API.
+ * 
  * This async function sends a GET request to the colors endpoint and returns the parsed JSON data.
- * If the response is not OK, it throws an error. Any errors encountered during the fetch process are logged.
- *
+ * If the response is not OK, it throws an error.
+ * 
  * @async
  * @returns {Promise<Object[]|undefined>} A promise that resolves to an array of color objects, or undefined if an error occurs.
  */
- const fetchColors = async () => {
+const fetchColors = async () => {
   try {
     const response = await fetch(`${API_BASE_URL}/colors/colors`, {
       method: 'GET',
@@ -151,49 +148,43 @@ const emit = defineEmits(["toggle"]);
 onMounted(loadColors);
 
 /**
- * Adds a newly created category to the categories list and selects it.
- *
+ * @vue-method {Function} addNewCategoryToList - Adds a newly created category to the categories list and selects it.
+ * 
  * This function takes the newly created category object (which should include its ID)
- * and appends it to the existing list of categories. It then sets this new category as
- * the currently selected category.
- *
+ * and appends it to the existing list of categories. It then sets this new category as the currently selected category.
+ * 
  * @param {Object} createdCategory - The new category object, including its unique ID.
  */
- const addNewCategoryToList = (createdCategory) => {
+const addNewCategoryToList = (createdCategory) => {
   categories.value.push(createdCategory); // Adds the new category including its ID
   selectedCategory.value = createdCategory;
 };
 
 /**
- * Adds a new category after performing necessary validations.
- *
- * This async function performs the following steps:
+ * @vue-method {Function} addNewCategory - Adds a new category after performing necessary validations.
+ * 
+ * This async function:
  * 1. Validates the new category name, checks that the maximum number of categories hasn't been reached,
- *    and ensures the category name is unique using:
- *    - checkNewCategoryName()
- *    - checkCatgeoriesLength()
- *    - checkCatgeoriesNameTaken()
+ *    and ensures the category name is unique.
  * 2. If validations pass, it creates a new category object with the provided name and selected color.
  * 3. Displays an overlay while the new category is being added.
  * 4. Sends a POST request to the API to create the new category.
- * 5. On successful creation, it shows a confirmation message, adds the new category to the local list via
- *    addNewCategoryToList(createdCategory), and emits a "toggle" event to close the modal or view.
+ * 5. On successful creation, it shows a confirmation message, adds the new category to the local list, and emits a "toggle" event.
  * 6. If an error occurs, it logs the error message.
- * 7. Finally, it hides the overlay regardless of the outcome.
- *
+ * 
  * @async
  * @returns {Promise<void>} A promise that resolves when the operation is complete.
  */
- const addNewCategory = async () => {
+const addNewCategory = async () => {
   if (!checkNewCategoryName() || !checkCatgeoriesLength() || !checkCatgeoriesNameTaken()) {
     return;
   }
-  
+
   const newCategory = {
     name: newCategoryName.value,
     color: newCategoryColor.value,
   };
-  
+
   showOverlay();
   try {
     const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/${workspaceId}/categories/`, {
@@ -216,8 +207,8 @@ onMounted(loadColors);
     hideOverlay();
   }
 };
-
 </script>
+
 
 <style scoped>
 .icon-container {

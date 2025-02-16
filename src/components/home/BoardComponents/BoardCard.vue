@@ -22,16 +22,43 @@ import { defineProps, computed, onMounted } from 'vue';
 import AssignedToAvatars from '@/components/shared/AssignedToAvatars.vue';
 import { categories } from '@/store/state';
 import { Prioicons } from '@/utils/prioIcons';
-import  useTextColor  from '@/composables/useTextColor';
+import useTextColor from '@/composables/useTextColor';
+
+// Get the function to determine the text color for the task
 const { getTextColor } = useTextColor();
+
+// Define props for the task object
+/**
+ * @vue-prop {Object} task - The task object containing various details.
+ */
 const props = defineProps({
     task: {
         type: Object
     }
 });
 
+// Computed properties for task attributes
+
+/**
+ * @vue-computed {string} title - The title of the task.
+ * 
+ * This computed property extracts the name of the task from the `task` prop.
+ */
 const title = computed(() => props.task.name);
+
+/**
+ * @vue-computed {string} description - The description of the task.
+ * 
+ * This computed property extracts the description of the task from the `task` prop.
+ */
 const description = computed(() => props.task.description);
+
+/**
+ * @vue-computed {Object} category - The category of the task.
+ * 
+ * This computed property finds the category for the task based on the `task.category` ID.
+ * If no category is found, it returns a fallback category object.
+ */
 const category = computed(() => {
     const cat = categories.value.find(category => category.id === props.task.category);
     if (!cat) {
@@ -40,28 +67,51 @@ const category = computed(() => {
     return cat;
 });
 
+/**
+ * @vue-computed {Array} subtasks - The list of subtasks associated with the task.
+ * 
+ * This computed property extracts the list of subtasks from the `task.subtasks`.
+ */
 const subtasks = computed(() => props.task.subtasks);
+
+/**
+ * @vue-computed {number} subtasksDone - The count of subtasks that are completed.
+ * 
+ * This computed property counts the number of subtasks that are marked as completed.
+ */
 const subtasksDone = computed(() => subtasks.value.filter(subtask => subtask.is_completed).length);
+
+/**
+ * @vue-computed {Array} assignedTo - The list of contacts assigned to the task.
+ * 
+ * This computed property returns the contacts assigned to the task.
+ */
 const assignedTo = computed(() => props.task.selected_contacts || []);
+
+/**
+ * @vue-computed {string} prio - The priority of the task.
+ * 
+ * This computed property extracts the priority level (high, medium, low) of the task.
+ */
 const prio = computed(() => props.task.prio);
+
+/**
+ * @vue-computed {string} buttonImg - The image to be used for the priority button.
+ * 
+ * This computed property returns the appropriate priority icon based on the task's priority.
+ */
 const buttonImg = computed(() => {
   if (prio.value === 'high') {
     return Prioicons.urgent;
   } else if (prio.value === 'medium') {
-    return Prioicons.medium; // Adjust the key if it's 'mediumWite'
+    return Prioicons.medium; // Adjust the key if it's 'mediumWhite'
   } else if (prio.value === 'low') {
     return Prioicons.low;
   }
   return ''; // Return a default or empty string if no match
 });
-
-
-
 </script>
 
-<style scoped>
-/* Dein Styles hier */
-</style>
 <style scoped>
 .board-card {
     display: flex;

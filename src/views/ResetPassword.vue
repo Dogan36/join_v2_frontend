@@ -52,125 +52,130 @@
 
 
 <script setup>
-import FormLayout from "@/components/shared/FormLayout.vue";
-import InputField from "@/components/shared/InputField.vue";
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import { API_BASE_URL } from "@/config";
-import passwordIcon from '@/assets/img/loginPassword.svg'
-import { useConfirmationOverlay } from "@/composables/useConfirmationOverlay";
-import { useLoadingOverlay } from "@/composables/useLoadingOverlay";
-const { showConfirmation } = useConfirmationOverlay();
-const { showOverlay, hideOverlay } = useLoadingOverlay();
-const resetPassword = ref("");
-const resetPasswordRepeat = ref("");
-const router = useRouter();
-const uid = router.currentRoute.value.params.uid
-const token = router.currentRoute.value.params.token
-const passwordError = ref(false);
-const passwordLengthError = ref(false);
-const passwordMatchError = ref(false);
+  import FormLayout from "@/components/shared/FormLayout.vue";
+  import InputField from "@/components/shared/InputField.vue";
+  import { ref } from "vue";
+  import { useRouter } from "vue-router";
+  import { API_BASE_URL } from "@/config";
+  import passwordIcon from '@/assets/img/loginPassword.svg'
+  import { useConfirmationOverlay } from "@/composables/useConfirmationOverlay";
+  import { useLoadingOverlay } from "@/composables/useLoadingOverlay";
 
-/**
- * Initiates the password reset process by validating input fields.
- * If no errors are found, the reset password request is performed.
- */
- const tryReset = () => {
-  resetErrors();
-  if (!checkForErrors()) {
-    performResetPassword(resetPassword.value);
-  }
-};
+  const { showConfirmation } = useConfirmationOverlay();
+  const { showOverlay, hideOverlay } = useLoadingOverlay();
+  const resetPassword = ref("");
+  const resetPasswordRepeat = ref("");
+  const router = useRouter();
+  const uid = router.currentRoute.value.params.uid;
+  const token = router.currentRoute.value.params.token;
+  const passwordError = ref(false);
+  const passwordLengthError = ref(false);
+  const passwordMatchError = ref(false);
 
-/**
- * Sends a request to reset the password.
- * 
- * @async
- * @param {string} password - The new password to be set.
- */
-async function performResetPassword(password) {
-  showOverlay();
-  try {
-    const response = await fetch(`${API_BASE_URL}/user/password-reset/${uid}/${token}/`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password }),
-    });
-
-    if (response.ok) {
-      showConfirmation("Password reset successful!");
-      router.push({ name: "start" });
+  /**
+   * Attempts to reset the password after validating the form inputs.
+   * 
+   * This function resets the error states and checks for validation errors. 
+   * If no errors exist, it proceeds with the password reset process.
+   */
+  const tryReset = () => {
+    resetErrors();
+    if (!checkForErrors()) {
+      performResetPassword(resetPassword.value);
     }
-  } catch (error) {
-    console.error("Error resetting password", error);
+  };
+
+  /**
+   * Resets the password by sending a POST request to the API with the provided password.
+   * 
+   * @async
+   * @param {string} password - The new password to be set for the user.
+   */
+  async function performResetPassword(password) {
+    showOverlay();
+    try {
+      const response = await fetch(`${API_BASE_URL}/user/password-reset/${uid}/${token}/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+      if (response.ok) {
+        showConfirmation("Password reset successful!");
+        router.push({ name: "start" });
+      }
+    } catch (error) {
+      console.error("Error resetting password", error);
+    }
+    hideOverlay();
   }
-  hideOverlay();
-}
 
-/**
- * Resets all password-related error states.
- */
-const resetErrors = () => {
-  passwordError.value = false;
-  passwordLengthError.value = false;
-  passwordMatchError.value = false;
-};
+  /**
+   * Resets all password-related error states to their initial values.
+   */
+  const resetErrors = () => {
+    passwordError.value = false;
+    passwordLengthError.value = false;
+    passwordMatchError.value = false;
+  };
 
-/**
- * Checks for password input errors.
- * 
- * @returns {boolean} `true` if there are validation errors, otherwise `false`.
- */
-const checkForErrors = () => {
-  const isPasswordValid = checkIfPasswordEmpty();
-  const isPasswordLengthValid = isPasswordValid && checkPasswordLength();
-  const isPasswordRepeatValid = checkIfPasswordRepeatEmpty();
-  const arePasswordsMatching = isPasswordRepeatValid && checkIfPasswordsMatch();
+  /**
+   * Checks for any validation errors in the password and repeat password fields.
+   * 
+   * @returns {boolean} `true` if there are validation errors, otherwise `false`.
+   */
+  const checkForErrors = () => {
+    const isPasswordValid = checkIfPasswordEmpty();
+    const isPasswordLengthValid = isPasswordValid && checkPasswordLength();
+    const isPasswordRepeatValid = checkIfPasswordRepeatEmpty();
+    const arePasswordsMatching = isPasswordRepeatValid && checkIfPasswordsMatch();
 
-  return (
-    !isPasswordValid ||
-    !isPasswordLengthValid ||
-    !isPasswordRepeatValid ||
-    !arePasswordsMatching
-  );
-};
+    return (
+      !isPasswordValid ||
+      !isPasswordLengthValid ||
+      !isPasswordRepeatValid ||
+      !arePasswordsMatching
+    );
+  };
 
-/**
- * Checks if the password field is empty and updates the corresponding error state.
- * 
- * @returns {boolean} `true` if the password is not empty, otherwise `false`.
- */
-const checkIfPasswordEmpty = () => {
-  passwordError.value = !resetPassword.value;
-  return !passwordError.value;
-};
+  /**
+   * Checks if the password field is empty and updates the corresponding error state.
+   * 
+   * @returns {boolean} `true` if the password field is not empty, otherwise `false`.
+   */
+  const checkIfPasswordEmpty = () => {
+    passwordError.value = !resetPassword.value;
+    return !passwordError.value;
+  };
 
-/**
- * Checks if the password meets the minimum length requirement (6 characters).
- * 
- * @returns {boolean} `true` if the password length is valid, otherwise `false`.
- */
-const checkPasswordLength = () => {
-  passwordLengthError.value = resetPassword.value && resetPassword.value.length < 6;
-  return !passwordLengthError.value;
-};
+  /**
+   * Checks if the password meets the minimum length requirement (6 characters).
+   * 
+   * @returns {boolean} `true` if the password is valid in length, otherwise `false`.
+   */
+  const checkPasswordLength = () => {
+    passwordLengthError.value =
+      resetPassword.value && resetPassword.value.length < 6;
+    return !passwordLengthError.value;
+  };
 
-/**
- * Checks if the repeated password field is empty and updates the corresponding error state.
- * 
- * @returns {boolean} `true` if the repeated password is not empty, otherwise `false`.
- */
-const checkIfPasswordRepeatEmpty = () => {
-  passwordMatchError.value = !resetPasswordRepeat.value;
-  return !passwordMatchError.value;
-};
+  /**
+   * Checks if the repeated password field is empty and updates the corresponding error state.
+   * 
+   * @returns {boolean} `true` if the repeated password field is not empty, otherwise `false`.
+   */
+  const checkIfPasswordRepeatEmpty = () => {
+    passwordMatchError.value = !resetPasswordRepeat.value;
+    return !passwordError.value;
+  };
 
-/**
- * Checks if the passwords match and updates the corresponding error state.
- * 
- * @returns {boolean} `true` if the passwords match, otherwise `false`.
- */
-const checkIfPasswordsMatch = () => {
-  passwordMatchError.value = resetPassword.value !== resetPasswordRepeat.value;
-  return !passwordMatchError.value;
-};
+  /**
+   * Checks if the password and its repeated field match.
+   * 
+   * @returns {boolean} `true` if both passwords match, otherwise `false`.
+   */
+  const checkIfPasswordsMatch = () => {
+    passwordMatchError.value = resetPassword.value !== resetPasswordRepeat.value;
+    return !passwordMatchError.value;
+  };
+</script>
+

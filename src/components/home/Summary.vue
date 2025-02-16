@@ -68,7 +68,8 @@
       </div>
       </div>
     
-  </template>
+</template>
+
 <script setup>
 import { currentUser, tasks } from '@/store/state';
 import { computed, onMounted } from 'vue';
@@ -76,18 +77,25 @@ import { currentView, selectedTasks } from '@/store/state';
 import { greetingDone } from '@/store/state';
 
 /**
- * Sets greetingDone to true after a 3-second delay when the component is mounted.
+ * @vue-method {Function} onMounted - Sets greetingDone to true after a 3-second delay when the component is mounted.
+ * 
+ * This lifecycle hook will update the `greetingDone` reactive property to `true` after 3 seconds.
+ * 
+ * @returns {void}
  */
- onMounted(() => {
+onMounted(() => {
   setTimeout(() => {
     greetingDone.value = true;
   }, 3000);
 });
 
 /**
- * Navigates to the board view and optionally filters tasks.
+ * @vue-method {Function} goToBoard - Navigates to the board view and optionally filters tasks.
+ * 
+ * This function updates the `currentView` to 'board' and applies a filter to the `selectedTasks` if provided.
  *
  * @param {Array} filter - The filter to apply to the tasks.
+ * @returns {void}
  */
 const goToBoard = (filter) => {
   currentView.value = 'board';
@@ -97,34 +105,58 @@ const goToBoard = (filter) => {
 };
 
 /**
- * Computes the first name of the current user.
+ * @vue-computed {string} userName - Computes the first name of the current user.
+ * 
+ * This computed property extracts the first name from the `currentUser`'s full name.
+ * 
+ * @returns {string} - The first name of the current user.
  */
 const userName = computed(() => {
   return currentUser.value.name ? currentUser.value.name.split(' ')[0] : '';
 });
 
 /**
- * Returns all tasks for the board view.
+ * @vue-computed {Array} boardTasks - Returns all tasks for the board view.
+ * 
+ * This computed property returns the entire list of tasks from the `tasks` store.
+ * 
+ * @returns {Array} - An array of tasks.
  */
 const boardTasks = computed(() => tasks.value);
 
 /**
- * Filters tasks with the status 'inProgress'.
+ * @vue-computed {Array} inProgressTasks - Filters tasks with the status 'inProgress'.
+ * 
+ * This computed property filters the tasks that have a status of 'inProgress'.
+ * 
+ * @returns {Array} - An array of tasks with the status 'inProgress'.
  */
 const inProgressTasks = computed(() => tasks.value.filter(task => task.status === 'inProgress'));
 
 /**
- * Filters tasks with the status 'awaitingFeedback'.
+ * @vue-computed {Array} awaitingFeedbackTasks - Filters tasks with the status 'awaitingFeedback'.
+ * 
+ * This computed property filters the tasks that have a status of 'awaitingFeedback'.
+ * 
+ * @returns {Array} - An array of tasks with the status 'awaitingFeedback'.
  */
 const awaitingFeedbackTasks = computed(() => tasks.value.filter(task => task.status === 'awaitingFeedback'));
 
 /**
- * Filters tasks with high priority.
+ * @vue-computed {Array} urgentTasks - Filters tasks with high priority.
+ * 
+ * This computed property filters the tasks that have a high priority.
+ * 
+ * @returns {Array} - An array of tasks with high priority.
  */
 const urgentTasks = computed(() => tasks.value.filter(task => task.prio === 'high'));
 
 /**
- * Computes tasks with the earliest upcoming deadline, excluding done tasks.
+ * @vue-computed {Array} upcomingDeadline - Computes tasks with the earliest upcoming deadline, excluding done tasks.
+ * 
+ * This computed property filters tasks that have a deadline and are not marked as 'done', then sorts them by the earliest deadline.
+ * 
+ * @returns {Array} - An array of tasks with the earliest upcoming deadline.
  */
 const upcomingDeadline = computed(() => {
   const tasksWithDeadline = tasks.value.filter(task => task.due_date && task.status !== 'done');
@@ -137,7 +169,11 @@ const upcomingDeadline = computed(() => {
 });
 
 /**
- * Computes the label for the upcoming or missed deadline.
+ * @vue-computed {string} deadlineLabel - Computes the label for the upcoming or missed deadline.
+ * 
+ * This computed property checks if the earliest deadline has passed or is upcoming and returns the appropriate label.
+ * 
+ * @returns {string} - The label for the upcoming or missed deadline.
  */
 const deadlineLabel = computed(() => {
   if (upcomingDeadline.value.length === 0) {
@@ -152,17 +188,32 @@ const deadlineLabel = computed(() => {
 });
 
 /**
- * Filters tasks with the status 'todo'.
+ * @vue-computed {Array} toDoTasks - Filters tasks with the status 'todo'.
+ * 
+ * This computed property filters the tasks that have a status of 'todo'.
+ * 
+ * @returns {Array} - An array of tasks with the status 'todo'.
  */
 const toDoTasks = computed(() => tasks.value.filter(task => task.status === 'todo'));
 
 /**
- * Filters tasks with the status 'done'.
+ * @vue-computed {Array} doneTasks - Filters tasks with the status 'done'.
+ * 
+ * This computed property filters the tasks that have a status of 'done'.
+ * 
+ * @returns {Array} - An array of tasks with the status 'done'.
  */
 const doneTasks = computed(() => tasks.value.filter(task => task.status === 'done'));
 
 /**
- * Computes a greeting based on the current time of day.
+ * @vue-computed {string} greetingByDaytime - Computes a greeting based on the current time of day.
+ * 
+ * This computed property returns a greeting message based on the time of day:
+ * - 'Good Morning' for 5 AM - 12 PM
+ * - 'Good Afternoon' for 12 PM - 6 PM
+ * - 'Good Evening' for 6 PM - 5 AM
+ * 
+ * @returns {string} - A greeting message based on the current time.
  */
 const greetingByDaytime = computed(() => {
   const date = new Date();
@@ -176,6 +227,7 @@ const greetingByDaytime = computed(() => {
   }
 });
 </script>
+
 <style scoped>
 .content-summary {
   display: flex;

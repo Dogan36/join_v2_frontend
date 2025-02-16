@@ -28,20 +28,38 @@ import { ref } from "vue";
 import { currentUser, currentView, isWorkspaceOverlayVisible, isProfilOverlayVisible } from "@/store/state";
 import { useRouter } from "vue-router";
 import { useRoute } from 'vue-router';
+
+// Router and route objects
 const router = useRouter();
 const route = useRoute();
+
+// Reactive property for the user menu visibility
+/**
+ * @vue-data {boolean} showUserMenu - Controls the visibility of the user menu.
+ * 
+ * This reactive property is used to toggle whether the user menu is displayed or not.
+ */
 const showUserMenu = ref(false);
 let closeUserMenuTimeout = null;
+
 /**
- * Opens the workspace information overlay and closes the user menu.
+ * @vue-method {Function} openWorkspaceInfo - Opens the workspace information overlay and closes the user menu.
+ * 
+ * This function closes the user menu (if open) and opens the workspace overlay.
+ * 
+ * @returns {void}
  */
- function openWorkspaceInfo() {
+function openWorkspaceInfo() {
   closeUserMenu();
   isWorkspaceOverlayVisible.value = true;
 }
 
 /**
- * Navigates to the profile overlay and closes the user menu.
+ * @vue-method {Function} goToProfile - Navigates to the profile overlay and closes the user menu.
+ * 
+ * This function opens the profile overlay and closes the user menu.
+ * 
+ * @returns {void}
  */
 function goToProfile() {
   isProfilOverlayVisible.value = true;
@@ -49,8 +67,12 @@ function goToProfile() {
 }
 
 /**
- * Toggles the visibility of the user menu.
- * If opened, it automatically closes after 2 seconds.
+ * @vue-method {Function} toggleUserMenu - Toggles the visibility of the user menu.
+ * 
+ * This function toggles the visibility of the user menu. If the menu is opened, 
+ * it automatically closes after 2 seconds.
+ * 
+ * @returns {void}
  */
 function toggleUserMenu() {
   showUserMenu.value = !showUserMenu.value;
@@ -61,14 +83,22 @@ function toggleUserMenu() {
 }
 
 /**
- * Cancels the automatic closing of the user menu when the mouse enters.
+ * @vue-method {Function} onUserMenuMouseEnter - Cancels the automatic closing of the user menu when the mouse enters.
+ * 
+ * This function clears the timeout that would automatically close the user menu when the mouse enters.
+ * 
+ * @returns {void}
  */
 function onUserMenuMouseEnter() {
   clearTimeout(closeUserMenuTimeout);
 }
 
 /**
- * Starts a timeout to close the user menu when the mouse leaves.
+ * @vue-method {Function} onUserMenuMouseLeave - Starts a timeout to close the user menu when the mouse leaves.
+ * 
+ * This function starts a timeout to close the user menu after 2 seconds when the mouse leaves the menu area.
+ * 
+ * @returns {void}
  */
 function onUserMenuMouseLeave() {
   closeUserMenuTimeout = setTimeout(() => {
@@ -77,14 +107,23 @@ function onUserMenuMouseLeave() {
 }
 
 /**
- * Closes the user menu.
+ * @vue-method {Function} closeUserMenu - Closes the user menu.
+ * 
+ * This function sets the `showUserMenu` property to `false`, closing the user menu.
+ * 
+ * @returns {void}
  */
 function closeUserMenu() {
   showUserMenu.value = false;
 }
 
 /**
- * Logs the user out by removing authentication tokens and redirecting to the start page.
+ * @vue-method {Function} logout - Logs the user out by removing authentication tokens and redirecting to the start page.
+ * 
+ * This function clears the authentication tokens from `localStorage`, closes the user menu, 
+ * and redirects the user to the start page.
+ * 
+ * @returns {void}
  */
 function logout() {
   closeUserMenu();
@@ -94,9 +133,12 @@ function logout() {
 }
 
 /**
- * Changes the current view to the specified one.
+ * @vue-method {Function} changeView - Changes the current view to the specified one.
+ * 
+ * This function updates the `currentView` to the provided view name, changing the displayed view in the app.
  * 
  * @param {string} view - The name of the view to switch to.
+ * @returns {void}
  */
 function changeView(view) {
   currentView.value = view;

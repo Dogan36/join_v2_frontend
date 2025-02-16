@@ -25,49 +25,56 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
-import { currentView, isWorkspaceOverlayVisible, isProfilOverlayVisible, currentWorkspace } from "@/store/state";
-import MenuContainer from "@/components/shared/MenuContainer.vue";
-import Header from "@/components/shared/Header.vue";
-import Summary from "@/components/home/Summary.vue";
-import Board from "@/components/home/Board.vue";
-import AddTask from "@/components/home/AddTask.vue";
-import Contacts from "@/components/home/Contacts.vue";
-import PrivacyPolicy from "@/components/shared/PrivacyPolicy.vue";
-import LegalNotice from "@/components/shared/LegalNotice.vue";
-import Help from "@/components/home/Help.vue";
-import WorkspaceInfo from "@/components/shared/WorkspaceInfo.vue";
-import DarkBackground from "@/components/shared/DarkBackground.vue";
-import Profil from "@/components/shared/Profil.vue";
-import useWorkspaces from "@/composables/useWorkspaces";
-import useContacts from "@/composables/useContacts";
-import { currentUser } from "@/store/state";
-const { loadWorkspaces } = useWorkspaces();
-const { loadContacts } = useContacts();
-onMounted(async () => {
-  getUser();
-  loadWorkspaces();
-  loadContacts();
-  
-});
+  import { ref, onMounted, watch } from "vue";
+  import { currentView, isWorkspaceOverlayVisible, isProfilOverlayVisible, currentWorkspace } from "@/store/state";
+  import MenuContainer from "@/components/shared/MenuContainer.vue";
+  import Header from "@/components/shared/Header.vue";
+  import Summary from "@/components/home/Summary.vue";
+  import Board from "@/components/home/Board.vue";
+  import AddTask from "@/components/home/AddTask.vue";
+  import Contacts from "@/components/home/Contacts.vue";
+  import PrivacyPolicy from "@/components/shared/PrivacyPolicy.vue";
+  import LegalNotice from "@/components/shared/LegalNotice.vue";
+  import Help from "@/components/home/Help.vue";
+  import WorkspaceInfo from "@/components/shared/WorkspaceInfo.vue";
+  import DarkBackground from "@/components/shared/DarkBackground.vue";
+  import Profil from "@/components/shared/Profil.vue";
+  import useWorkspaces from "@/composables/useWorkspaces";
+  import useContacts from "@/composables/useContacts";
+  import { currentUser } from "@/store/state";
+  const { loadWorkspaces } = useWorkspaces();
+  const { loadContacts } = useContacts();
 
-/**
- * Retrieves the current user from localStorage and updates the "currentUser" state.
- */
- function getUser() { 
-  currentUser.value = JSON.parse(localStorage.getItem("join_user"));
-}
+  onMounted(async () => {
+    getUser();
+    loadWorkspaces();
+    loadContacts();
+  });
 
-/**
- * Closes both the profile and workspace overlays.
- */
-function closeOverlay() {
-  isProfilOverlayVisible.value = false;
-  isWorkspaceOverlayVisible.value = false;
-}
+  /**
+   * Retrieves the current user from localStorage and updates the `currentUser` state.
+   * This function reads the user data from `localStorage` and parses it into a JavaScript object.
+   * The user data is then assigned to `currentUser.value`.
+   *
+   * @returns {void}
+   */
+  function getUser() { 
+    currentUser.value = JSON.parse(localStorage.getItem("join_user"));
+  }
 
-
+  /**
+   * Closes both the profile and workspace overlays by setting their visibility state to false.
+   * This function hides the profile and workspace overlays in the UI by updating the `isProfilOverlayVisible` 
+   * and `isWorkspaceOverlayVisible` reactive state variables.
+   *
+   * @returns {void}
+   */
+  function closeOverlay() {
+    isProfilOverlayVisible.value = false;
+    isWorkspaceOverlayVisible.value = false;
+  }
 </script>
+
 
 <style>
 .home {

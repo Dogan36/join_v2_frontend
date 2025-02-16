@@ -51,6 +51,16 @@ For information on data protection, please refer to our Privacy Policy.</p>
 </p>
 </div>
 </template>
+
+
+<script setup>
+import { useRoute } from 'vue-router';
+const route = useRoute();
+const goToStart = () => {
+    window.location.href = '/start';
+};
+</script>
+
 <style>
 .legal-container {
     display: flex;
@@ -68,11 +78,3 @@ For information on data protection, please refer to our Privacy Policy.</p>
     }
 }
 </style>
-
-<script setup>
-import { useRoute } from 'vue-router';
-const route = useRoute();
-const goToStart = () => {
-    window.location.href = '/start';
-};
-</script>

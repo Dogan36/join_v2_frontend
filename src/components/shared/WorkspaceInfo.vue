@@ -113,34 +113,56 @@
 </template>
 
 <script setup>
-import { ref} from "vue";
-
+import { ref } from "vue";
 import CreateNewWorkspace from "./CreateNewWorkspace.vue";
 import SwitchWorkspace from "./SwitchWorkspace.vue";
 import InviteToWorkspace from "./InviteToWorkspace.vue";
 import LeaveWorkspaceConfirmation from "./LeaveWorkspaceConfirmation.vue";
 import JoinWorkspace from "./JoinWorkspace.vue";
-import {currentWorkspace } from '@/store/state';
+import { currentWorkspace } from '@/store/state';
+
+// Reactive property to track the active modal
+/**
+ * @vue-data {string} activeModal - The currently active modal.
+ * 
+ * This reactive property holds the name of the currently active modal (e.g., 'workspaceInfo').
+ */
 const activeModal = ref('workspaceInfo');
+
+// Event emitter to close the modal
+/**
+ * @vue-method {Function} emit - Emits the "close" event.
+ * 
+ * This function is used to close the modal by emitting the "close" event.
+ * 
+ * @returns {void}
+ */
 const emit = defineEmits(["close"]);
 
 /**
- * Sets the currently active modal.
+ * @vue-method {Function} setActiveModal - Sets the currently active modal.
+ * 
+ * This function sets the `activeModal` to the provided modal name, which switches the currently active modal.
  * 
  * @param {string} modalName - The name of the modal to activate.
+ * @returns {void}
  */
- const setActiveModal = (modalName) => {
+const setActiveModal = (modalName) => {
   activeModal.value = modalName;
 };
 
 /**
- * Closes the modal by emitting the "close" event.
+ * @vue-method {Function} close - Closes the modal by emitting the "close" event.
+ * 
+ * This function emits the "close" event to close the modal.
+ * 
+ * @returns {void}
  */
 const close = () => {
   emit("close");
 };
-
 </script>
+
 
 <style>
 .logo{

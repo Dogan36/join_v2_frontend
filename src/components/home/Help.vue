@@ -1,6 +1,7 @@
 <template>
   <div class="help-content">
     <div class="headline-component">
+      <!-- Navigation back to the start if not on the home page -->
       <img
         v-if="route.path !== '/home'"
         src="@/assets/img/arrowLeft.svg"
@@ -31,6 +32,7 @@
     </p>
 
     <div class="steps">
+      <!-- Step 1: Explore Workspace -->
       <div class="step">
         <div class="step-number">1</div>
         <div class="step-content">
@@ -43,6 +45,7 @@
         </div>
       </div>
 
+      <!-- Step 2: Manage Contacts & Members -->
       <div class="step">
         <div class="step-number">2</div>
         <div class="step-content">
@@ -54,6 +57,7 @@
         </div>
       </div>
 
+      <!-- Step 3: Create Cards -->
       <div class="step">
         <div class="step-number">3</div>
         <div class="step-content">
@@ -65,6 +69,7 @@
         </div>
       </div>
 
+      <!-- Step 4: Drag & Drop Cards -->
       <div class="step">
         <div class="step-number">4</div>
         <div class="step-content">
@@ -75,6 +80,7 @@
         </div>
       </div>
 
+      <!-- Step 5: Remove Completed Tasks -->
       <div class="step">
         <div class="step-number">5</div>
         <div class="step-content">
@@ -91,6 +97,22 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import { useRoute } from 'vue-router';
+const route = useRoute();
+
+/**
+ * Redirects the user back to the start page.
+ * 
+ * This function is called when the back arrow is clicked and the user is navigated to the start page.
+ * 
+ * @returns {void}
+ */
+const goToStart = () => {
+    window.location.href = '/start';
+};
+</script>
 
 <style scoped>
 
@@ -142,11 +164,3 @@
   margin: 0 0 0.5rem;
 }
 </style>
-
-<script setup>
-import { useRoute } from 'vue-router';
-const route = useRoute();
-const goToStart = () => {
-    window.location.href = '/start';
-};
-</script>

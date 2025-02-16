@@ -67,12 +67,9 @@ import InputField from "@/components/shared/InputField.vue";
 import useContacts from "@/composables/useContacts";
 const { saveContact } = useContacts();
 import { selectedContact, contactOverlayIsEditMode } from "@/store/state";
-import  useTextColor  from '@/composables/useTextColor';
+import useTextColor from '@/composables/useTextColor';
 const { getTextColor } = useTextColor();
-
 const emit = defineEmits(["close"]);
-
-
 
 const contactName = ref("");
 const contactEmail = ref("");
@@ -87,14 +84,14 @@ onMounted(() => {
 });
 
 /**
- * Initializes the contact form with the selected contact's information if the form is in edit mode.
+ * @vue-method {Function} initializeForm - Initializes the contact form with the selected contact's information.
  *
- * If `contactOverlayIsEditMode.value` is true, the function populates:
- * - `contactName` with the selected contact's name.
- * - `contactEmail` with the selected contact's email.
- * - `contactPhone` with the selected contact's phone number (or an empty string if not available).
+ * If the form is in edit mode, the function populates the `contactName`, `contactEmail`, and `contactPhone` fields
+ * with the selected contact's information.
+ * 
+ * @returns {void}
  */
- const initializeForm = () => {
+const initializeForm = () => {
   if (contactOverlayIsEditMode.value) {
     contactName.value = selectedContact.value.name;
     contactEmail.value = selectedContact.value.email;
@@ -103,18 +100,17 @@ onMounted(() => {
 };
 
 /**
- * Saves the contact information if the form passes validation.
+ * @vue-method {Function} save - Saves the contact information if the form passes validation.
  *
  * This function performs the following steps:
- * 1. Resets any previous error messages by calling `resetErrors()`.
- * 2. Checks for validation errors using `checkForErrors()`.
- *    - If validation fails, the function exits early.
- * 3. If no errors are detected:
- *    - Constructs a contact object with `name`, `email`, and `phone` properties from the form fields.
- *    - Calls `saveContact(contact, selectedContact.id)` to persist the contact information.
- *    - Resets the form fields by calling `resetForm()`.
+ * 1. Resets any previous error messages.
+ * 2. Checks for validation errors.
+ * 3. If validation passes, it constructs a contact object and calls `saveContact` to persist the contact information.
+ * 4. Resets the form fields after successful saving.
+ * 
+ * @returns {void}
  */
- const save = () => {
+const save = () => {
   resetErrors();
   if (checkForErrors()) {
     const contact = {
@@ -130,16 +126,17 @@ onMounted(() => {
 };
 
 /**
- * Resets all error flags for the contact form.
+ * @vue-method {Function} resetErrors - Resets all error flags for the contact form.
  *
- * This function clears error states related to the contact's name and email by setting
- * the following error flags to false:
+ * This function clears error states related to the contact's name and email by setting:
  * - nameError
  * - emailError
  * - emailFormatError
  * - emailTakenError
+ * 
+ * @returns {void}
  */
- const resetErrors = () => {
+const resetErrors = () => {
   nameError.value = false;
   emailError.value = false;
   emailFormatError.value = false;
@@ -147,69 +144,70 @@ onMounted(() => {
 };
 
 /**
- * Resets the contact form fields to their initial state.
+ * @vue-method {Function} resetForm - Resets the contact form fields to their initial state.
  *
- * This function clears the form fields by setting the following values to an empty string:
- * - contactName
- * - contactEmail
- * - contactPhone
+ * This function clears the form fields by setting `contactName`, `contactEmail`, and `contactPhone` to empty strings.
+ * 
+ * @returns {void}
  */
- const resetForm = () => {
+const resetForm = () => {
   contactName.value = "";
   contactEmail.value = "";
   contactPhone.value = "";
 };
 
-
 /**
- * Cancels the contact form submission and closes the overlay.
+ * @vue-method {Function} cancel - Cancels the contact form submission and closes the overlay.
  *
- * This function resets the form fields by calling `resetForm()` and emits a close event to the parent component.
+ * This function resets the form fields and emits a "close" event to the parent component.
+ * 
+ * @returns {void}
  */
 const cancel = () => {
   resetForm();
-    emit('close');
-  // Event oder Callback, um das Overlay zu schließen
+  emit('close');
 };
 
 /**
- * Checks the contact form for validation errors.
+ * @vue-method {Function} checkForErrors - Checks the contact form for validation errors.
  *
- * This function validates the contact form fields and sets error flags based on the following criteria:
- * - `nameError` is set to true if the `contactName` field is empty.
- * - `emailError` is set to true if the `contactEmail` field is empty.
- * - `emailFormatError` is set to true if the `contactEmail` field is not empty and does not match the email pattern.
- * - `emailTakenError` is set to true if the `contactEmail` field is not empty and the email is already in use.
- *
- * The function returns true if no errors are detected and false otherwise.
+ * This function validates the contact form fields, setting error flags based on:
+ * - `nameError`: Checks if `contactName` is empty.
+ * - `emailError`: Checks if `contactEmail` is empty.
+ * - `emailFormatError`: Checks if `contactEmail` matches a valid email pattern.
+ * - `emailTakenError`: Checks if `contactEmail` is already in use.
+ * 
+ * The function returns true if no errors are detected, and false otherwise.
+ * 
+ * @returns {boolean} - True if the form is valid, otherwise false.
  */
 const checkForErrors = () => {
   const isNameValid = checkIfNameEmpty();
   const isEmailValid = checkIfEmailEmpty();
-  const isEmailFormatValid = isEmailValid && checkEmailFormat(); // Nur prüfen, wenn E-Mail nicht leer
-  const isEmailUnique = isEmailFormatValid // Nur prüfen, wenn Format korrekt
+  const isEmailFormatValid = isEmailValid && checkEmailFormat(); // Only check format if email is not empty
+  const isEmailUnique = isEmailFormatValid; // Only check if the format is correct
 
   return isNameValid && isEmailValid && isEmailFormatValid && isEmailUnique;
 };
 
 /**
- * Checks if the contact name field is empty.
+ * @vue-method {Function} checkIfNameEmpty - Checks if the contact name field is empty.
  *
  * This function sets the `nameError` flag to true if the `contactName` field is empty.
- *
- * The function returns true if the field is not empty and false otherwise.
+ * 
+ * @returns {boolean} - Returns true if the name field is not empty, otherwise false.
  */
 const checkIfNameEmpty = () => {
-  nameError.value = !contactName.value; // Setzt den Fehlerstatus
-  return !nameError.value; // Gibt true zurück, wenn kein Fehler vorliegt
+  nameError.value = !contactName.value;
+  return !nameError.value;
 };
 
 /**
- * Checks if the contact email field is empty.
+ * @vue-method {Function} checkIfEmailEmpty - Checks if the contact email field is empty.
  *
  * This function sets the `emailError` flag to true if the `contactEmail` field is empty.
- *
- * The function returns true if the field is not empty and false otherwise.
+ * 
+ * @returns {boolean} - Returns true if the email field is not empty, otherwise false.
  */
 const checkIfEmailEmpty = () => {
   emailError.value = !contactEmail.value;
@@ -217,21 +215,20 @@ const checkIfEmailEmpty = () => {
 };
 
 /**
- * Checks the format of the contact email.
+ * @vue-method {Function} checkEmailFormat - Checks the format of the contact email.
  *
- * This function uses a regular expression pattern to validate the format of the `contactEmail` field.
- *
- * The function sets the `emailFormatError` flag to true if the email format is invalid.
- *
- * The function returns true if the email format is valid and false otherwise.
+ * This function uses a regular expression to validate the format of `contactEmail`.
+ * It sets the `emailFormatError` flag to true if the email format is invalid.
+ * 
+ * @returns {boolean} - Returns true if the email format is valid, otherwise false.
  */
 const checkEmailFormat = () => {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  emailFormatError.value =
-    contactEmail.value && !emailPattern.test(contactEmail.value);
+  emailFormatError.value = contactEmail.value && !emailPattern.test(contactEmail.value);
   return !emailFormatError.value;
 };
 </script>
+
 
 <style scoped>
 .contact-cverlay {

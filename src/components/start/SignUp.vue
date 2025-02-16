@@ -74,6 +74,7 @@ import InputField from "../shared/InputField.vue";
 import { useLoadingOverlay } from '@/composables/useLoadingOverlay';
 import { useConfirmationOverlay } from "@/composables/useConfirmationOverlay";
 import router from "@/router";
+
 const { showOverlay, hideOverlay } = useLoadingOverlay();
 const { showConfirmation } = useConfirmationOverlay();
 
@@ -83,41 +84,78 @@ const signupEmail = ref("");
 const signupPassword = ref("");
 const signupPasswordRepeat = ref("");
 
-// Fehlerstatus
+// Error states
+/**
+ * @vue-data {boolean} nameError - Indicates whether the name field is empty.
+ */
 const nameError = ref(false);
+
+/**
+ * @vue-data {boolean} emailError - Indicates whether the email field is empty.
+ */
 const emailError = ref(false);
+
+/**
+ * @vue-data {boolean} emailFormatError - Indicates whether the email format is incorrect.
+ */
 const emailFormatError = ref(false);
+
+/**
+ * @vue-data {boolean} emailTakenError - Indicates whether the email is already taken.
+ */
 const emailTakenError = ref(false);
+
+/**
+ * @vue-data {boolean} passwordError - Indicates whether the password field is empty.
+ */
 const passwordError = ref(false);
+
+/**
+ * @vue-data {boolean} passwordLengthError - Indicates whether the password length is less than 6 characters.
+ */
 const passwordLengthError = ref(false);
+
+/**
+ * @vue-data {boolean} passwordMatchError - Indicates whether the passwords match.
+ */
 const passwordMatchError = ref(false);
+
+/**
+ * @vue-data {boolean} privacyError - Indicates whether the privacy policy has been accepted.
+ */
 const privacyError = ref(false);
 
 const emit = defineEmits();
+
 /**
- * Emits an event to toggle the current view (e.g., back to login).
+ * @vue-method {Function} goBack - Emits an event to toggle the current view (e.g., back to login).
+ * 
+ * @returns {void}
  */
- const goBack = () => {
+const goBack = () => {
   emit("toggle");
 };
 
 /**
- * Emits an event to display the privacy policy.
+ * @vue-method {Function} showPrivacyPolicy - Emits an event to display the privacy policy.
+ * 
+ * @returns {void}
  */
 const showPrivacyPolicy = () => {
   emit("privacyPolicy");
 };
 
 /**
- * Registers a new user with the provided name, email, and password.
+ * @vue-method {Function} signUp - Registers a new user with the provided name, email, and password.
  * 
- * If successful, stores authentication details in localStorage and redirects to the home page.
- * If the email is already taken, an error flag is set.
+ * This async function sends a POST request to register a user. If successful, it stores the authentication details
+ * and redirects the user to the home page. If the email is already taken, it updates the `emailTakenError` flag.
  * 
  * @async
  * @param {string} name - The user's full name.
  * @param {string} email - The user's email address.
  * @param {string} password - The user's password.
+ * @returns {Promise<void>} Resolves when the sign-up process is complete.
  */
 async function signUp(name, email, password) {
   showOverlay();
@@ -150,7 +188,11 @@ async function signUp(name, email, password) {
 }
 
 /**
- * Attempts to sign up the user after validating input fields.
+ * @vue-method {Function} trySignup - Attempts to sign up the user after validating input fields.
+ * 
+ * This function checks if there are any validation errors, and if none are found, it calls `signUp`.
+ * 
+ * @returns {void}
  */
 const trySignup = () => {
   resetErrors();
@@ -160,7 +202,9 @@ const trySignup = () => {
 };
 
 /**
- * Resets all sign-up-related error states.
+ * @vue-method {Function} resetErrors - Resets all sign-up-related error states.
+ * 
+ * @returns {void}
  */
 const resetErrors = () => {
   nameError.value = false;
@@ -174,7 +218,9 @@ const resetErrors = () => {
 };
 
 /**
- * Validates sign-up input fields.
+ * @vue-method {Function} checkForErrors - Validates sign-up input fields.
+ * 
+ * This function checks each input field for errors such as empty fields, invalid email format, password mismatch, etc.
  * 
  * @returns {boolean} `true` if validation errors exist, otherwise `false`.
  */
@@ -202,7 +248,7 @@ const checkForErrors = () => {
 };
 
 /**
- * Checks if the name field is empty and updates the corresponding error state.
+ * @vue-method {Function} checkIfNameEmpty - Checks if the name field is empty and updates the corresponding error state.
  * 
  * @returns {boolean} `true` if the name is not empty, otherwise `false`.
  */
@@ -212,7 +258,7 @@ const checkIfNameEmpty = () => {
 };
 
 /**
- * Checks if the email field is empty and updates the corresponding error state.
+ * @vue-method {Function} checkIfEmailEmpty - Checks if the email field is empty and updates the corresponding error state.
  * 
  * @returns {boolean} `true` if the email is not empty, otherwise `false`.
  */
@@ -222,7 +268,7 @@ const checkIfEmailEmpty = () => {
 };
 
 /**
- * Validates the email format and updates the corresponding error state.
+ * @vue-method {Function} checkEmailFormat - Validates the email format and updates the corresponding error state.
  * 
  * @returns {boolean} `true` if the email format is valid, otherwise `false`.
  */
@@ -233,7 +279,7 @@ const checkEmailFormat = () => {
 };
 
 /**
- * Checks if the email is already taken based on a predefined email database.
+ * @vue-method {Function} checkEmailDatabase - Checks if the email is already taken based on a predefined email database.
  * 
  * @returns {boolean} `true` if the email is unique, otherwise `false`.
  */
@@ -244,7 +290,7 @@ const checkEmailDatabase = () => {
 };
 
 /**
- * Checks if the password field is empty and updates the corresponding error state.
+ * @vue-method {Function} checkIfPasswordEmpty - Checks if the password field is empty and updates the corresponding error state.
  * 
  * @returns {boolean} `true` if the password is not empty, otherwise `false`.
  */
@@ -254,7 +300,7 @@ const checkIfPasswordEmpty = () => {
 };
 
 /**
- * Checks if the password meets the minimum length requirement (6 characters).
+ * @vue-method {Function} checkPasswordLength - Checks if the password meets the minimum length requirement (6 characters).
  * 
  * @returns {boolean} `true` if the password length is valid, otherwise `false`.
  */
@@ -264,7 +310,7 @@ const checkPasswordLength = () => {
 };
 
 /**
- * Checks if the repeated password field is empty and updates the corresponding error state.
+ * @vue-method {Function} checkIfPasswordRepeatEmpty - Checks if the repeated password field is empty and updates the corresponding error state.
  * 
  * @returns {boolean} `true` if the repeated password is not empty, otherwise `false`.
  */
@@ -274,7 +320,7 @@ const checkIfPasswordRepeatEmpty = () => {
 };
 
 /**
- * Checks if the passwords match and updates the corresponding error state.
+ * @vue-method {Function} checkIfPasswordsMatch - Checks if the passwords match and updates the corresponding error state.
  * 
  * @returns {boolean} `true` if the passwords match, otherwise `false`.
  */
@@ -284,7 +330,7 @@ const checkIfPasswordsMatch = () => {
 };
 
 /**
- * Checks if the privacy policy has been accepted and updates the corresponding error state.
+ * @vue-method {Function} checkPrivacyAccepted - Checks if the privacy policy has been accepted and updates the corresponding error state.
  * 
  * @returns {boolean} `true` if the privacy policy is accepted, otherwise `false`.
  */

@@ -1,33 +1,102 @@
-# join_v2_frontend
+# Join - Kanban Project Management Tool
 
-This template should help get you started developing with Vue 3 in Vite.
+Join is a Kanban-based project management tool designed for managing tasks and collaboration. Developed as part of a web development bootcamp at the Developer Akademie, Join is a flexible, simple tool that allows users to organize their projects in workspaces and boards.
 
-## Recommended IDE Setup
+> **Note:** This is an educational project created for learning purposes. It might not be suitable for large-scale business use, but it provides an excellent base for a task management system.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+---
 
-## Type Support for `.vue` Imports in TS
+## Features
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+- **Workspaces**: Create separate workspaces for different projects.
+- **Boards & Lists**: Organize tasks using boards with customizable lists such as "To Do", "In Progress", "Awaiting Feedback", and "Done".
+- **Contacts & Members**: Add contacts for collaboration and invite team members to workspaces.
+- **Task Management**: Create and manage tasks with due dates, descriptions, and assignees.
+- **Drag & Drop**: Easily move tasks between lists as their status changes.
+- **Task Completion**: Mark tasks as complete or delete them entirely.
 
-## Customize configuration
+---
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+## Table of Contents
 
-## Project Setup
+- [Installation](#installation)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [Contributing](#contributing)
+- [License](#license)
 
-```sh
-npm install
-```
+---
 
-### Compile and Hot-Reload for Development
+## Installation
 
-```sh
-npm run dev
-```
+### Prerequisites
 
-### Type-Check, Compile and Minify for Production
+Make sure you have the following installed:
+- [Node.js](https://nodejs.org/)
+- [Vue.js](https://vuejs.org/)
 
-```sh
-npm run build
-```
+### Steps
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/Dogan36/join-v2-frontend.git
+   
+2. Install the required dependencies:
+
+    ```bash
+    cd join-kanban
+    npm install
+
+3. Start the development server:
+    ```bash
+    npm run serve
+
+4. Open your browser and go to http://localhost:8080 to see the app.
+
+Usage
+    After starting the app, you can:
+
+    Sign up for a new account or log in if you already have one.
+    Create a new workspace or join existing workspaces by entering the workspace code.
+    Use the board view to organize tasks with columns like "To Do", "In Progress", and "Done".
+    Add contacts and members to collaborate with your team.
+    Create tasks by clicking the "+" button in the desired list.
+    Move tasks between lists to update their status.
+    Remove tasks by deleting them or moving them to the "Done" list.
+
+Configuration
+    The project uses the following configuration:
+
+    API Base URL: All API requests are directed to the local development server (http://localhost:8000).
+    Authentication: The app supports token-based authentication, which is stored in localStorage.
+    Responsive Design: The UI adjusts for different screen sizes, making it accessible on both desktop and mobile devices.  
+
+Contributing
+    Contributions to Join are welcome! Feel free to fork the repository, make changes, and submit pull requests. Here’s how you can get involved:
+
+    Fork the repository.
+    Create a new branch for your feature or fix (git checkout -b feature-name).
+    Commit your changes (git commit -am 'Add new feature').
+    Push to the branch (git push origin feature-name).
+    Open a pull request to merge your changes into the main branch.
+
+License
+    Join is licensed under the MIT License.
+
+Contact
+    For feedback or questions, please reach out to the developer:
+    Dogan Celik
+    Email: mail@dogan-celik.com
+
+### Explanation of Sections:
+
+- **Features**: An overview of what the application can do.
+- **Installation**: Instructions on how to set up the project locally.
+- **Usage**: Provides instructions for interacting with the app after installation.
+- **Configuration**: Configuration settings like API base URL or authentication methods.
+- **Contributing**: Guidelines for contributing to the project.
+- **License**: Information about the license governing the project (MIT in this case).
+- **Contact**: Developer's contact information for questions or feedback.
+
+Feel free to modify and expand on this template based on your project's specific requirements!

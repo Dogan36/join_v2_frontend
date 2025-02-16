@@ -14,25 +14,36 @@
 
 <script setup>
 import { ref } from "vue";
+
+// Reactive state for description and error message
+/**
+ * @vue-data {string} description - The description text.
+ */
 const description = ref("");
+
+/**
+ * @vue-data {string} errorMessage - The error message related to the description.
+ */
 const errorMessage = ref("");
 
 /**
- * Sets the description to the provided value.
- *
+ * @vue-method {Function} setDescription - Sets the description to the provided value.
+ * 
+ * This function assigns the given value to the `description` reactive property.
+ * 
  * @param {string} value - The new description value.
  */
- const setDescription = (value) => {
+const setDescription = (value) => {
   description.value = value;
 };
 
 /**
- * Clears the description and any error message.
- *
- * This function resets the description to an empty string and clears the error message,
+ * @vue-method {Function} clear - Clears the description and any error message.
+ * 
+ * This function resets the `description` to an empty string and clears the `errorMessage`,
  * providing a clean state.
  */
- const clear = () => {
+const clear = () => {
   description.value = "";
   errorMessage.value = "";
 };
@@ -43,6 +54,7 @@ defineExpose({
   clear,
 });
 </script>
+
 
 <style scoped>
   .inputfield {

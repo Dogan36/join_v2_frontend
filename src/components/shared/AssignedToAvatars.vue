@@ -22,9 +22,22 @@
 <script setup>
 import { members } from '@/store/state';
 import { defineProps, computed, onMounted, watch } from 'vue';
-import  useTextColor  from '@/composables/useTextColor';
+import useTextColor from '@/composables/useTextColor';
+
+// Get the text color function
+/**
+ * @vue-method {Function} getTextColor - A function that returns the text color.
+ * 
+ * This function is used to determine the appropriate text color for the assigned members.
+ */
 const { getTextColor } = useTextColor();
 
+// Define component props
+/**
+ * @vue-prop {Array} assignedTo - A list of member IDs assigned to a task or item.
+ * 
+ * This prop holds the list of assigned member IDs, which will be used to filter and display the assigned members.
+ */
 const props = defineProps({
   assignedTo: {
     type: Array,
@@ -33,32 +46,39 @@ const props = defineProps({
 });
 
 /**
- * Computes a list of members assigned to a specific task or item.
- *
- * @type {import('vue').ComputedRef<Array<Object>>}
+ * @vue-computed {Array} assignedTo - Computes a list of members assigned to a specific task or item.
+ * 
+ * This computed property filters the `members` array and returns the members whose `id` is present in the `assignedTo` prop.
+ * 
+ * @returns {Array<Object>} - The filtered list of assigned members.
  */
- const assignedTo = computed(() => {
+const assignedTo = computed(() => {
   return members.value.filter(member => props.assignedTo.includes(member.id));
 });
 
 /**
- * Computes a reduced list of assigned members, limited to a maximum of 4.
- *
- * @type {import('vue').ComputedRef<Array<Object>>}
+ * @vue-computed {Array} assignedToReduced - Computes a reduced list of assigned members, limited to a maximum of 4.
+ * 
+ * This computed property takes only the first 4 members from the `assignedTo` list.
+ * 
+ * @returns {Array<Object>} - The reduced list of assigned members.
  */
 const assignedToReduced = computed(() => {
   return assignedTo.value.slice(0, 4); // Takes only the first 4 contacts
 });
 
 /**
- * Computes the number of remaining assigned contacts that are not included in `assignedToReduced`.
- *
- * @type {import('vue').ComputedRef<number>}
+ * @vue-computed {number} remainingContacts - Computes the number of remaining assigned contacts that are not included in `assignedToReduced`.
+ * 
+ * This computed property calculates how many assigned members are remaining beyond the first 4.
+ * 
+ * @returns {number} - The count of remaining assigned members.
  */
 const remainingContacts = computed(() => {
   return assignedTo.value.length - 4; // Returns the count of remaining contacts
 });
 </script>
+
 
 <style scoped>
 .assigned-to {

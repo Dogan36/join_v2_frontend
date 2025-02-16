@@ -84,6 +84,13 @@
 </template>
 
 <script setup>
+/**
+ * A simple component that displays a title.
+ *
+ * @component
+ * @example
+ * <TitleComponent />
+ */
 import { ref, computed, onBeforeUnmount } from "vue";
 import { API_BASE_URL } from "@/config";
 import BoardCard from "./BoardComponents/BoardCard.vue";
@@ -91,12 +98,37 @@ import AddTaskMain from "./AddTaskComponents/AddTaskMain.vue";
 import DarkBackground from "../shared/DarkBackground.vue";
 import { tasks, currentTask, currentWorkspace, getToken, categories, selectedTasks, isAddTaskOverlayVisible } from "@/store/state";
 import BoardTaskDetail from "./BoardComponents/BoardTaskDetail.vue";
+
+// Reactive variables and references
+/**
+ * @vue-data {boolean} isDetailViewVisible - Whether the task detail view is visible.
+ */
 const isDetailViewVisible = ref(false);
+
+/**
+ * @vue-data {string} searchQuery - The search query for filtering tasks.
+ */
 const searchQuery = ref("");
 
-let choosenStatus = '';
+// Task dragging state
+/**
+ * @vue-data {Object} draggedTask - The task that is currently being dragged.
+ */
 const draggedTask = ref(null);
+
+/**
+ * @vue-data {string} choosenStatus - The selected status for task categorization.
+ */
+let choosenStatus = '';
+
+/**
+ * @vue-data {Object} hoveredColumn - The column currently being hovered by the dragged task.
+ */
 const hoveredColumn = ref(null);
+
+/**
+ * @vue-data {Array} columns - The columns used for task statuses.
+ */
 const columns = [
   { status: 'todo', label: 'To do' },
   { status: 'inProgress', label: 'In Progress' },
@@ -104,76 +136,57 @@ const columns = [
   { status: 'done', label: 'Done' }
 ];
 
-const longPressFlag = ref(false);
-let touchTimer = null;
-const touchedTask = ref(null);
-const dragPreviewPosition = ref({ x: 0, y: 0 });
-const boardMainContentRef = ref(null);
-const boardContentRef = ref({ x: 0, y: 0 });
-let maxScroll = 0;
-let scrollInterval = null;
-function getMainElement() {
-  return document.querySelector('main');
-}
-
+// Touch and drag handling
 /**
- * Starts scrolling the main element in a specified direction while updating the drag preview position.
+ * @vue-method {Function} startScrolling - Starts scrolling the main element based on the touch event.
+ * 
+ * This function scrolls the main element in a specified direction and updates the drag preview position.
  *
- * This function:
- * - Stops any current scrolling by calling `stopScrolling()`.
- * - Sets up an interval (`scrollInterval`) that:
- *   - Retrieves the main element using `getMainElement()` and scrolls it by a fixed offset:
- *     - Scrolls up by 220 pixels if the direction is 'up'.
- *     - Scrolls down by 200 pixels otherwise.
- *   - Uses smooth scrolling behavior.
- * - Updates the drag preview position based on the first touch point relative to the `boardMainContentRef` element's position.
- *
- * @param {string} direction - The direction to scroll ('up' for upward scrolling; any other value for downward scrolling).
- * @param {TouchEvent} e - The touch event that provides the current touch position for updating the drag preview.
+ * @param {string} direction - The direction to scroll ('up' or 'down').
+ * @param {TouchEvent} e - The touch event that provides the current touch position.
+ * @returns {void}
  */
- function startScrolling(direction, e) {
+function startScrolling(direction, e) {
   stopScrolling();
   scrollInterval = setInterval(() => {
     const mainElement = getMainElement();
     if (mainElement) {
       mainElement.scrollBy({
-        top: direction === 'up' ? -220 : 200, // Adjust speed accordingly
+        top: direction === 'up' ? -220 : 200,
         behavior: 'smooth'
       });
     }
     
-    // Update the drag preview position relative to boardMainContent
     const rect = boardMainContentRef.value.getBoundingClientRect();
     dragPreviewPosition.value = {
       x: e.touches[0].clientX - rect.left,
       y: e.touches[0].clientY - rect.top
     };
-  }, 50); // Adjust interval accordingly
+  }, 50);
 }
 
-
 /**
- * Stops the scrolling interval if it is active.
- *
- * If a scrolling interval is currently set (via `scrollInterval`), this function clears it and resets `scrollInterval` to null.
+ * @vue-method {Function} stopScrolling - Stops the scrolling interval if it is active.
+ * 
+ * @returns {void}
  */
- function stopScrolling() {
+function stopScrolling() {
   if (scrollInterval) {
     clearInterval(scrollInterval);
     scrollInterval = null;
   }
 }
 
-
 /**
- * Handles the touch start event for a task.
- * Initializes the drag preview position and starts a timer for long press detection.
- * If the touch lasts longer than 500ms, it triggers the drag start.
+ * @vue-method {Function} onTouchStart - Handles the touch start event for a task.
+ * 
+ * Initializes the drag preview position and starts the timer for long press detection.
  *
  * @param {Object} task - The task object associated with the touch event.
  * @param {TouchEvent} e - The touch event object.
+ * @returns {void}
  */
- function onTouchStart(task, e) {
+function onTouchStart(task, e) {
   const mainElement = getMainElement();
   maxScroll = mainElement.scrollHeight - mainElement.clientHeight;
   touchedTask.value = task;
@@ -191,13 +204,14 @@ function getMainElement() {
 }
 
 /**
- * Handles the touch move event.
- * Updates the drag preview position and hovered column based on touch position.
- * Initiates scrolling if the touch is near the top or bottom of the screen.
+ * @vue-method {Function} onTouchMove - Handles the touch move event for a task.
+ * 
+ * Updates the drag preview position and hovered column, starts scrolling when the touch is near the top or bottom of the screen.
  *
  * @param {TouchEvent} e - The touch event object.
+ * @returns {void}
  */
- function onTouchMove(e) {
+function onTouchMove(e) {
   const mainElement = getMainElement();
 
   if (longPressFlag.value && boardMainContentRef.value) {
@@ -216,14 +230,17 @@ function getMainElement() {
       stopScrolling();
     }
   }
- }
+}
+
 /**
- * Handles the touch end event.
+ * @vue-method {Function} onTouchEnd - Handles the touch end event for a task.
+ * 
  * Stops scrolling, clears the touch timer, and handles task drop or task detail opening.
  *
  * @param {TouchEvent} e - The touch event object.
+ * @returns {void}
  */
- function onTouchEnd(e) {
+function onTouchEnd(e) {
   stopScrolling();
   clearTimeout(touchTimer);
   if (longPressFlag.value) {
@@ -240,11 +257,12 @@ function getMainElement() {
 }
 
 /**
- * Updates the hovered column based on the touch position.
- *
+ * @vue-method {Function} updateHoveredColumn - Updates the hovered column based on the touch position.
+ * 
  * @param {TouchEvent} e - The touch event object.
+ * @returns {void}
  */
- function updateHoveredColumn(e) {
+function updateHoveredColumn(e) {
   const elem = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
   if (elem) {
     const boardElement = elem.closest('.boardElement');
@@ -256,17 +274,13 @@ function getMainElement() {
   }
 }
 
-onBeforeUnmount(() => {
-  removeHighlight();
-});
-
 /**
- * Checks if a task is highlighted by comparing its ID with selected tasks.
- *
+ * @vue-method {Function} isHighlighted - Checks if a task is highlighted by comparing its ID with selected tasks.
+ * 
  * @param {Object} task - The task to check.
  * @returns {boolean} - True if the task is highlighted, otherwise false.
  */
- const isHighlighted = (task) => {
+const isHighlighted = (task) => {
   if (!selectedTasks.value) {
     return false;
   }
@@ -274,20 +288,22 @@ onBeforeUnmount(() => {
 };
 
 /**
- * Removes the highlight by clearing the selected tasks array.
+ * @vue-method {Function} removeHighlight - Removes the highlight by clearing the selected tasks array.
+ * 
+ * @returns {void}
  */
- const removeHighlight = () => {
+const removeHighlight = () => {
   selectedTasks.value = [];
 };
 
-
 /**
- * Filters tasks based on the search query.
- * Matches task name, description, or category name.
+ * @vue-computed {Array} filteredTasks - Filters tasks based on the search query.
+ * 
+ * This computed property matches task name, description, or category name with the search query.
  *
  * @returns {Array} - The filtered list of tasks.
  */
- const filteredTasks = computed(() => {
+const filteredTasks = computed(() => {
   if (!searchQuery.value.trim()) {
     return tasks.value;
   }
@@ -303,11 +319,13 @@ onBeforeUnmount(() => {
 });
 
 /**
- * Groups filtered tasks by their status into predefined categories.
+ * @vue-computed {Object} tasksByStatus - Groups filtered tasks by their status.
+ * 
+ * This computed property groups the tasks by their status (`todo`, `inProgress`, `awaitingFeedback`, `done`).
  *
  * @returns {Object} - An object containing tasks grouped by status.
  */
- const tasksByStatus = computed(() => {
+const tasksByStatus = computed(() => {
   const groups = {
     todo: [],
     inProgress: [],
@@ -323,56 +341,36 @@ onBeforeUnmount(() => {
 });
 
 /**
- * Handles the drag start event for a task.
- * Sets the dragged task to the provided task object.
- *
+ * @vue-method {Function} onDragStart - Handles the drag start event for a task.
+ * 
  * @param {Object} task - The task being dragged.
+ * @returns {void}
  */
- function onDragStart(task) {
+function onDragStart(task) {
   draggedTask.value = task;
 }
 
 /**
- * Handles the drag end event.
+ * @vue-method {Function} onDragEnd - Handles the drag end event.
+ * 
  * Resets the dragged task and hovered column.
+ * 
+ * @returns {void}
  */
- function onDragEnd() {
+function onDragEnd() {
   draggedTask.value = null;
   hoveredColumn.value = null;
 }
 
 /**
- * Handles the drag over event.
- * Updates the hovered column if a task is being dragged.
- *
- * @param {string} status - The status of the column being hovered over.
- */
-function onDragOver(status) {
-  if (draggedTask.value) {
-    hoveredColumn.value = status;
-  }
-}
-
-/**
- * Handles the drag enter event.
- * Updates the hovered column if a task is being dragged.
- *
- * @param {string} status - The status of the column being entered.
- */
-function onDragEnter(status) {
-  if (draggedTask.value) {
-    hoveredColumn.value = status;
-  }
-}
-
-
-/**
- * Handles the drop event for a task.
+ * @vue-method {Function} onDrop - Handles the drop event for a task.
+ * 
  * Updates the task's status via a PATCH request and updates the local task list.
- *
+ * 
  * @param {string} status - The new status of the task.
+ * @returns {void}
  */
- async function onDrop(status) {
+async function onDrop(status) {
   if (draggedTask.value) {
     try {
       const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/${currentWorkspace.value.id}/tasks/${draggedTask.value.id}/`, {
@@ -402,11 +400,12 @@ function onDragEnter(status) {
 }
 
 /**
- * Opens the add task overlay and sets the chosen status.
- *
+ * @vue-method {Function} openAddTaskOverlay - Opens the add task overlay and sets the chosen status.
+ * 
  * @param {string} status - The status to pre-select in the add task overlay.
+ * @returns {void}
  */
- const openAddTaskOverlay = (status) => {
+const openAddTaskOverlay = (status) => {
   if (status) {
     choosenStatus = status;
     currentTask.value = null;
@@ -415,9 +414,10 @@ function onDragEnter(status) {
 };
 
 /**
- * Opens the task detail view for the specified task.
- *
+ * @vue-method {Function} openTaskDetail - Opens the task detail view for the specified task.
+ * 
  * @param {Object} task - The task to display in the detail view.
+ * @returns {void}
  */
 const openTaskDetail = (task) => {
   currentTask.value = task;
@@ -425,14 +425,16 @@ const openTaskDetail = (task) => {
 };
 
 /**
- * Closes all overlays (add task and detail view).
+ * @vue-method {Function} closeOverlay - Closes all overlays (add task and detail view).
+ * 
+ * @returns {void}
  */
 const closeOverlay = () => {
   isAddTaskOverlayVisible.value = false;
   isDetailViewVisible.value = false;
 };
-
 </script>
+
 <style scoped>
 .long-press-overlay {
   position: fixed;

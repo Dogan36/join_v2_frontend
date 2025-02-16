@@ -6,7 +6,6 @@
 
 <script setup>
 import { useLoadingOverlay } from '@/composables/useLoadingOverlay';
-
 const { isLoading } = useLoadingOverlay();
 </script>
 

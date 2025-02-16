@@ -48,6 +48,7 @@
     </div>
     </div>
 </template>
+
 <script setup>
 import { API_BASE_URL } from "@/config";
 import InputField from "./InputField.vue";
@@ -58,19 +59,75 @@ const { showConfirmation } = useConfirmationOverlay();
 
 import { currentUser, getToken } from "@/store/state";
 import { defineEmits, onMounted, ref } from "vue";
-const emit = defineEmits(["setActiveModal"]);
-const newName = ref("");
-const newEmail = ref("");
-const newPhone = ref("");
 
-// Fehlerstatus
-const nameError = ref(false);
-const emailError = ref(false);
-const emailFormatError = ref(false);
-const emailTakenError = ref(false);
+// Define the "setActiveModal" event
+/**
+ * @vue-method {Function} emit - Emits the "setActiveModal" event.
+ * 
+ * This function emits an event to close the modal where the profile update process occurs.
+ * 
+ * @returns {void}
+ */
+const emit = defineEmits(["setActiveModal"]);
+
+// Reactive properties for profile form
+/**
+ * @vue-data {string} newName - The new name entered by the user for the profile.
+ * 
+ * This reactive property holds the name inputted by the user for updating their profile.
+ */
+const newName = ref("");
 
 /**
- * Initializes the profile form fields with the current user's data when the component is mounted.
+ * @vue-data {string} newEmail - The new email entered by the user for the profile.
+ * 
+ * This reactive property holds the email inputted by the user for updating their profile.
+ */
+const newEmail = ref("");
+
+/**
+ * @vue-data {string} newPhone - The new phone number entered by the user for the profile.
+ * 
+ * This reactive property holds the phone number inputted by the user for updating their profile.
+ */
+const newPhone = ref("");
+
+// Error states for the profile form
+/**
+ * @vue-data {boolean} nameError - Error state for the name field.
+ * 
+ * This reactive property tracks whether the name field has an error (e.g., if it's empty).
+ */
+const nameError = ref(false);
+
+/**
+ * @vue-data {boolean} emailError - Error state for the email field.
+ * 
+ * This reactive property tracks whether the email field has an error (e.g., if it's empty).
+ */
+const emailError = ref(false);
+
+/**
+ * @vue-data {boolean} emailFormatError - Error state for invalid email format.
+ * 
+ * This reactive property tracks whether the email format is invalid.
+ */
+const emailFormatError = ref(false);
+
+/**
+ * @vue-data {boolean} emailTakenError - Error state for email already taken.
+ * 
+ * This reactive property tracks whether the email provided is already taken.
+ */
+const emailTakenError = ref(false);
+
+
+/**
+ * @vue-method {Function} onMounted - Initializes the profile form fields with the current user's data when the component is mounted.
+ * 
+ * This lifecycle hook sets the `newName`, `newEmail`, and `newPhone` properties to the current user's details.
+ * 
+ * @returns {void}
  */
 onMounted(() => {
   newName.value = currentUser.value.name;
@@ -79,13 +136,14 @@ onMounted(() => {
 });
 
 /**
- * Asynchronously updates the user's profile.
+ * @vue-method {Function} updateProfile - Asynchronously updates the user's profile.
  * 
- * If validation fails, the function exits early. Otherwise, it sends an API request to update the profile.
- * If the request is successful, the local user data is updated, and a confirmation message is shown.
+ * This function checks for input errors, then sends a POST request to update the user's profile. 
+ * If successful, the user's data is updated locally, and a confirmation message is shown. 
  * If the email is already taken, an error flag is set.
  * 
  * @async
+ * @returns {Promise<void>} Resolves when the profile update process is complete.
  */
 const updateProfile = async () => {
   if (!checkForProfilErrors()) {
@@ -128,7 +186,11 @@ const updateProfile = async () => {
 };
 
 /**
- * Resets all profile-related error states.
+ * @vue-method {Function} resetProfilErrors - Resets all profile-related error states.
+ * 
+ * This function clears all the error flags related to the profile input fields, setting them to false.
+ * 
+ * @returns {void}
  */
 const resetProfilErrors = () => {
   nameError.value = false;
@@ -138,7 +200,9 @@ const resetProfilErrors = () => {
 };
 
 /**
- * Checks for profile input errors and resets previous error states.
+ * @vue-method {Function} checkForProfilErrors - Checks for profile input errors and resets previous error states.
+ * 
+ * This function checks for errors in the name, email, and email format fields, returning `true` if any errors are found.
  * 
  * @returns {boolean} `true` if there are errors, otherwise `false`.
  */
@@ -151,7 +215,7 @@ const checkForProfilErrors = () => {
 };
 
 /**
- * Checks if the name field is empty and updates the corresponding error state.
+ * @vue-method {Function} checkIfNameEmpty - Checks if the name field is empty and updates the corresponding error state.
  * 
  * @returns {boolean} `true` if the name is empty, otherwise `false`.
  */
@@ -161,7 +225,7 @@ const checkIfNameEmpty = () => {
 };
 
 /**
- * Checks if the email field is empty and updates the corresponding error state.
+ * @vue-method {Function} checkIfEmailEmpty - Checks if the email field is empty and updates the corresponding error state.
  * 
  * @returns {boolean} `true` if the email is empty, otherwise `false`.
  */
@@ -171,7 +235,7 @@ const checkIfEmailEmpty = () => {
 };
 
 /**
- * Validates the email format and updates the corresponding error state.
+ * @vue-method {Function} checkEmailFormat - Validates the email format and updates the corresponding error state.
  * 
  * @returns {boolean} `true` if the email format is invalid, otherwise `false`.
  */
@@ -182,7 +246,11 @@ const checkEmailFormat = () => {
 };
 
 /**
- * Closes the modal by emitting the "setActiveModal" event.
+ * @vue-method {Function} close - Closes the modal by emitting the "setActiveModal" event.
+ * 
+ * This function emits an event to close the modal where the profile update process occurs.
+ * 
+ * @returns {void}
  */
 const close = () => {
   emit("setActiveModal");

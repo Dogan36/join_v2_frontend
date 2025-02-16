@@ -50,30 +50,68 @@
 </template>
 
 <script setup>
-import { defineProps, computed} from 'vue';
+import { defineProps, computed } from 'vue';
 import { categories } from '@/store/state';
 import { Prioicons } from '@/utils/prioIcons';
 import { members, tasks } from '@/store/state';
-import  useTextColor  from '@/composables/useTextColor';
+import useTextColor from '@/composables/useTextColor';
 import { useLoadingOverlay } from '@/composables/useLoadingOverlay';
 import { useConfirmationOverlay } from '@/composables/useConfirmationOverlay';
 import { API_BASE_URL } from '@/config';
 import { getToken, currentWorkspace } from '@/store/state';
-const {  showOverlay} = useLoadingOverlay();
+
+// Get functions to handle UI states and overlays
+const { showOverlay } = useLoadingOverlay();
 const { showConfirmation } = useConfirmationOverlay();
 const { getTextColor } = useTextColor();
-const emit =  defineEmits(["close", "edit"]);
 
+// Define events for emitting changes
+const emit = defineEmits(["close", "edit"]);
+
+/**
+ * @vue-method {Function} closeOverlay - Closes the current overlay and emits a "close" event.
+ * 
+ * This function emits the "close" event to signal the parent component to close the overlay.
+ * 
+ * @returns {void}
+ */
 const closeOverlay = () => {
     emit("close");
 };
+
+/**
+ * @vue-prop {Object} task - The task object passed as a prop.
+ * 
+ * This object contains various details like the task's name, description, category, subtasks, etc.
+ */
 const props = defineProps({
     task: {
         type: Object
     }
 });
+
+// Computed properties for task details
+
+/**
+ * @vue-computed {string} title - The title of the task.
+ * 
+ * This computed property extracts the task's name from the `task` prop.
+ */
 const title = computed(() => props.task.name);
+
+/**
+ * @vue-computed {string} description - The description of the task.
+ * 
+ * This computed property extracts the task's description from the `task` prop.
+ */
 const description = computed(() => props.task.description);
+
+/**
+ * @vue-computed {Object} category - The category of the task.
+ * 
+ * This computed property finds the task's category from the `categories` array.
+ * If no category is found, it returns a fallback category with the name 'Category Deleted'.
+ */
 const category = computed(() => {
     const cat = categories.value.find(category => category.id === props.task.category);
     if (!cat) {
@@ -82,23 +120,57 @@ const category = computed(() => {
     return cat;
 });
 
+/**
+ * @vue-computed {Array} assignedTo - The list of users assigned to the task.
+ * 
+ * This computed property filters the `members` array to find users assigned to the task.
+ */
 const assignedTo = computed(() => {
     return members.value.filter(member => props.task.selected_contacts.includes(member.id));
 });
+
+/**
+ * @vue-computed {string} dueDate - The due date of the task.
+ * 
+ * This computed property extracts the task's due date from the `task` prop.
+ */
 const dueDate = computed(() => props.task.due_date);
+
+/**
+ * @vue-computed {Array} subtasks - The list of subtasks associated with the task.
+ * 
+ * This computed property extracts the subtasks from the `task.subtasks`.
+ */
 const subtasks = computed(() => props.task.subtasks);
+
+/**
+ * @vue-computed {string} prio - The priority of the task.
+ * 
+ * This computed property extracts the priority level of the task from the `task.prio` field.
+ */
 const prio = computed(() => props.task.prio);
+
+/**
+ * @vue-computed {string} buttonImg - The image for the priority button.
+ * 
+ * This computed property returns the appropriate priority icon based on the task's priority.
+ */
 const buttonImg = computed(() => {
   if (prio.value === 'high') {
     return Prioicons.urgentWhite;
   } else if (prio.value === 'medium') {
-    return Prioicons.mediumWhite; // Adjust the key if it's 'mediumWite'
+    return Prioicons.mediumWhite; // Adjust the key if it's 'mediumWhite'
   } else if (prio.value === 'low') {
     return Prioicons.lowWhite;
   }
   return ''; // Return a default or empty string if no match
 });
 
+/**
+ * @vue-computed {string} buttonColor - The color of the priority button.
+ * 
+ * This computed property returns a color code based on the task's priority.
+ */
 const buttonColor = computed(() => {
   if (prio.value === 'urgent') {
     return 'rgb(255, 60, 0)';
@@ -111,10 +183,10 @@ const buttonColor = computed(() => {
 });
 
 /**
- * Updates the completion status of a given subtask by toggling its `is_completed` property.
- *
- * Sends a PATCH request to update the subtask on the server. If the request is successful,
- * it toggles the `is_completed` property locally. In case of an error, the error is logged to the console.
+ * @vue-method {Function} updateSubtask - Updates the completion status of a given subtask.
+ * 
+ * This async function sends a PATCH request to the server to update the subtask's completion status.
+ * Upon a successful request, it toggles the `is_completed` field for the subtask.
  *
  * @async
  * @param {Object} subtask - The subtask object to update.
@@ -122,7 +194,7 @@ const buttonColor = computed(() => {
  * @param {boolean} subtask.is_completed - The current completion status of the subtask.
  * @returns {Promise<void>} A promise that resolves when the update operation is complete.
  */
- const updateSubtask = async (subtask) => {
+const updateSubtask = async (subtask) => {
     try {
         const token = getToken();
         await fetch(`${API_BASE_URL}/workspaces/workspaces/${currentWorkspace.value.id}/subtasks/${subtask.id}/`, {
@@ -142,22 +214,19 @@ const buttonColor = computed(() => {
 };
 
 /**
- * Deletes a task from the current workspace.
- *
- * This async function performs the following steps:
- * 1. Displays an overlay to indicate the process has started.
- * 2. Retrieves the authentication token.
- * 3. Sends a DELETE request to the API to remove the specified task.
- * 4. Updates the local tasks array by removing the deleted task.
- * 5. Shows a confirmation message upon successful deletion.
- * 6. Closes the overlay.
- *
- * If an error occurs during the process, it logs the error to the console.
+ * @vue-method {Function} deleteTask - Deletes a task from the current workspace.
+ * 
+ * This async function:
+ * 1. Displays an overlay to indicate that the process has started.
+ * 2. Sends a DELETE request to the API to remove the task.
+ * 3. Updates the local tasks list.
+ * 4. Displays a confirmation message upon successful deletion.
+ * 5. Closes the overlay.
  *
  * @async
  * @returns {Promise<void>} A promise that resolves when the task deletion is complete.
  */
- const deleteTask = async () => {
+const deleteTask = async () => {
     showOverlay();
     try {
         const token = getToken();
@@ -177,17 +246,17 @@ const buttonColor = computed(() => {
 };
 
 /**
- * Initiates the task editing process.
- *
- * This function performs the following actions:
- * - Closes the current overlay.
- * - Emits an 'edit' event to signal that the task should be edited.
+ * @vue-method {Function} editTask - Initiates the task editing process.
+ * 
+ * This function emits an 'edit' event to signal the parent component that the task should be edited.
+ * It also closes the current overlay.
  */
- const editTask = () => {
+const editTask = () => {
     closeOverlay();
     emit('edit');
 };
 </script>
+
 
 <style scoped>
 .board-task-detail {

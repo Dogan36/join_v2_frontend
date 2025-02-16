@@ -43,21 +43,52 @@ import { defineEmits, ref } from "vue";
 import useWorkspaces from "@/composables/useWorkspaces";
 const { invitePerEmail } = useWorkspaces();
 import { currentWorkspace } from "@/store/state";
-const emit = defineEmits(["close"]);
-const shareCodeEmail = ref("");
-const error = ref("");
-const copyToClipboardText = ref("Copy to Clipboard");
 
+// Event emitter for closing the modal
+/**
+ * @vue-method {Function} emit - Emits the "close" event.
+ * 
+ * This function is used to close the modal where the invite process is taking place.
+ * 
+ * @returns {void}
+ */
+const emit = defineEmits(["close"]);
+
+// Reactive properties
+/**
+ * @vue-data {string} shareCodeEmail - The email address to send the invitation to.
+ * 
+ * This reactive property holds the email address inputted by the user for sending an invitation.
+ */
+const shareCodeEmail = ref("");
 
 /**
- * Attempts to send an invitation via email.
+ * @vue-data {string} error - The error message related to email validation or invitation failure.
  * 
- * If there are validation errors, the function exits early. Otherwise, it sends the invitation 
- * and closes the modal upon success.
+ * This reactive property holds the error message when validation fails or if there's an issue sending the invitation.
+ */
+const error = ref("");
+
+/**
+ * @vue-data {string} copyToClipboardText - The text displayed on the "Copy to Clipboard" button.
+ * 
+ * This reactive property holds the text shown on the button, which changes once the workspace join code is copied.
+ */
+const copyToClipboardText = ref("Copy to Clipboard");
+
+/**
+ * @vue-method {Function} trySend - Attempts to send an invitation via email.
+ * 
+ * This async function performs the following steps:
+ * - Validates the email input and checks for errors.
+ * - If validation fails, it exits early.
+ * - If validation passes, it sends the invitation and closes the modal upon success.
+ * - If there's an error during the invitation process, it displays an error message.
  * 
  * @async
+ * @returns {Promise<void>} Resolves when the invitation is sent successfully or rejected in case of error.
  */
- const trySend = async () => {
+const trySend = async () => {
   resetErrors();
   if (checkForErrors()) {
     return;
@@ -71,14 +102,20 @@ const copyToClipboardText = ref("Copy to Clipboard");
 };
 
 /**
- * Resets the error message.
+ * @vue-method {Function} resetErrors - Resets the error message.
+ * 
+ * This function clears any previously set error messages.
+ * 
+ * @returns {void}
  */
 const resetErrors = () => {
   error.value = "";
 };
 
 /**
- * Validates the email input and sets an error message if necessary.
+ * @vue-method {Function} checkForErrors - Validates the email input and sets an error message if necessary.
+ * 
+ * This function checks if the email input is empty or invalid and sets an appropriate error message.
  * 
  * @returns {boolean} `true` if there are validation errors, otherwise `false`.
  */
@@ -95,16 +132,23 @@ const checkForErrors = () => {
 };
 
 /**
- * Closes the modal by emitting the "close" event.
+ * @vue-method {Function} close - Closes the modal by emitting the "close" event.
+ * 
+ * This function emits the "close" event to close the modal.
+ * 
+ * @returns {void}
  */
 const close = () => {
   emit("close");
 };
 
 /**
- * Copies the workspace join code to the clipboard.
+ * @vue-method {Function} copyToClipboard - Copies the workspace join code to the clipboard.
  * 
- * If successful, updates the UI to indicate that the text has been copied.
+ * This function copies the text content of the workspace join code to the clipboard.
+ * It also updates the UI to indicate that the text has been successfully copied.
+ * 
+ * @returns {void}
  */
 const copyToClipboard = () => {
   const textToCopy = document.getElementById("join_code").innerText;
@@ -118,6 +162,7 @@ const copyToClipboard = () => {
 };
 
 </script>
+
 
 <style scoped>
 

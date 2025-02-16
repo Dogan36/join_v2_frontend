@@ -32,14 +32,26 @@
 import { ref, computed } from 'vue';
 import AssignedToAvatars from '@/components/shared/AssignedToAvatars.vue';
 import { members } from "@/store/state";
+
+// State that indicates whether the user is selecting contacts
+/**
+ * @vue-data {boolean} selectingContacts - Indicates whether the user is in contact selection mode.
+ */
 const selectingContacts = ref(false);
 
-
+// Initialize contacts with selected state
+/**
+ * @vue-data {Array} contacts - A list of contacts, each containing a `selected` state.
+ */
 const contacts = ref(members.value.map(member => ({
   ...member,
   selected: false,
 })));
 
+// Computed property for selected contacts
+/**
+ * @vue-computed {Array} selectedContacts - A list of IDs of the selected contacts.
+ */
 const selectedContacts = computed(() => {
   return contacts.value.filter(contact => contact.selected).map(contact => contact.id);
 });
@@ -82,9 +94,8 @@ const toggleSelectContacts = () => {
 };
 
 defineExpose({
- selectedContacts,
- setContacts,
- clear,
+  selectedContacts,
+  setContacts,
+  clear,
 });
-
 </script>

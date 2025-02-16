@@ -74,8 +74,21 @@
 import { defineProps, computed, defineEmits } from 'vue';
 import { ref } from 'vue';
 import Prioicons from '@/utils/prioIcons';
+
+// Emit event to update the model value
+/**
+ * @vue-method {Function} updatePrio - Updates the current priority value and emits an update event.
+ * 
+ * This function sets the new priority value and emits an update event to notify the parent component.
+ * 
+ * @param {string} newPrio - The new priority value to set.
+ */
 const emit = defineEmits(['update:modelValue']);
 
+// Define the component's props
+/**
+ * @vue-prop {string} modelValue - The initial priority value. Defaults to 'medium'.
+ */
 const props = defineProps({
     modelValue: {
         type: String,
@@ -83,30 +96,40 @@ const props = defineProps({
     }
 });
 
-// Debugging hinzufügen, um sicherzustellen, dass der Standardwert korrekt ist
+// Debugging to ensure the default value is correct
+/**
+ * @vue-data {string} currentPrio - The current priority value.
+ * 
+ * This data property holds the current priority value, which can be updated.
+ */
 const currentPrio = ref(props.modelValue || 'medium');
 
-
 /**
- * Resets the current priority value to 'medium'.
+ * @vue-method {Function} clear - Resets the current priority value to 'medium'.
+ * 
+ * This function resets the `currentPrio` to the default value 'medium'.
  */
- const clear = () => {
+const clear = () => {
     currentPrio.value = 'medium';
 };
 
 /**
- * Updates the current priority value and emits an update event.
+ * @vue-method {Function} updatePrio - Updates the current priority value and emits an update event.
+ * 
+ * This function updates the priority and emits the new value.
  *
  * @param {string} newPrio - The new priority value to set.
  */
- function updatePrio(newPrio) {
+function updatePrio(newPrio) {
   currentPrio.value = newPrio;
   emit('update:modelValue', newPrio);
 }
 
+// Expose methods and data
 defineExpose({
     currentPrio,
     updatePrio,
     clear
 });
 </script>
+

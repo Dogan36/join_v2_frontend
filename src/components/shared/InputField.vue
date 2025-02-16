@@ -34,13 +34,24 @@
 </template>
 
 <script setup>
-
 import { ref, computed } from 'vue';
 import { defineProps, defineEmits } from 'vue';
 import loginPasswordSvg from '@/assets/img/loginPassword.svg';
 import visibleIconSvg from '@/assets/img/visibleIcon.svg';
 import notVisibleIconSvg from '@/assets/img/notVisibleIcon.svg';
-// Props definieren
+
+// Props definition
+/**
+ * @vue-prop {string} modelValue - The value bound to the input.
+ * @vue-prop {string} id - The unique identifier for the input field.
+ * @vue-prop {string} [type='text'] - The type of the input (e.g., 'password', 'text').
+ * @vue-prop {string} placeholder - The placeholder text for the input field.
+ * @vue-prop {string} maxlength - The maximum number of characters allowed in the input.
+ * @vue-prop {string} [icon=''] - The icon for the input field (default is empty).
+ * @vue-prop {string} iconAlt - The alt text for the input icon.
+ * @vue-prop {boolean} error - Flag to indicate if there is an error.
+ * @vue-prop {object} errorMessages - An object holding error messages.
+ */
 const props = defineProps({
   modelValue: String,
   id: String,
@@ -48,30 +59,41 @@ const props = defineProps({
   placeholder: String,
   maxlength: String,
   autocomplete: String,
-  icon: { type: String, default: '' }, // Standardicon für Nicht-Passwortfelder
+  icon: { type: String, default: '' }, // Default icon for non-password fields
   iconAlt: { type: String, default: '' },
   error: Boolean,
   errorMessages: {type: Object, default: () => ({})},
 });
 
+// Event emitters
+/**
+ * @vue-method {Function} emit - Emits the "update:modelValue" event and the "iconClick" event.
+ * 
+ * This function allows the input value to be updated and also triggers the icon click event.
+ * 
+ * @returns {void}
+ */
 const emit = defineEmits(['update:modelValue', 'iconClick']);
 
-// Lokale Variablen
+// Local variables
+/**
+ * @vue-data {boolean} isPasswordVisible - Flag to toggle password visibility.
+ */
 const isPasswordVisible = ref(false);
 
 /**
- * Computes the first available error message from the provided error messages object.
+ * @vue-computed {string} errorMessage - Computes the first available error message from the provided error messages object.
  * 
- * @constant
+ * @returns {string} - The first error message or an empty string if no error exists.
  */
- const errorMessage = computed(() => {
+const errorMessage = computed(() => {
   return Object.values(props.errorMessages).find((msg) => msg) || "";
 });
 
 /**
- * Computes the appropriate password icon source based on the input state.
+ * @vue-computed {string} passwordIconSrc - Computes the appropriate password icon source based on the input state.
  * 
- * @constant
+ * @returns {string} - The path to the correct icon (either a lock icon or a visibility toggle icon).
  */
 const passwordIconSrc = computed(() => {
   if (!props.modelValue) {
@@ -81,9 +103,9 @@ const passwordIconSrc = computed(() => {
 });
 
 /**
- * Computes the alt text for the password icon.
+ * @vue-computed {string} passwordIconAlt - Computes the alt text for the password icon.
  * 
- * @constant
+ * @returns {string} - The alt text for the password icon.
  */
 const passwordIconAlt = computed(() => {
   if (!props.modelValue) return "Lock icon";
@@ -91,9 +113,9 @@ const passwordIconAlt = computed(() => {
 });
 
 /**
- * Computes the CSS class for the password icon based on its type.
+ * @vue-computed {string} passwordIconClass - Computes the CSS class for the password icon based on its type.
  * 
- * @constant
+ * @returns {string} - The CSS class for the password icon (either a default style or a clickable style).
  */
 const passwordIconClass = computed(() => {
   return passwordIconSrc.value.includes("loginPassword") // Password field
@@ -102,23 +124,34 @@ const passwordIconClass = computed(() => {
 });
 
 /**
- * Emits an event when the input value changes.
+ * @vue-method {Function} onInput - Emits an event when the input value changes.
  * 
- * @param {Event} event - The input event.
+ * This function is triggered whenever the input value changes and updates the bound model value.
+ * 
+ * @param {Event} event - The input event that triggers the update.
+ * @returns {void}
  */
 const onInput = (event) => {
   emit("update:modelValue", event.target.value);
 };
 
 /**
- * Toggles the visibility of the password.
+ * @vue-method {Function} togglePasswordVisibility - Toggles the visibility of the password.
+ * 
+ * This function flips the value of `isPasswordVisible` to show or hide the password.
+ * 
+ * @returns {void}
  */
 const togglePasswordVisibility = () => {
   isPasswordVisible.value = !isPasswordVisible.value;
 };
 
 /**
- * Emits an event when the password icon is clicked.
+ * @vue-method {Function} emitIconClick - Emits an event when the password icon is clicked.
+ * 
+ * This function emits an event to handle the icon click (e.g., for toggling visibility).
+ * 
+ * @returns {void}
  */
 const emitIconClick = () => {
   emit("iconClick");

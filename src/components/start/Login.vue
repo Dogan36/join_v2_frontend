@@ -64,33 +64,73 @@ import { currentUser } from "@/store/state";
 import { API_BASE_URL } from "@/config";
 import { useLoadingOverlay } from '@/composables/useLoadingOverlay';
 import { useConfirmationOverlay } from "@/composables/useConfirmationOverlay";
+
 const { showOverlay, hideOverlay } = useLoadingOverlay();
 const { showConfirmation } = useConfirmationOverlay();
-
 
 const router = useRouter();
 const loginEmail = ref("");
 const loginPassword = ref("");
 const rememberMe = ref(false);
 
-// Fehlerstatus
+// Error states
+/**
+ * @vue-data {boolean} emailError - Indicates whether the email input field is empty.
+ */
 const emailError = ref(false);
+
+/**
+ * @vue-data {boolean} emailFormatError - Indicates whether the email format is incorrect.
+ */
 const emailFormatError = ref(false);
+
+/**
+ * @vue-data {boolean} emailNotFoundError - Indicates if the email provided is not found in the system.
+ */
 const emailNotFoundError = ref(false);
+
+/**
+ * @vue-data {boolean} passwordError - Indicates whether the password field is empty.
+ */
 const passwordError = ref(false);
+
+/**
+ * @vue-data {boolean} passwordLengthError - Indicates whether the password length is less than 6 characters.
+ */
 const passwordLengthError = ref(false);
+
+/**
+ * @vue-data {boolean} passwordIncorrectError - Indicates if the password is incorrect.
+ */
 const passwordIncorrectError = ref(false);
+
+// Event emitter
+/**
+ * @vue-method {Function} emit - Emits events to manage modal states.
+ * 
+ * This function is used to emit events like `toggleForgotPassword` to control the visibility of modals.
+ * 
+ * @returns {void}
+ */
 const emit = defineEmits();
 
 /**
- * Emits an event to toggle the forgot password view.
+ * @vue-method {Function} forgotPassword - Emits an event to toggle the forgot password view.
+ * 
+ * This function emits the event "toggleForgotPassword" to display the forgot password modal.
+ * 
+ * @returns {void}
  */
 const forgotPassword = () => {
   emit("toggleForgotPassword");
 };
 
 /**
- * Loads remembered email from localStorage if the "remember me" option was previously selected.
+ * @vue-method {Function} onMounted - Loads remembered email from localStorage if the "remember me" option was previously selected.
+ * 
+ * This function checks if there is a remembered email in localStorage and populates the email field accordingly.
+ * 
+ * @returns {void}
  */
 onMounted(() => {
   if (localStorage.getItem("join_remember")) {
@@ -100,14 +140,16 @@ onMounted(() => {
 });
 
 /**
- * Attempts to log in a user with the provided email and password.
+ * @vue-method {Function} login - Attempts to log in a user with the provided email and password.
  * 
- * If successful, stores authentication details in localStorage and redirects the user.
- * Handles errors such as incorrect credentials or non-existent users.
+ * This async function sends a login request to the API with the provided email and password. 
+ * If successful, it stores the authentication details in localStorage and redirects the user to the home page.
+ * It handles errors such as incorrect credentials or non-existent users.
  * 
  * @async
  * @param {string} email - The user's email address.
  * @param {string} password - The user's password.
+ * @returns {Promise<void>} Resolves when the login attempt is complete.
  */
 async function login(email, password) {
   console.log("Login with", email, password);
@@ -149,7 +191,12 @@ async function login(email, password) {
 }
 
 /**
- * Attempts to log in the user after validating input fields.
+ * @vue-method {Function} tryLogin - Attempts to log in the user after validating input fields.
+ * 
+ * This function first resets any error states, checks for validation errors in the email and password input fields, 
+ * and if no errors are found, it proceeds to call the `login` function.
+ * 
+ * @returns {void}
  */
 const tryLogin = () => {
   resetErrors();
@@ -159,7 +206,11 @@ const tryLogin = () => {
 };
 
 /**
- * Resets all login-related error states.
+ * @vue-method {Function} resetErrors - Resets all login-related error states.
+ * 
+ * This function clears all error flags related to the email and password input and validation.
+ * 
+ * @returns {void}
  */
 const resetErrors = () => {
   emailError.value = false;
@@ -171,7 +222,9 @@ const resetErrors = () => {
 };
 
 /**
- * Validates login input fields.
+ * @vue-method {Function} checkForErrors - Validates login input fields.
+ * 
+ * This function checks for validation errors in the email and password fields (empty fields, incorrect format, etc.).
  * 
  * @returns {boolean} `true` if validation errors exist, otherwise `false`.
  */
@@ -190,7 +243,9 @@ const checkForErrors = () => {
 };
 
 /**
- * Checks if the email field is empty and updates the corresponding error state.
+ * @vue-method {Function} checkIfEmailEmpty - Checks if the email field is empty and updates the corresponding error state.
+ * 
+ * This function sets the `emailError` flag if the email field is empty.
  * 
  * @returns {boolean} `true` if the email is not empty, otherwise `false`.
  */
@@ -200,7 +255,9 @@ const checkIfEmailEmpty = () => {
 };
 
 /**
- * Validates the email format and updates the corresponding error state.
+ * @vue-method {Function} checkEmailFormat - Validates the email format and updates the corresponding error state.
+ * 
+ * This function checks if the email format is valid using a regular expression and sets the `emailFormatError` flag if invalid.
  * 
  * @returns {boolean} `true` if the email format is valid, otherwise `false`.
  */
@@ -211,7 +268,9 @@ const checkEmailFormat = () => {
 };
 
 /**
- * Checks if the password field is empty and updates the corresponding error state.
+ * @vue-method {Function} checkIfPasswordEmpty - Checks if the password field is empty and updates the corresponding error state.
+ * 
+ * This function sets the `passwordError` flag if the password field is empty.
  * 
  * @returns {boolean} `true` if the password is not empty, otherwise `false`.
  */
@@ -221,7 +280,9 @@ const checkIfPasswordEmpty = () => {
 };
 
 /**
- * Checks if the password meets the minimum length requirement (6 characters).
+ * @vue-method {Function} checkPasswordLength - Checks if the password meets the minimum length requirement (6 characters).
+ * 
+ * This function checks if the password length is less than 6 characters and sets the `passwordLengthError` flag accordingly.
  * 
  * @returns {boolean} `true` if the password length is valid, otherwise `false`.
  */
@@ -231,12 +292,15 @@ const checkPasswordLength = () => {
 };
 
 /**
- * Logs in a guest user with predefined credentials.
+ * @vue-method {Function} guestLogin - Logs in a guest user with predefined credentials.
+ * 
+ * This function automatically logs in a guest user using predefined credentials for testing or demo purposes.
+ * 
+ * @returns {void}
  */
 const guestLogin = () => {
   login("guest@join.dogan-celik.de", "Guest1234");
 };
-
 </script>
 
 <style>

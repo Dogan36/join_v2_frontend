@@ -34,30 +34,73 @@ import InputField from "../shared/InputField.vue";
 import { useConfirmationOverlay } from "@/composables/useConfirmationOverlay";
 import { useLoadingOverlay } from "@/composables/useLoadingOverlay";
 const { showOverlay, hideOverlay } = useLoadingOverlay();
-const  {showConfirmation} = useConfirmationOverlay();
+const { showConfirmation } = useConfirmationOverlay();
 import { API_BASE_URL } from "@/config";
+
+// Event emitter
+/**
+ * @vue-method {Function} emit - Emits events such as "toggle" to manage the modal state.
+ * 
+ * @returns {void}
+ */
 const emit = defineEmits();
+
+/**
+ * @vue-data {string} forgotEmail - The email entered by the user for password reset.
+ * 
+ * This reactive property stores the email address entered by the user when requesting a password reset.
+ */
 const forgotEmail = ref("");
 
+// Event handler for going back
+/**
+ * @vue-method {Function} goBack - Closes the current modal by emitting the "toggle" event.
+ * 
+ * This function emits the "toggle" event to close the current modal.
+ * 
+ * @returns {void}
+ */
 const goBack = () => {
   emit("toggle");
 };
-// Fehlerstatus
+
+// Error states
+/**
+ * @vue-data {boolean} emailError - Indicates whether there is an error in the email input field.
+ * 
+ * This reactive property holds the error state for the email input field when it is empty.
+ */
 const emailError = ref(false);
+
+/**
+ * @vue-data {boolean} emailFormatError - Indicates whether the email format is incorrect.
+ * 
+ * This reactive property holds the error state when the email format is invalid.
+ */
 const emailFormatError = ref(false);
+
+/**
+ * @vue-data {boolean} emailNotFoundError - Indicates if the email entered does not exist in the system.
+ * 
+ * This reactive property holds the error state when the email provided by the user is not found.
+ */
 const emailNotFoundError = ref(false);
 
 
 /**
- * Sends a password reset request for the given email.
+ * @vue-method {Function} requestPasswordReset - Sends a password reset request for the given email.
  * 
- * Displays an overlay during the request and handles potential errors such as 
- * invalid emails or network issues. If successful, a confirmation message is shown.
+ * This async function performs the following:
+ * - Displays an overlay during the request.
+ * - Sends a request to reset the password.
+ * - If successful, displays a confirmation message.
+ * - If the email is not found or another error occurs, it sets an appropriate error message.
  * 
  * @async
  * @param {string} email - The email address for which to request a password reset.
+ * @returns {Promise<void>} Resolves when the request is completed or failed.
  */
- async function requestPasswordReset(email) {
+async function requestPasswordReset(email) {
   showOverlay();
   try {
     const response = await fetch(`${API_BASE_URL}/user/password-reset-request/`, {
@@ -87,7 +130,12 @@ const emailNotFoundError = ref(false);
 }
 
 /**
- * Attempts to send a password reset request if no validation errors exist.
+ * @vue-method {Function} tryRequest - Attempts to send a password reset request if no validation errors exist.
+ * 
+ * This function first resets any error states, checks for validation errors in the email input, 
+ * and if no errors are found, it proceeds to send the password reset request.
+ * 
+ * @returns {void}
  */
 const tryRequest = () => {
   resetErrors();
@@ -97,7 +145,11 @@ const tryRequest = () => {
 };
 
 /**
- * Resets all password reset-related error states.
+ * @vue-method {Function} resetErrors - Resets all password reset-related error states.
+ * 
+ * This function clears all error flags related to the email input and validation.
+ * 
+ * @returns {void}
  */
 const resetErrors = () => {
   emailError.value = false;
@@ -106,7 +158,10 @@ const resetErrors = () => {
 };
 
 /**
- * Checks for errors in the email input field.
+ * @vue-method {Function} checkForErrors - Checks for errors in the email input field.
+ * 
+ * This function validates if the email input is empty or if the format is incorrect.
+ * It returns `true` if there are validation errors and `false` otherwise.
  * 
  * @returns {boolean} `true` if there are validation errors, otherwise `false`.
  */
@@ -117,7 +172,9 @@ const checkForErrors = () => {
 };
 
 /**
- * Checks if the email field is empty and updates the corresponding error state.
+ * @vue-method {Function} checkIfEmailEmpty - Checks if the email field is empty and updates the corresponding error state.
+ * 
+ * This function validates whether the email input is empty and sets the `emailError` flag if it is.
  * 
  * @returns {boolean} `true` if the email is not empty, otherwise `false`.
  */
@@ -127,7 +184,9 @@ const checkIfEmailEmpty = () => {
 };
 
 /**
- * Validates the email format and updates the corresponding error state.
+ * @vue-method {Function} checkEmailFormat - Validates the email format and updates the corresponding error state.
+ * 
+ * This function checks if the email format is valid using a regular expression and updates the `emailFormatError` flag if it is invalid.
  * 
  * @returns {boolean} `true` if the email format is valid, otherwise `false`.
  */
@@ -136,11 +195,9 @@ const checkEmailFormat = () => {
   emailFormatError.value = forgotEmail.value && !emailPattern.test(forgotEmail.value);
   return !emailFormatError.value;
 };
-
 </script>
 
 <style>
-
 .button-icon {
   width: 24px;
   height: 24px;

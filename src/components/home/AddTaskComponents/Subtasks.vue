@@ -32,95 +32,122 @@
   </template>
   
 
-<script setup>
-import { ref, watch, defineEmits } from 'vue';
-
-
-const emit = defineEmits(["update:subtasks"]);
-const addingNewSubtask = ref(false);
-const newSubtask = ref('');
-const error = ref('');
-
-const subtasks = ref([]);
-
-/**
- * Adds a new subtask to the subtasks list.
- *
- * This function performs the following steps:
- * 1. Checks if the new subtask input is empty (after trimming whitespace). If it is empty,
- *    an error message is set and the function returns early.
- * 2. If the input is valid, it appends a new subtask object (with `name` and `completed` status) to the subtasks array.
- * 3. Resets the new subtask input and error message.
- * 4. Emits an event to update the parent component with the updated subtasks list.
- * 5. Toggles the UI state for adding a new subtask.
- */
- const addNewSubtask = () => {
+  <script setup>
+  import { ref, watch, defineEmits } from 'vue';
+  
+  const emit = defineEmits(["update:subtasks"]);
+  
+  // Reactive state for managing subtasks
+  /**
+   * @vue-data {boolean} addingNewSubtask - Indicates if the UI for adding a new subtask is active.
+   */
+  const addingNewSubtask = ref(false);
+  
+  /**
+   * @vue-data {string} newSubtask - The input value for the new subtask.
+   */
+  const newSubtask = ref('');
+  
+  /**
+   * @vue-data {string} error - The error message related to the new subtask input.
+   */
+  const error = ref('');
+  
+  /**
+   * @vue-data {Array} subtasks - The list of subtasks associated with the task.
+   */
+  const subtasks = ref([]);
+  
+  /**
+   * @vue-method {Function} addNewSubtask - Adds a new subtask to the subtasks list.
+   * 
+   * This function performs the following steps:
+   * 1. Checks if the new subtask input is empty (after trimming whitespace). If it is empty,
+   *    an error message is set and the function returns early.
+   * 2. If the input is valid, it appends a new subtask object (with `name` and `completed` status) to the subtasks array.
+   * 3. Resets the new subtask input and error message.
+   * 4. Emits an event to update the parent component with the updated subtasks list.
+   * 5. Toggles the UI state for adding a new subtask.
+   * 
+   * @returns {void}
+   */
+  const addNewSubtask = () => {
     if (!newSubtask.value.trim()) {
-        error.value = 'New subtask cannot be empty';
-        return;
+      error.value = 'New subtask cannot be empty';
+      return;
     }
     subtasks.value.push({ name: newSubtask.value, completed: false });
     newSubtask.value = '';
     error.value = '';
     emit("update:subtasks", subtasks.value);
     toggleAddingNewSubtask();
-};
-
-/**
- * Toggles the UI state for adding a new subtask.
- *
- * This function clears the current input for a new subtask and toggles the boolean flag
- * that indicates whether the UI for adding a new subtask is active.
- */
- const toggleAddingNewSubtask = () => {
+  };
+  
+  /**
+   * @vue-method {Function} toggleAddingNewSubtask - Toggles the UI state for adding a new subtask.
+   * 
+   * This function clears the current input for a new subtask and toggles the boolean flag
+   * that indicates whether the UI for adding a new subtask is active.
+   * 
+   * @returns {void}
+   */
+  const toggleAddingNewSubtask = () => {
     newSubtask.value = '';
     addingNewSubtask.value = !addingNewSubtask.value;
-};
-
-/**
- * Sets the subtasks array to the provided list.
- *
- * @param {Array} newSubtasks - The new list of subtasks.
- */
- const setSubtasks = (newSubtasks) => {
+  };
+  
+  /**
+   * @vue-method {Function} setSubtasks - Sets the subtasks array to the provided list.
+   * 
+   * This function is used to set the `subtasks` array from the parent component.
+   * 
+   * @param {Array} newSubtasks - The new list of subtasks.
+   * @returns {void}
+   */
+  const setSubtasks = (newSubtasks) => {
     subtasks.value = newSubtasks;
-};
-
-/**
- * Clears all subtasks by resetting the subtasks array to an empty array.
- */
- const clear = () => {
+  };
+  
+  /**
+   * @vue-method {Function} clear - Clears all subtasks by resetting the subtasks array to an empty array.
+   * 
+   * @returns {void}
+   */
+  const clear = () => {
     subtasks.value = [];
-};
-
-/**
- * Deletes a subtask at the specified index from the subtasks array.
- *
- * After removing the subtask, it emits an event to update the parent component with the updated subtasks list.
- *
- * @param {number} index - The index of the subtask to be removed.
- */
- const deleteSubtask = (index) => {
-  subtasks.value.splice(index, 1);
-  emit("update:subtasks", subtasks.value);
-};
-
-/**
- * Watches the `subtasks` array for changes and emits an update event with the new subtasks.
- *
- * This ensures that any change in the `subtasks` array is immediately communicated to the parent component.
- *
- * @param {Array} newSubtasks - The updated list of subtasks.
- */
- watch(subtasks, (newSubtasks) => {
-  emit("update:subtasks", newSubtasks);
-});
-
-defineExpose({
+  };
+  
+  /**
+   * @vue-method {Function} deleteSubtask - Deletes a subtask at the specified index from the subtasks array.
+   * 
+   * After removing the subtask, it emits an event to update the parent component with the updated subtasks list.
+   * 
+   * @param {number} index - The index of the subtask to be removed.
+   * @returns {void}
+   */
+  const deleteSubtask = (index) => {
+    subtasks.value.splice(index, 1);
+    emit("update:subtasks", subtasks.value);
+  };
+  
+  /**
+   * @vue-method {Function} watch - Watches the `subtasks` array for changes and emits an update event with the new subtasks.
+   * 
+   * This ensures that any change in the `subtasks` array is immediately communicated to the parent component.
+   * 
+   * @param {Array} newSubtasks - The updated list of subtasks.
+   * @returns {void}
+   */
+  watch(subtasks, (newSubtasks) => {
+    emit("update:subtasks", newSubtasks);
+  });
+  
+  defineExpose({
     setSubtasks,
     clear
-});
-</script>
+  });
+  </script>
+  
 
 <style>
 .subtasks-container {

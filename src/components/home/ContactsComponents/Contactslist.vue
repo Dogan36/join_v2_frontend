@@ -28,38 +28,68 @@
 </template>
 
 <script setup>
-import {computed, ref } from "vue";
+import { computed, ref } from "vue";
 import ContactslistCard from "./ContactslistCard.vue";
 import { defineEmits } from "vue";
 import { contacts } from "@/store/state";
 import { members } from "@/store/state";
 import { currentUser, selectedContact } from "@/store/state";
 
+// Ref to track selected filter
+/**
+ * @vue-data {string} selectedFilter - The selected filter for displaying contacts ('all', 'own', 'members').
+ */
 const selectedFilter = ref('all');
 
-const emit = defineEmits(["updateContact"]); // Definiere ein Event für das Parent
+// Event to update selected contact in the parent component
+/**
+ * @vue-method {Function} emitSelectedContact - Emits an event to update the selected contact in the parent component.
+ *
+ * @param {Object} contact - The selected contact to be passed to the parent.
+ * @returns {void}
+ */
+const emit = defineEmits(["updateContact"]);
 const emitSelectedContact = (contact) => {
-  emit("updateContact", contact); // Sende den Kontakt nach oben
+  emit("updateContact", contact); // Pass the selected contact to the parent
 };
 
+/**
+ * @vue-computed {Array} combinedContacts - Combines and filters contacts and members based on the selected filter.
+ * 
+ * This computed property returns:
+ * - 'all' filter: all contacts and members.
+ * - 'own' filter: only contacts.
+ * - 'members' filter: only members.
+ * 
+ * @returns {Array} The combined list of contacts and members based on the selected filter.
+ */
 const combinedContacts = computed(() => {
   const allContacts = contacts.value.map(contact => ({
     ...contact,
-    isMember: false  // Markiere, dass es sich um einen Kontakt handelt
+    isMember: false  // Mark as a contact
   }));
+  
   const allMembers = members.value
-  .filter(member => member.id !== currentUser.value.id)
-  .map(member => ({
-    ...member,
-    isMember: true  // Markiere, dass es sich um ein Mitglied handelt
-  }));
+    .filter(member => member.id !== currentUser.value.id)
+    .map(member => ({
+      ...member,
+      isMember: true  // Mark as a member
+    }));
+  
   return selectedFilter.value === 'own' ? allContacts :
          selectedFilter.value === 'members' ? allMembers :
          [...allContacts, ...allMembers];
 });
 
+/**
+ * @vue-computed {Object} groupedContacts - Groups contacts by the first letter of their name.
+ * 
+ * This computed property organizes the contacts into groups based on the first letter of their name,
+ * and sorts the groups alphabetically.
+ * 
+ * @returns {Object} A grouped and sorted object of contacts.
+ */
 const groupedContacts = computed(() => {
-  // Kontakte nach erstem Buchstaben gruppieren
   const groups = combinedContacts.value.reduce((acc, contact) => {
     const firstLetter = contact.name[0].toUpperCase();
     if (!acc[firstLetter]) {
@@ -69,10 +99,9 @@ const groupedContacts = computed(() => {
     return acc;
   }, {});
 
-  // Neues Objekt mit sortierten Schlüsseln erzeugen
   const sortedGroups = {};
   Object.keys(groups)
-    .sort() // sortiert alphabetisch
+    .sort() // Sort groups alphabetically
     .forEach(letter => {
       sortedGroups[letter] = groups[letter];
     });
@@ -80,10 +109,20 @@ const groupedContacts = computed(() => {
   return sortedGroups;
 });
 
+/**
+ * @vue-computed {boolean} isEmpty - Checks if there are no contacts in the groupedContacts list.
+ * 
+ * @returns {boolean} Returns true if there are no contacts, otherwise false.
+ */
 const isEmpty = computed(() => {
   return groupedContacts.value && Object.keys(groupedContacts.value).length === 0;
 });
 
+/**
+ * @vue-computed {string} emptyMessage - Returns a message to be displayed when no contacts are available based on the selected filter.
+ * 
+ * @returns {string} The message to display when no contacts are available.
+ */
 const emptyMessage = computed(() => {
   if (selectedFilter.value === 'own') {
     return 'No own contacts available.';
@@ -93,6 +132,7 @@ const emptyMessage = computed(() => {
   return 'No contacts available.';
 });
 </script>
+
 
 <style scoped>
 .contacts-list {

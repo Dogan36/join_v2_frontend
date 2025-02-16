@@ -17,14 +17,34 @@
 
 <script setup>
 import { defineProps, computed } from "vue";
-import  useTextColor  from '@/composables/useTextColor';
+import useTextColor from '@/composables/useTextColor';
+
+// Get the text color function
+/**
+ * @vue-method {Function} getTextColor - A function that returns the text color.
+ * 
+ * This function is used to determine the appropriate text color for the contact.
+ */
 const { getTextColor } = useTextColor();
+
+// Define component props
+/**
+ * @vue-prop {Object} contact - The contact object containing details such as name, email, etc.
+ * 
+ * This prop holds the information for a single contact, which can be used to display the contact's details.
+ */
 const props = defineProps({
   contact: Object,
+  
+  /**
+   * @vue-prop {boolean} isActive - A boolean that indicates whether the contact is active or not.
+   * 
+   * This prop is used to track if the contact is in an active state.
+   */
   isActive: Boolean,
 });
-
 </script>
+
 
 <style scoped>
 .avatar {

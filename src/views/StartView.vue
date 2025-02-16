@@ -31,75 +31,78 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import Login from '@/components/start/Login.vue';
-import Signup from '@/components/start/SignUp.vue';
-import ForgotPassword from '@/components/start/ForgotPassword.vue';
-import { currentUser } from '@/store/state';
-const startAnimation = ref(false);
-const animationFinished = ref(false);
+  import { ref, onMounted } from 'vue';
+  import Login from '@/components/start/Login.vue';
+  import Signup from '@/components/start/SignUp.vue';
+  import ForgotPassword from '@/components/start/ForgotPassword.vue';
+  import { currentUser } from '@/store/state';
+  const startAnimation = ref(false);
+  const animationFinished = ref(false);
+
   onMounted(() => {
-  setTimeout(() => {
-    startAnimation.value = true;
-  }, 1000);
-  setTimeout(() => {
-    checkIfUserIsLoggedIn();
-  }, 2000);
+    setTimeout(() => {
+      startAnimation.value = true;
+    }, 1000);
+    setTimeout(() => {
+      checkIfUserIsLoggedIn();
+    }, 2000);
+  });
 
-  
-});
-// Reaktives Datenobjekt für den Login-Zustand
-const isLogin = ref(true);
-const isSignup = ref(false);
-const isForgotPassword = ref(false);
+  // Reaktives Datenobjekt für den Login-Zustand
+  const isLogin = ref(true);
+  const isSignup = ref(false);
+  const isForgotPassword = ref(false);
 
-/**
- * Toggles between login and signup views.
- */
- const toggleSignup = () => {
-  isLogin.value = !isLogin.value;
-  isSignup.value = !isSignup.value;
-};
+  /**
+   * Toggles between the login and signup views.
+   * This function switches the `isLogin` and `isSignup` states to toggle between
+   * showing the login and signup components.
+   */
+  const toggleSignup = () => {
+    isLogin.value = !isLogin.value;
+    isSignup.value = !isSignup.value;
+  };
 
-/**
- * Toggles between login and forgot password views.
- */
-const toggleForgotPassword = () => {
-  isLogin.value = !isLogin.value;
-  isForgotPassword.value = !isForgotPassword.value;
-};
+  /**
+   * Toggles between the login and forgot password views.
+   * This function switches the `isLogin` and `isForgotPassword` states to toggle
+   * between showing the login and forgot password components.
+   */
+  const toggleForgotPassword = () => {
+    isLogin.value = !isLogin.value;
+    isForgotPassword.value = !isForgotPassword.value;
+  };
 
-/**
- * Checks if the user is already logged in by verifying the presence of a token in localStorage.
- * If the user is logged in, their data is loaded, and they are redirected to the home page.
- * If not, the login animation is marked as finished.
- */
-const checkIfUserIsLoggedIn = () => {
-  if (localStorage.getItem("join_token")) {
-    currentUser.value = JSON.parse(localStorage.getItem("join_user"));
-    window.location.href = "/home";
-  } else {
-    animationFinished.value = true;
-  }
-};
+  /**
+   * Checks if the user is already logged in.
+   * This function checks if a token exists in localStorage. If the token is present,
+   * it loads the user's data from localStorage and redirects them to the home page.
+   * If no token is found, it marks the login animation as finished.
+   *
+   * @returns {void}
+   */
+  const checkIfUserIsLoggedIn = () => {
+    if (localStorage.getItem("join_token")) {
+      currentUser.value = JSON.parse(localStorage.getItem("join_user"));
+      window.location.href = "/home";
+    } else {
+      animationFinished.value = true;
+    }
+  };
 
-/**
- * Opens the privacy policy page in a new tab.
- */
-const goToPrivacyPolicy = () => {
-  window.open("/privacy?type=privacyPolicy", "_blank");
-};
-
+  /**
+   * Opens the privacy policy page in a new tab.
+   * This function opens the privacy policy page by navigating to "/privacy?type=privacyPolicy".
+   * 
+   * @returns {void}
+   */
+  const goToPrivacyPolicy = () => {
+    window.open("/privacy?type=privacyPolicy", "_blank");
+  };
 </script>
 
-<style>
-:root {
-  --final-logo-top: 5rem;
-  --final-logo-left: 5rem;
-  --final-logo-width: 100px;
-  --initial-logo-width: 150px;
-}
 
+<style>
 .wrapper {
   width: 100%;
   height: 90%;
