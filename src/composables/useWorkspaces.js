@@ -152,7 +152,7 @@ export default function useWorkspaces() {
   * @async
   */
  const leaveWorkspace = async () => {
-   if (currentWorkspace.value.id === "2" && currentUser.value.id === "2") {
+   if (currentWorkspace.value.id === "3" && currentUser.value.id === "3") {
      alert("Guest cannot leave this workspace.");
      hideOverlay();
      return;

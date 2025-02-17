@@ -298,7 +298,7 @@ const checkPasswordLength = () => {
  * @returns {void}
  */
 const guestLogin = () => {
-  login("guest@join.dogan-celik.de", "Test1234");
+  login("guest@join.dogan-celik.com", "Test1234");
 };
 </script>
 
