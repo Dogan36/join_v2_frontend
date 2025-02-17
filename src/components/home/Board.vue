@@ -115,33 +115,27 @@ const maxScroll = ref(0);
 let scrollInterval = null;
 
 function getMainElement() {
-  console.log(document.querySelector('main'))
   return document.querySelector('main');
 }
 
 function onDragStart(task) {
-  console.log('onDragStart' + task)
   draggedTask.value = task;
 }
 function onDragEnd() {
-  console.log('onDragEnd')
   draggedTask.value = null;
   hoveredColumn.value = null;
 }
 function onDragOver(status) {
-  console.log('onDragOver' + status)
   if (draggedTask.value) {
     hoveredColumn.value = status;
   }
 }
 function onDragEnter(status) {
-  console.log('onDragEnter' + status)
   if (draggedTask.value) {
     hoveredColumn.value = status;
   }
 }
 async function onDrop(status) {
-  console.log('onDrop' + status)
   if (draggedTask.value) {
     try {
       // Beispiel-PATCH-Anfrage an deine API (passe URL und Authentifizierung ggf. an)
@@ -173,7 +167,6 @@ async function onDrop(status) {
 }
 
 function onTouchStart(task, e) {
-  console.log('onTouchStart' + task)
   maxScroll.value = mainElement.scrollHeight - mainElement.clientHeight;
   touchedTask.value = task;
   const rect = boardMainContentRef.value.getBoundingClientRect();
@@ -208,7 +201,6 @@ function onTouchMove(e) {
 }
 
 function onTouchEnd(e) {
-  console.log('onTouchEnd')
   stopScrolling();
   clearTimeout(touchTimer);
   if (longPressFlag.value) {
@@ -241,7 +233,6 @@ function updateHoveredColumn(e) {
 }
 
 function startScrolling(direction, e) {
-  console.log('startScrolling' + direction + e)
   stopScrolling();
   scrollInterval = setInterval(() => {
     if (mainElement) {
@@ -261,7 +252,6 @@ function startScrolling(direction, e) {
 }
 
 function stopScrolling() {
-  console.log('stopScrolling')
   if (scrollInterval) {
     clearInterval(scrollInterval);
     scrollInterval = null;
@@ -311,6 +301,7 @@ const tasksByStatus = computed(() => {
 
 const openAddTaskOverlay = (status) => {
   if (status) {
+  
     choosenStatus = status
     currentTask.value = null;}
   isAddTaskOverlayVisible.value = true;

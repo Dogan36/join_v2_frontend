@@ -229,7 +229,6 @@ const checkEmailFormat = () => {
 };
 
 const checkEmailUnique = () => {
-  console.log(selectedContact.value?.id)
   if (contacts.value.filter((contact) => contact.email === contactEmail.value && contact.id !== selectedContact.value?.id).length > 0) {
     emailTakenError.value = true;
     return false;

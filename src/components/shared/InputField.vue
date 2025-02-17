@@ -147,7 +147,6 @@ const iconMap = {
 const resolvedIcon = computed(() => {
   return iconMap[props.icon];
 });
-console.log(props.icon);
 
 /**
  * @vue-method {Function} togglePasswordVisibility - Toggles the visibility of the password.

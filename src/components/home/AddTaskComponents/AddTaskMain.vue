@@ -107,6 +107,7 @@ const initializeForm = () => {
     prio.value?.updatePrio(currentTask.value.prio || "todo");
     assignContacts.value?.setContacts(currentTask.value.selected_contacts || []);
     subtasks.value?.setSubtasks(currentTask.value.subtasks || []);
+
   }
   else {
     selectedCategory.value = null;
@@ -121,7 +122,6 @@ const assignContacts = ref(null);
 const dueDate = ref(null);
 const prio = ref(null);
 const subtasks = ref(null);
-const status = props.status;
 const subtasksData = ref([]); // Collect subtasks
 
 /**
@@ -183,7 +183,7 @@ const createTaskObject = () => {
     due_date: dueDate.value?.dueDate || "",
     prio: prio.value?.currentPrio || "medium", 
     subtasks: subtasksData.value || [],
-    status: props.status || "todo", 
+    status: currentTask.value.status || "todo", 
   };
 };
 

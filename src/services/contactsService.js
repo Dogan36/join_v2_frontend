@@ -34,7 +34,6 @@ async function fetchContacts() {
  * @throws {Error} If the request fails.
  */
 async function addContactFetch(contact) {
-  console.log(contact);
   const token = getToken();
   const response = await fetch(`${API_BASE_URL}/user/contacts/`, {
     method: "POST",
@@ -44,7 +43,6 @@ async function addContactFetch(contact) {
     },
     body: JSON.stringify(contact),
   });
-  console.log(response);
   if (!response.ok) {
     throw new Error(`Error adding contact: ${response.statusText}`);
   }

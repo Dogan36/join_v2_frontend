@@ -151,6 +151,13 @@ const subtasks = computed(() => props.task.subtasks);
 const prio = computed(() => props.task.prio);
 
 /**
+ * @vue-computed {string} status - The status of the task.
+ * 
+ * This computed property extracts the status of the task from the `task.prio` field.
+ */
+const status = computed(() => props.task.status);
+
+/**
  * @vue-computed {string} buttonImg - The image for the priority button.
  * 
  * This computed property returns the appropriate priority icon based on the task's priority.
