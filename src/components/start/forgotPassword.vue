@@ -5,7 +5,7 @@
       <h1>I forgot my password</h1>
       <div style="width: 37px;"></div>
     </div>
-      <img class="seperator" src="../../assets/img/seperator.svg" alt="" />
+      <img class="seperator" src="@/assets/img/seperator.svg" alt="" />
       <span class="subheader">Don't worry! Enter your email address and we will send you a link to reset your password.</span>
     <form class="form" @submit.prevent="tryRequest" novalidate>
       <InputField
@@ -13,7 +13,7 @@
         type="email"
         placeholder="Enter your email"
         autocomplete="current-email"
-        icon="src/assets/img/loginMail.svg"
+        icon="@/assets/img/loginMail.svg"
         :error="emailError || emailFormatError || emailNotFoundError"
         :errorMessages="{
           emailError: emailError ? 'Email is required' : '',

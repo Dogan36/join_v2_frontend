@@ -11,7 +11,7 @@
         v-model="signupName"
         type="string"
         placeholder="Name"
-        icon="src/assets/img/userIcon.svg"
+        icon="@/assets/img/userIcon.svg"
         :error="nameError"
         :errorMessages="{
           nameError: nameError ? 'Name is required' : '',
@@ -21,7 +21,7 @@
         v-model="signupEmail"
         type="email"
         placeholder="E-Mail"
-        icon="src/assets/img/loginMail.svg"
+        icon="@/assets/img/loginMail.svg"
         :error="emailError || emailFormatError || emailTakenError"
         :errorMessages="{
           emailError: emailError ? 'Email is required' : '',
@@ -33,7 +33,7 @@
         v-model="signupPassword"
         type="password"
         placeholder="Password"
-        icon="src/assets/img/loginPassword.svg"
+        icon="@/assets/img/loginPassword.svg"
         :error="passwordError || passwordLengthError"
         :errorMessages="{
           passwordError: passwordError ? 'Password is required' : '',
@@ -46,7 +46,7 @@
         v-model="signupPasswordRepeat"
         type="password"
         placeholder="Confirm Password"
-        icon="src/assets/img/loginPassword.svg"
+        icon="@/assets/img/loginPassword.svg"
         :error="passwordMatchError"
         :errorMessages="{
           passwordError: passwordError ? 'Confirmation is required' : '',

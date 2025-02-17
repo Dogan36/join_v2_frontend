@@ -95,7 +95,6 @@ export default function useWorkspaces() {
        console.error("Error loading workspaces:", error);
      }
    }
-   console.log(currentWorkspace);
  };
 
  /**

@@ -26,7 +26,7 @@
         type="password"
         autocomplete="current-password"
         placeholder="Enter your password"
-        icon="src/assets/img/loginPassword.svg"
+        icon="@/assets/img/loginPassword.svg"
         :error="passwordError || passwordLengthError || passwordIncorrectError"
         :errorMessages="{
           passwordError: passwordError ? 'Password is required' : '',
@@ -152,7 +152,6 @@ onMounted(() => {
  * @returns {Promise<void>} Resolves when the login attempt is complete.
  */
 async function login(email, password) {
-  console.log("Login with", email, password);
   showOverlay();
   let username = email;
   try {

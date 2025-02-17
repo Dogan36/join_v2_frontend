@@ -85,7 +85,7 @@ const submitWorkspaceCode = async () => {
       await joinWorkspace(workspaceCode.value);
       emit("close");
     } catch (e) {
-      console.log(e);
+
       if(e == "Error: 404") {
         error.value = "Workspace not found";
       } else if (e == "Error: 400") {
