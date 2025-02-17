@@ -10,8 +10,6 @@ Join ist eine moderne **Kollaborationsplattform**, mit der du effizient in Works
 
 Um Join zu nutzen, musst du zunächst einen **Account erstellen** oder dich in deinen bestehenden Account **einloggen**.
 
-🔹 **[Registrieren & Login](../getting-started/authentication.md)**  
-🔹 **[Erste Schritte mit Workspaces](../getting-started/workspaces.md)**  
 
 ## Kernfunktionen
 
@@ -22,7 +20,6 @@ Join bietet eine Vielzahl von Funktionen für produktive Zusammenarbeit:
 - 🧑‍🤝‍🧑 **Kontakte** – Lade Kollegen ein und verwalte dein Team  
 - 🔒 **Datenschutz & Sicherheit** – Schütze deine Daten mit modernen Sicherheitsmaßnahmen  
 
-➡ **Mehr erfahren:** [Funktionen im Detail](../features/overview.md)
 
 ## Installation & Nutzung
 

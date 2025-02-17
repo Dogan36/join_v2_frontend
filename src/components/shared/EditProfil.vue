@@ -146,6 +146,10 @@ onMounted(() => {
  * @returns {Promise<void>} Resolves when the profile update process is complete.
  */
 const updateProfile = async () => {
+  if (currentUser.value.id === 2) {
+    alert("Guest profile cannot be updated");
+    return;
+  }
   if (!checkForProfilErrors()) {
     return;
   }
