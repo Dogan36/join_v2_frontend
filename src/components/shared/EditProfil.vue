@@ -14,7 +14,7 @@
             v-model="newName"
             type="text"
             placeholder="Enter your name"
-            icon="src/assets/img/userIcon.svg"
+            icon="@/assets/img/userIcon.svg"
             :error="nameError"
             :errorMessages="{ nameError: nameError ? 'Name is required' : '' }"
           />
@@ -22,7 +22,7 @@
             v-model="newEmail"
             type="email"
             placeholder="Enter your email"
-            icon="src/assets/img/loginMail.svg"
+            icon="@/assets/img/loginMail.svg"
             :error="emailError || emailFormatError || emailTakenError"
             :errorMessages="{ emailError: emailError ? 'Email is required' : '', 
                               emailFormatError: emailFormatError ? 'Email format is invalid' : '',
@@ -33,7 +33,7 @@
             v-model="newPhone"
             type="number"
             placeholder="Enter your number"
-            icon="src/assets/img/phone.svg"
+            icon="@/assets/img/phone.svg"
           />
         </div>
         <div class="button-container">
