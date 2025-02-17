@@ -11,7 +11,7 @@
         v-model="signupName"
         type="string"
         placeholder="Name"
-        icon="@/assets/img/userIcon.svg"
+        icon="user"
         :error="nameError"
         :errorMessages="{
           nameError: nameError ? 'Name is required' : '',
@@ -21,7 +21,7 @@
         v-model="signupEmail"
         type="email"
         placeholder="E-Mail"
-        icon="@/assets/img/loginMail.svg"
+        icon="email"
         :error="emailError || emailFormatError || emailTakenError"
         :errorMessages="{
           emailError: emailError ? 'Email is required' : '',
@@ -59,7 +59,7 @@
         <input type="checkbox" v-model="readPrivacy" />
         I accept the <span @click="showPrivacyPolicy">Privacy Policy</span>
       </div>
-      <p v-if="privacyError" class="error-message">Please read and accept the Privacy Policy.</p>
+      <p v-if="privacyError" class="error-message" style="align-self: center;">Please read and accept the Privacy Policy.</p>
       <div class="login-buttons">
         <button class="main-button-layout" type="submit">Sign Up</button>
       </div>
@@ -74,7 +74,7 @@ import InputField from "../shared/InputField.vue";
 import { useLoadingOverlay } from '@/composables/useLoadingOverlay';
 import { useConfirmationOverlay } from "@/composables/useConfirmationOverlay";
 import router from "@/router";
-
+import { API_BASE_URL } from "@/config";
 const { showOverlay, hideOverlay } = useLoadingOverlay();
 const { showConfirmation } = useConfirmationOverlay();
 
@@ -160,7 +160,7 @@ const showPrivacyPolicy = () => {
 async function signUp(name, email, password) {
   showOverlay();
   try {
-    const response = await fetch('http://localhost:8000/api/v1/user/register/', {
+    const response = await fetch(`${API_BASE_URL}/user/register/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

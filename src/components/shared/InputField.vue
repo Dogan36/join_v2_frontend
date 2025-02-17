@@ -22,7 +22,7 @@
 
     <img
       v-else-if="icon"
-      :src="icon"
+      :src="resolvedIcon"
       :alt="iconAlt || 'Icon'"
       class="input-icon"
       @click="emitIconClick"
@@ -39,6 +39,9 @@ import { defineProps, defineEmits } from 'vue';
 import loginPasswordSvg from '@/assets/img/loginPassword.svg';
 import visibleIconSvg from '@/assets/img/visibleIcon.svg';
 import notVisibleIconSvg from '@/assets/img/notVisibleIcon.svg';
+import loginMailSvg from '@/assets/img/loginMail.svg';
+import phoneSvg from '@/assets/img/phone.svg';
+import userIconSvg from '@/assets/img/userIcon.svg';
 
 // Props definition
 /**
@@ -134,6 +137,17 @@ const passwordIconClass = computed(() => {
 const onInput = (event) => {
   emit("update:modelValue", event.target.value);
 };
+
+const iconMap = {
+  "email": loginMailSvg,
+  "phone": phoneSvg,
+  "user": userIconSvg,
+};
+
+const resolvedIcon = computed(() => {
+  return iconMap[props.icon];
+});
+console.log(props.icon);
 
 /**
  * @vue-method {Function} togglePasswordVisibility - Toggles the visibility of the password.

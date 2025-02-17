@@ -13,7 +13,7 @@
         type="email"
         placeholder="Enter your email"
         autocomplete="current-email"
-        icon="@/assets/img/loginMail.svg"
+        icon="email"
         :error="emailError || emailFormatError || emailNotFoundError"
         :errorMessages="{
           emailError: emailError ? 'Email is required' : '',
