@@ -65,8 +65,8 @@
 import { ref, onMounted, computed, defineEmits } from "vue";
 import InputField from "@/components/shared/InputField.vue";
 import useContacts from "@/composables/useContacts";
-const { saveContact } = useContacts();
-import { selectedContact, contactOverlayIsEditMode } from "@/store/state";
+const { saveContact, contacts } = useContacts();
+import { selectedContact, contactOverlayIsEditMode, currentUser } from "@/store/state";
 import useTextColor from '@/composables/useTextColor';
 const { getTextColor } = useTextColor();
 const emit = defineEmits(["close"]);
@@ -185,7 +185,7 @@ const checkForErrors = () => {
   const isNameValid = checkIfNameEmpty();
   const isEmailValid = checkIfEmailEmpty();
   const isEmailFormatValid = isEmailValid && checkEmailFormat(); // Only check format if email is not empty
-  const isEmailUnique = isEmailFormatValid; // Only check if the format is correct
+  const isEmailUnique = checkEmailUnique(); // Only check if the format is correct
 
   return isNameValid && isEmailValid && isEmailFormatValid && isEmailUnique;
 };
@@ -226,6 +226,15 @@ const checkEmailFormat = () => {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   emailFormatError.value = contactEmail.value && !emailPattern.test(contactEmail.value);
   return !emailFormatError.value;
+};
+
+const checkEmailUnique = () => {
+  console.log(selectedContact.value?.id)
+  if (contacts.value.filter((contact) => contact.email === contactEmail.value && contact.id !== selectedContact.value?.id).length > 0) {
+    emailTakenError.value = true;
+    return false;
+  }
+  return true;
 };
 </script>
 
