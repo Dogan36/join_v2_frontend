@@ -306,7 +306,6 @@ const updateTaskFetch = async (taskData) => {
 
   label {
     font-size: 2rem;
-    margin-bottom: 0.8rem;
   }
 }
 

@@ -4,7 +4,7 @@
   <RouterView />
 </template>
 
-<script>
+<script setup lang="ts">
 /**
  * Main app component for the Join application.
  * 

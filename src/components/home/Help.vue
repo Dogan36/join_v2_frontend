@@ -90,7 +90,8 @@
             Please be cautious when deleting cards, as this action cannot be undone.
             <br /><br />
             For further assistance or feedback, please contact me at
-            <a href="mailto:mail@dogan-celik.com">mail@dogan-celik.com</a>.
+            <a href="mailto:mail@dogan-celik.com">mail@dogan-celik.com</a> or visit the documentation at
+            <a href="http://join-docs.dogan-celik.com">join-docs.dogan-celik.com</a>.
           </p>
         </div>
       </div>

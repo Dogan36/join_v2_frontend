@@ -18,6 +18,7 @@
       <p class="privacy-link-mobile" @click="changeView('legalNotice')">Legal Notice</p>
       <p @click="openWorkspaceInfo">Workspace</p>
       <p @click="goToProfile">Profil</p>
+      <p @click="openDocumentation">Documentation</p>
       <p @click="logout">Logout</p>
     </div>
   </div>
@@ -32,6 +33,11 @@ import { useRoute } from 'vue-router';
 // Router and route objects
 const router = useRouter();
 const route = useRoute();
+
+// Open the documentation in a new tab
+const openDocumentation = () => {
+  window.open("http://join-docs.dogan-celik.com", "_blank");
+};
 
 // Reactive property for the user menu visibility
 /**

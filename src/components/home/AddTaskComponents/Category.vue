@@ -207,7 +207,7 @@ defineExpose({
     align-items: center;
     width: 100%;
     font-size: 2.1rem;
-    height: 30px;
+    height: 23px;
     .arrow-icon-dropdown {
       height: 8px;
     }

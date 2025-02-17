@@ -26,8 +26,7 @@ Join bietet eine Vielzahl von Funktionen für produktive Zusammenarbeit:
 Falls du Join lokal als Entwickler testen möchtest, kannst du die Anwendung mit diesen Befehlen starten:
 
 ```shell
-git clone https://github.com/dein-repo/join.git
-cd join
+git clone https://github.com/Dogan36/join_v2_frontend.git
 npm install
 npm run serve
 

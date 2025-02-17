@@ -239,5 +239,6 @@ const addNewCategory = async () => {
   height: 12px;
   border-radius: 100%;
   border: 1px solid black;
+  margin-right: 1rem;
 }
 </style>

@@ -24,7 +24,7 @@
           v-model="contactName"
           type="text"
           placeholder="Name"
-          icon="src/assets/img/userIcon.svg"
+          icon="@/assets/img/userIcon.svg"
           :error="nameError"
           :errorMessages="{
             nameError: nameError ? 'Name is required' : '',
@@ -34,7 +34,7 @@
           v-model="contactEmail"
           type="email"
           placeholder="Email"
-          icon="src/assets/img/loginMail.svg"
+          icon="@/assets/img/loginMail.svg"
           :error="emailError || emailFormatError || emailTakenError"
           :errorMessages="{
             emailError: emailError ? 'Email is required' : '',
@@ -46,7 +46,7 @@
           v-model="contactPhone"
           type="number"
           placeholder="Phone"
-          icon="src/assets/img/phone.svg"
+          icon="@/assets/img/phone.svg"
         />
 
         <div class="form-buttons">

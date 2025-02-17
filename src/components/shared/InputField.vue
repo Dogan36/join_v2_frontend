@@ -239,4 +239,8 @@ input[type="number"] {
   appearance: textfield;
   -moz-appearance: textfield;
 }
+
+input[type="date"]{
+  cursor: pointer;
+}
 </style>
