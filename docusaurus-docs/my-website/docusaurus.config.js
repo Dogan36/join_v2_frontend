@@ -36,6 +36,11 @@ module.exports = {
           "label": "Docs"
         },
         {
+          "href": "https://github.com/Dogan36/join_backend_v2",
+          "label": "GitHub Backend",
+          "position": "right"
+        },
+        {
           "href": "https://github.com/Dogan36/join_v2_frontend",
           "label": "GitHub",
           "position": "right"

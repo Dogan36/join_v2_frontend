@@ -118,7 +118,7 @@
   top: 0;
   left: 0;
   width: 100vw;         /* Volle Breite */
-  height: 100vh;        /* Volle Höhe */
+  height: 100svh;        /* Volle Höhe */
   background-color: var(--main-color); /* Hintergrundfarbe */
   display: flex;
   justify-content: center;

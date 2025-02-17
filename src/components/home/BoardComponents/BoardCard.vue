@@ -131,7 +131,7 @@ const buttonImg = computed(() => {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 7px 25px;
+    padding: 7px 7px;
     background: black;
     border-radius: 8px;
     text-align: center;

@@ -1,6 +1,6 @@
 <template>
   <div class="board-content" @click="removeHighlight" ref="boardContentRef">
-   
+
     <div class="headline-component">
       <h1>Board</h1>
       <div class="board-headline-right">
@@ -40,6 +40,7 @@
         @dragover.prevent="onDragOver(column.status)"
         @dragenter.prevent="onDragEnter(column.status)"
         @drop.prevent="onDrop(column.status)"
+        @touchmove="updateHoveredColumn(column.status)"
       >
         <BoardCard
           v-for="task in tasksByStatus[column.status]"
@@ -47,9 +48,10 @@
           :key="task.id"
           :task="task"
           draggable="true"
+          @click="openTaskDetail(task)"
           @dragstart="onDragStart(task)"
           @dragend="onDragEnd"
-          @touchstart.prevent="onTouchStart(task, $event)"
+          @touchstart="onTouchStart(task, $event)"
           @touchend.prevent="onTouchEnd"
           @touchcancel.prevent="onTouchEnd"
         />
@@ -67,7 +69,7 @@
         </div>
       </div>
     </div>
- 
+
     <DarkBackground v-if="isAddTaskOverlayVisible" @close="closeOverlay">
       <AddTaskMain
       :status="choosenStatus"
@@ -84,13 +86,6 @@
 </template>
 
 <script setup>
-/**
- * A simple component that displays a title.
- *
- * @component
- * @example
- * <TitleComponent />
- */
 import { ref, computed, onBeforeUnmount } from "vue";
 import { API_BASE_URL } from "@/config";
 import BoardCard from "./BoardComponents/BoardCard.vue";
@@ -98,281 +93,58 @@ import AddTaskMain from "./AddTaskComponents/AddTaskMain.vue";
 import DarkBackground from "../shared/DarkBackground.vue";
 import { tasks, currentTask, currentWorkspace, getToken, categories, selectedTasks, isAddTaskOverlayVisible } from "@/store/state";
 import BoardTaskDetail from "./BoardComponents/BoardTaskDetail.vue";
-
-// Reactive variables and references
-/**
- * @vue-data {boolean} isDetailViewVisible - Whether the task detail view is visible.
- */
+const mainElement = getMainElement();
 const isDetailViewVisible = ref(false);
-
-/**
- * @vue-data {string} searchQuery - The search query for filtering tasks.
- */
 const searchQuery = ref("");
-
-// Task dragging state
-/**
- * @vue-data {Object} draggedTask - The task that is currently being dragged.
- */
-const draggedTask = ref(null);
-
-/**
- * @vue-data {string} choosenStatus - The selected status for task categorization.
- */
 let choosenStatus = '';
-
-/**
- * @vue-data {Object} hoveredColumn - The column currently being hovered by the dragged task.
- */
+const draggedTask = ref(null);
 const hoveredColumn = ref(null);
-
-/**
- * @vue-data {Array} columns - The columns used for task statuses.
- */
 const columns = [
   { status: 'todo', label: 'To do' },
   { status: 'inProgress', label: 'In Progress' },
   { status: 'awaitingFeedback', label: 'Awaiting Feedback' },
   { status: 'done', label: 'Done' }
 ];
+const longPressFlag = ref(false);
+let touchTimer = null;
+const touchedTask = ref(null);
+const dragPreviewPosition = ref({ x: 0, y: 0 });
+const boardMainContentRef = ref(null);
+const boardContentRef = ref({ x: 0, y: 0 });
+const maxScroll = ref(0);
+let scrollInterval = null;
 
-// Touch and drag handling
-/**
- * @vue-method {Function} startScrolling - Starts scrolling the main element based on the touch event.
- * 
- * This function scrolls the main element in a specified direction and updates the drag preview position.
- *
- * @param {string} direction - The direction to scroll ('up' or 'down').
- * @param {TouchEvent} e - The touch event that provides the current touch position.
- * @returns {void}
- */
-function startScrolling(direction, e) {
-  stopScrolling();
-  scrollInterval = setInterval(() => {
-    const mainElement = getMainElement();
-    if (mainElement) {
-      mainElement.scrollBy({
-        top: direction === 'up' ? -220 : 200,
-        behavior: 'smooth'
-      });
-    }
-    
-    const rect = boardMainContentRef.value.getBoundingClientRect();
-    dragPreviewPosition.value = {
-      x: e.touches[0].clientX - rect.left,
-      y: e.touches[0].clientY - rect.top
-    };
-  }, 50);
+function getMainElement() {
+  console.log(document.querySelector('main'))
+  return document.querySelector('main');
 }
 
-/**
- * @vue-method {Function} stopScrolling - Stops the scrolling interval if it is active.
- * 
- * @returns {void}
- */
-function stopScrolling() {
-  if (scrollInterval) {
-    clearInterval(scrollInterval);
-    scrollInterval = null;
-  }
-}
-
-/**
- * @vue-method {Function} onTouchStart - Handles the touch start event for a task.
- * 
- * Initializes the drag preview position and starts the timer for long press detection.
- *
- * @param {Object} task - The task object associated with the touch event.
- * @param {TouchEvent} e - The touch event object.
- * @returns {void}
- */
-function onTouchStart(task, e) {
-  const mainElement = getMainElement();
-  maxScroll = mainElement.scrollHeight - mainElement.clientHeight;
-  touchedTask.value = task;
-
-  const rect = boardMainContentRef.value.getBoundingClientRect();
-  dragPreviewPosition.value = {
-    x: e.touches[0].clientX - rect.left,
-    y: e.touches[0].clientY - rect.top
-  };
-
-  touchTimer = setTimeout(() => {
-    longPressFlag.value = true;
-    onDragStart(task);
-  }, 500);
-}
-
-/**
- * @vue-method {Function} onTouchMove - Handles the touch move event for a task.
- * 
- * Updates the drag preview position and hovered column, starts scrolling when the touch is near the top or bottom of the screen.
- *
- * @param {TouchEvent} e - The touch event object.
- * @returns {void}
- */
-function onTouchMove(e) {
-  const mainElement = getMainElement();
-
-  if (longPressFlag.value && boardMainContentRef.value) {
-    const rect = boardMainContentRef.value.getBoundingClientRect();
-    dragPreviewPosition.value = {
-      x: e.touches[0].clientX - rect.left,
-      y: e.touches[0].clientY - rect.top
-    };
-    updateHoveredColumn(e);
-
-    if (e.touches[0].clientY < 100) {
-      startScrolling('up', e);
-    } else if (e.touches[0].clientY > window.innerHeight - 100 && mainElement.scrollTop <= maxScroll) {
-      startScrolling('down', e);
-    } else {
-      stopScrolling();
-    }
-  }
-}
-
-/**
- * @vue-method {Function} onTouchEnd - Handles the touch end event for a task.
- * 
- * Stops scrolling, clears the touch timer, and handles task drop or task detail opening.
- *
- * @param {TouchEvent} e - The touch event object.
- * @returns {void}
- */
-function onTouchEnd(e) {
-  stopScrolling();
-  clearTimeout(touchTimer);
-  if (longPressFlag.value) {
-    if (hoveredColumn.value) {
-      onDrop(hoveredColumn.value);
-    } else {
-      onDragEnd();
-    }
-    longPressFlag.value = false;
-  } else if (touchedTask.value) {
-    openTaskDetail(touchedTask.value);
-  }
-  touchedTask.value = null;
-}
-
-/**
- * @vue-method {Function} updateHoveredColumn - Updates the hovered column based on the touch position.
- * 
- * @param {TouchEvent} e - The touch event object.
- * @returns {void}
- */
-function updateHoveredColumn(e) {
-  const elem = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
-  if (elem) {
-    const boardElement = elem.closest('.boardElement');
-    if (boardElement) {
-      hoveredColumn.value = boardElement.getAttribute('data-status');
-    } else {
-      hoveredColumn.value = null;
-    }
-  }
-}
-
-/**
- * @vue-method {Function} isHighlighted - Checks if a task is highlighted by comparing its ID with selected tasks.
- * 
- * @param {Object} task - The task to check.
- * @returns {boolean} - True if the task is highlighted, otherwise false.
- */
-const isHighlighted = (task) => {
-  if (!selectedTasks.value) {
-    return false;
-  }
-  return selectedTasks.value.some(selectedTask => selectedTask.id === task.id);
-};
-
-/**
- * @vue-method {Function} removeHighlight - Removes the highlight by clearing the selected tasks array.
- * 
- * @returns {void}
- */
-const removeHighlight = () => {
-  selectedTasks.value = [];
-};
-
-/**
- * @vue-computed {Array} filteredTasks - Filters tasks based on the search query.
- * 
- * This computed property matches task name, description, or category name with the search query.
- *
- * @returns {Array} - The filtered list of tasks.
- */
-const filteredTasks = computed(() => {
-  if (!searchQuery.value.trim()) {
-    return tasks.value;
-  }
-  const query = searchQuery.value.toLowerCase().trim();
-  return tasks.value.filter(task => {
-    const categoryObj = categories.value.find(cat => cat.id === task.category);
-    return (
-      (task.name && task.name.toLowerCase().includes(query)) ||
-      (task.description && task.description.toLowerCase().includes(query)) ||
-      (categoryObj && categoryObj.name.toLowerCase().includes(query))
-    );
-  });
-});
-
-/**
- * @vue-computed {Object} tasksByStatus - Groups filtered tasks by their status.
- * 
- * This computed property groups the tasks by their status (`todo`, `inProgress`, `awaitingFeedback`, `done`).
- *
- * @returns {Object} - An object containing tasks grouped by status.
- */
-const tasksByStatus = computed(() => {
-  const groups = {
-    todo: [],
-    inProgress: [],
-    awaitingFeedback: [],
-    done: []
-  };
-  filteredTasks.value.forEach(task => {
-    if (groups[task.status]) {
-      groups[task.status].push(task);
-    }
-  });
-  return groups;
-});
-
-/**
- * @vue-method {Function} onDragStart - Handles the drag start event for a task.
- * 
- * @param {Object} task - The task being dragged.
- * @returns {void}
- */
 function onDragStart(task) {
+  console.log('onDragStart' + task)
   draggedTask.value = task;
 }
-
-/**
- * @vue-method {Function} onDragEnd - Handles the drag end event.
- * 
- * Resets the dragged task and hovered column.
- * 
- * @returns {void}
- */
 function onDragEnd() {
+  console.log('onDragEnd')
   draggedTask.value = null;
   hoveredColumn.value = null;
 }
-
-/**
- * @vue-method {Function} onDrop - Handles the drop event for a task.
- * 
- * Updates the task's status via a PATCH request and updates the local task list.
- * 
- * @param {string} status - The new status of the task.
- * @returns {void}
- */
+function onDragOver(status) {
+  console.log('onDragOver' + status)
+  if (draggedTask.value) {
+    hoveredColumn.value = status;
+  }
+}
+function onDragEnter(status) {
+  console.log('onDragEnter' + status)
+  if (draggedTask.value) {
+    hoveredColumn.value = status;
+  }
+}
 async function onDrop(status) {
+  console.log('onDrop' + status)
   if (draggedTask.value) {
     try {
+      // Beispiel-PATCH-Anfrage an deine API (passe URL und Authentifizierung ggf. an)
       const response = await fetch(`${API_BASE_URL}/workspaces/workspaces/${currentWorkspace.value.id}/tasks/${draggedTask.value.id}/`, {
         method: 'PATCH',
         headers: {
@@ -391,6 +163,7 @@ async function onDrop(status) {
         }
         return task;
       });
+      // Optional: Aktualisiere hier deine lokale Taskliste oder hole neue Daten
     } catch (error) {
       console.error('Error updating task status:', error);
     }
@@ -399,36 +172,153 @@ async function onDrop(status) {
   draggedTask.value = null;
 }
 
-/**
- * @vue-method {Function} openAddTaskOverlay - Opens the add task overlay and sets the chosen status.
- * 
- * @param {string} status - The status to pre-select in the add task overlay.
- * @returns {void}
- */
+function onTouchStart(task, e) {
+  console.log('onTouchStart' + task)
+  maxScroll.value = mainElement.scrollHeight - mainElement.clientHeight;
+  touchedTask.value = task;
+  const rect = boardMainContentRef.value.getBoundingClientRect();
+  dragPreviewPosition.value = {
+    x: e.touches[0].clientX - rect.left,
+    y: e.touches[0].clientY - rect.top
+  };
+  touchTimer = setTimeout(() => {
+    longPressFlag.value = true;
+    onDragStart(task);
+  }, 500);
+}
+
+
+function onTouchMove(e) {
+  e.preventDefault();
+  if (longPressFlag.value && boardMainContentRef.value) {
+    const rect = boardMainContentRef.value.getBoundingClientRect();
+    dragPreviewPosition.value = {
+      x: e.touches[0].clientX - rect.left,
+      y: e.touches[0].clientY - rect.top
+    };
+    updateHoveredColumn(e);  // Update the hovered column correctly
+    if (e.touches[0].clientY < 100) {
+      startScrolling('up', e);
+    } else if (e.touches[0].clientY > window.innerHeight - 100 && mainElement.scrollTop <= maxScroll.value) {
+      startScrolling('down', e);
+    } else {
+      stopScrolling();
+    }
+  }
+}
+
+function onTouchEnd(e) {
+  console.log('onTouchEnd')
+  stopScrolling();
+  clearTimeout(touchTimer);
+  if (longPressFlag.value) {
+    if (hoveredColumn.value) {
+      onDrop(hoveredColumn.value);
+    } else {
+      onDragEnd();
+    }
+    longPressFlag.value = false;
+  } else if (touchedTask.value) {
+    // Bei kurzem Tippen: Öffne die Task-Detailansicht
+    openTaskDetail(touchedTask.value);
+  }
+  
+  touchedTask.value = null;
+}
+
+function updateHoveredColumn(e) {
+  if (e.touches && e.touches.length > 0) {
+    const elem = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
+    if (elem) {
+      const boardElement = elem.closest('.board-element');
+      if (boardElement) {
+        hoveredColumn.value = boardElement.getAttribute('data-status');
+      } else {
+        hoveredColumn.value = null;
+      }
+    }
+  }
+}
+
+function startScrolling(direction, e) {
+  console.log('startScrolling' + direction + e)
+  stopScrolling();
+  scrollInterval = setInterval(() => {
+    if (mainElement) {
+      mainElement.scrollBy({
+        top: direction === 'up' ? -220 : 200, // Geschwindigkeit anpassen
+        behavior: 'smooth'
+      });
+    }
+    
+    // Aktualisiere die Drag-Preview-Position relativ zum boardMainContent
+    const rect = boardMainContentRef.value.getBoundingClientRect();
+    dragPreviewPosition.value = {
+      x: e.touches[0].clientX - rect.left,
+      y: e.touches[0].clientY - rect.top
+    };
+  }, 50); // Intervall anpassen
+}
+
+function stopScrolling() {
+  console.log('stopScrolling')
+  if (scrollInterval) {
+    clearInterval(scrollInterval);
+    scrollInterval = null;
+  }
+}
+onBeforeUnmount(() => {
+  removeHighlight();
+});
+const isHighlighted = (task) => {
+  if(!selectedTasks.value) {
+    return false;
+  }
+  return selectedTasks.value.some(selectedTask => selectedTask.id === task.id);
+};
+const removeHighlight = () => {
+  selectedTasks.value = [];
+};
+const filteredTasks = computed(() => {
+  if (!searchQuery.value.trim()) {
+    return tasks.value;
+  }
+  const query = searchQuery.value.toLowerCase().trim();
+  return tasks.value.filter(task => {
+    const categoryObj = categories.value.find(cat => cat.id === task.category);
+    return (
+      (task.name && task.name.toLowerCase().includes(query)) ||
+      (task.description && task.description.toLowerCase().includes(query)) ||
+      (categoryObj && categoryObj.name.toLowerCase().includes(query))
+    );
+  });
+});
+
+const tasksByStatus = computed(() => {
+  const groups = {
+    todo: [],
+    inProgress: [],
+    awaitingFeedback: [],
+    done: []
+  };  
+  filteredTasks.value.forEach(task => {
+    if (groups[task.status]) {
+      groups[task.status].push(task);
+    }
+  });
+  return groups;
+});
+
 const openAddTaskOverlay = (status) => {
   if (status) {
-    choosenStatus = status;
-    currentTask.value = null;
-  }
+    choosenStatus = status
+    currentTask.value = null;}
   isAddTaskOverlayVisible.value = true;
 };
-
-/**
- * @vue-method {Function} openTaskDetail - Opens the task detail view for the specified task.
- * 
- * @param {Object} task - The task to display in the detail view.
- * @returns {void}
- */
 const openTaskDetail = (task) => {
-  currentTask.value = task;
+  currentTask.value = task; // Setzt den Status, der an das Overlay übergeben wird
   isDetailViewVisible.value = true;
 };
-
-/**
- * @vue-method {Function} closeOverlay - Closes all overlays (add task and detail view).
- * 
- * @returns {void}
- */
 const closeOverlay = () => {
   isAddTaskOverlayVisible.value = false;
   isDetailViewVisible.value = false;

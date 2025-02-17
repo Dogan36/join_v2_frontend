@@ -15,7 +15,7 @@ function getUser() {
 }
 // Deine Routen
 const routes = [
-  { path: '/', redirect: '/home' },
+  { path: '/', redirect: '/start' },
   { path: '/start', component: StartView, name: 'start' },
   { 
     path: '/home',
@@ -25,8 +25,9 @@ const routes = [
   },
   { path: '/privacy', component: AboutView },
   { path: '/reset-password/:uid/:token', component: ResetPassword },
+  { path: '/reset-password/:uid/:token', component: ResetPassword },
+  { path: '/:pathMatch(.*)*', redirect: '/start' },
 ];
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes
