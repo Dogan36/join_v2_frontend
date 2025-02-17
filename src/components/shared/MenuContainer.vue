@@ -199,7 +199,7 @@ function changeView(view) {
   color: #cdcdcd;
 }
 
-.desktop-template-iconActive {
+.desktopTemplateIconActive {
   background-color: #091931;
   transition: background-color 0.5s ease;
   &:hover{
@@ -207,7 +207,7 @@ function changeView(view) {
   }
 }
 
-.desktop-template-icon-active p {
+.desktopTemplateIconActive p {
   color: white !important;
 }
 
