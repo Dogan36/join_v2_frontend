@@ -20,10 +20,11 @@
     </div>
 
     <div class="subtasks-container">
-        <div class="subtask" v-for="subtask in subtasks" :key="subtask.id">
+      <div class="subtask" v-for="(subtask, index) in subtasks" :key="index">
             <span class="subtask-content">{{ subtask.name }}</span>
             <div class="icon-container-subtask">
-                <img @click="deleteSubtask(subtask.id)" class="delete-icon" src="@/assets/img/delete.svg" alt="Delete" />
+                <img @click="editSubtask(index)" src="@/assets/img/editIcon.svg" alt="">
+                <img @click="deleteSubtask(index)" class="delete-icon" src="@/assets/img/delete.svg" alt="Delete" />
                 <input type="checkbox" v-model="subtask.is_completed" />
             </div>
             
@@ -34,7 +35,7 @@
 
   <script setup>
   import { ref, watch, defineEmits } from 'vue';
-  
+  const editedSubtaskIndex = ref(null);
   const emit = defineEmits(["update:subtasks"]);
   
   // Reactive state for managing subtasks
@@ -73,14 +74,19 @@
    */
   const addNewSubtask = () => {
     if (!newSubtask.value.trim()) {
-      error.value = 'New subtask cannot be empty';
+      error.value = 'Subtask cannot be empty';
       return;
     }
+    if(editedSubtaskIndex.value !== null){
+        subtasks.value[editedSubtaskIndex.value].name = newSubtask.value;
+    } else {
     subtasks.value.push({ name: newSubtask.value, completed: false });
-    newSubtask.value = '';
-    error.value = '';
-    emit("update:subtasks", subtasks.value);
-    toggleAddingNewSubtask();
+  }
+  newSubtask.value = '';
+  error.value = '';
+  editedSubtaskIndex.value = null;
+  emit("update:subtasks", subtasks.value);
+  toggleAddingNewSubtask();
   };
   
   /**
@@ -129,6 +135,13 @@
     subtasks.value.splice(index, 1);
     emit("update:subtasks", subtasks.value);
   };
+
+  const editSubtask = (index) => {
+    editedSubtaskIndex.value = index;
+    toggleAddingNewSubtask();
+    newSubtask.value = subtasks.value[editedSubtaskIndex.value].name;
+
+  };
   
   /**
    * @vue-method {Function} watch - Watches the `subtasks` array for changes and emits an update event with the new subtasks.
@@ -167,7 +180,10 @@
         &:hover{
             background-color: #E7E7E7;
         }
-        &:hover .icon-container-subtask > *:first-child{
+        &:hover .icon-container-subtask > *:first-child {
+            display: flex;
+        }
+        &:hover .icon-container-subtask > *:nth-child(2) {
             display: flex;
         }
     }
@@ -184,6 +200,9 @@
         scale: 1.1;
     }
     :first-child{
+        display: none;
+    }
+    :nth-child(2){
         display: none;
     }
 }

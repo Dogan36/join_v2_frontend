@@ -48,7 +48,7 @@
       </div>
       <div class="login-buttons">
         <button class="main-button-layout" type="submit">Log in</button>
-        <button class="secondary-button-layout" @click="guestLogin">
+        <button class="secondary-button-layout" type="button" @click="guestLogin">
           Guest Login
         </button>
       </div>
@@ -184,9 +184,9 @@ async function login(email, password) {
     }
   } catch (error) {
     console.error("Error during login:", error);
-  } finally {
-    hideOverlay();
-  }
+  } 
+    //hideOverlay();
+  
 }
 
 /**

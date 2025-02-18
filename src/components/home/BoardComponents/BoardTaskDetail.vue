@@ -297,7 +297,7 @@ const editTask = () => {
 .active-task-category {
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
     padding: 0px 1.2rem;
     height: 4rem;
