@@ -319,8 +319,8 @@ const editTask = () => {
     gap: 1px;
     max-width: 100%;
     font-weight: 700;
-    font-size: 6rem;
-    line-height: 6rem;
+    font-size: 3rem;
+    line-height: 3rem;
     color: var(--defaultDark);
     max-width: 100%;
     overflow-wrap: anywhere;

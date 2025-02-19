@@ -39,7 +39,7 @@
         <p class="desktop-template-font">Board</p>
       </div>
       <div
-        @click="changeView('addTask')"
+        @click="changeView('addTask'); setCurrentTaskNull()"
         :class="[
           'desktop-template-menu-elements',
           { desktopTemplateIconActive: currentView === 'addTask' },
@@ -95,7 +95,7 @@
 </template>
 
 <script setup>
-import { currentView } from "@/store/state";
+import { currentTask, currentView } from "@/store/state";
 import { useRoute } from 'vue-router';
 const route = useRoute();
 
@@ -109,6 +109,10 @@ const route = useRoute();
  */
 function changeView(view) {
   currentView.value = view;
+}
+
+function setCurrentTaskNull() {
+  currentTask.value = null;
 }
 </script>
 

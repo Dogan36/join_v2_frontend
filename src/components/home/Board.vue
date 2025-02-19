@@ -301,7 +301,6 @@ const tasksByStatus = computed(() => {
 
 const openAddTaskOverlay = (status) => {
   if (status) {
-  
     choosenStatus = status
     currentTask.value = null;}
   isAddTaskOverlayVisible.value = true;
