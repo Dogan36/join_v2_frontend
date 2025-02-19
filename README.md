@@ -85,7 +85,8 @@ License
     Join is licensed under the MIT License.
 
 Documentation
-    Find the documentation at http://docs.dogan-celik.com
+    Documentation created with Docusaurus
+    Find it at http://docs.dogan-celik.com
 
 Backend
     Backend created with Django Rest Framework
@@ -104,6 +105,8 @@ Contact
 - **Configuration**: Configuration settings like API base URL or authentication methods.
 - **Contributing**: Guidelines for contributing to the project.
 - **License**: Information about the license governing the project (MIT in this case).
+- **Documentation**: Information about the documentation and link
+- **Backend**: Information about the documentation and Github link
 - **Contact**: Developer's contact information for questions or feedback.
 
 Feel free to modify and expand on this template based on your project's specific requirements!
