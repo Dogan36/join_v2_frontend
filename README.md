@@ -56,47 +56,47 @@ Make sure you have the following installed:
 4. Open your browser and go to http://localhost:8080 to see the app.
 
 ## Usage
-    After starting the app, you can:
+After starting the app, you can:
 
-    Sign up for a new account or log in if you already have one.
-    Create a new workspace or join existing workspaces by entering the workspace code.
-    Use the board view to organize tasks with columns like "To Do", "In Progress", and "Done".
-    Add contacts and members to collaborate with your team.
-    Create tasks by clicking the "+" button in the desired list.
-    Move tasks between lists to update their status.
-    Remove tasks by deleting them or moving them to the "Done" list.
+Sign up for a new account or log in if you already have one.
+Create a new workspace or join existing workspaces by entering the workspace code.
+Use the board view to organize tasks with columns like "To Do", "In Progress", and "Done".
+Add contacts and members to collaborate with your team.
+Create tasks by clicking the "+" button in the desired list.
+Move tasks between lists to update their status.
+Remove tasks by deleting them or moving them to the "Done" list.
 
 ## Configuration
-    The project uses the following configuration:
+The project uses the following configuration:
 
-    API Base URL: All API requests are directed to the local development server (http://localhost:8000).
-    Authentication: The app supports token-based authentication, which is stored in localStorage.
-    Responsive Design: The UI adjusts for different screen sizes, making it accessible on both desktop and mobile devices.  
+API Base URL: All API requests are directed to the local development server (http://localhost:8000).
+Authentication: The app supports token-based authentication, which is stored in localStorage.
+Responsive Design: The UI adjusts for different screen sizes, making it accessible on both desktop and mobile devices.  
 
 ## Contributing
-    Contributions to Join are welcome! Feel free to fork the repository, make changes, and submit pull requests. Here’s how you can get involved:
+Contributions to Join are welcome! Feel free to fork the repository, make changes, and submit pull requests. Here’s how you can get involved:
 
-    Fork the repository.
-    Create a new branch for your feature or fix (git checkout -b feature-name).
-    Commit your changes (git commit -am 'Add new feature').
-    Push to the branch (git push origin feature-name).
-    Open a pull request to merge your changes into the main branch.
+Fork the repository.
+Create a new branch for your feature or fix (git checkout -b feature-name).
+Commit your changes (git commit -am 'Add new feature').
+Push to the branch (git push origin feature-name).
+Open a pull request to merge your changes into the main branch.
 
 ## License
     Join is licensed under the MIT License.
 
 ## Documentation
-    Documentation created with Docusaurus
-    Find it at [http://docs.dogan-celik.com](http://docs.dogan-celik.com)
+Documentation created with Docusaurus
+Find it at [http://www.join-docs.dogan-celik.com](http://www.join-docs.dogan-celik.com)
 
 ## Backend
-    Backend created with Django Rest Framework
-    [Github](https://github.com/Dogan36/join_backend_v2)
+Backend created with Django Rest Framework
+[Github](https://github.com/Dogan36/join_backend_v2)
 
 ## Contact
-    For feedback or questions, please reach out to the developer:
-    Dogan Celik
-    Email: mail@dogan-celik.com
+For feedback or questions, please reach out to the developer:
+Dogan Celik
+Email: mail@dogan-celik.com
 
 ### Explanation of Sections:
 
