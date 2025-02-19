@@ -87,11 +87,11 @@ Make sure you have the following installed:
 
 ## Documentation
     Documentation created with Docusaurus
-    Find it at http://docs.dogan-celik.com
+    Find it at [http://docs.dogan-celik.com](http://docs.dogan-celik.com)
 
 ## Backend
     Backend created with Django Rest Framework
-    Github https://github.com/Dogan36/join_backend_v2
+    [Github](https://github.com/Dogan36/join_backend_v2)
 
 ## Contact
     For feedback or questions, please reach out to the developer:
