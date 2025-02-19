@@ -26,6 +26,7 @@ Join is a Kanban-based project management tool designed for managing tasks and c
 - [License](#license)
 - [Documentation](#documentation)
 - [Backend](#backend)
+- [Contact](#contact)
 
 ---
 
@@ -54,7 +55,7 @@ Make sure you have the following installed:
 
 4. Open your browser and go to http://localhost:8080 to see the app.
 
-Usage
+## Usage
     After starting the app, you can:
 
     Sign up for a new account or log in if you already have one.
@@ -65,14 +66,14 @@ Usage
     Move tasks between lists to update their status.
     Remove tasks by deleting them or moving them to the "Done" list.
 
-Configuration
+## Configuration
     The project uses the following configuration:
 
     API Base URL: All API requests are directed to the local development server (http://localhost:8000).
     Authentication: The app supports token-based authentication, which is stored in localStorage.
     Responsive Design: The UI adjusts for different screen sizes, making it accessible on both desktop and mobile devices.  
 
-Contributing
+## Contributing
     Contributions to Join are welcome! Feel free to fork the repository, make changes, and submit pull requests. Here’s how you can get involved:
 
     Fork the repository.
@@ -81,18 +82,18 @@ Contributing
     Push to the branch (git push origin feature-name).
     Open a pull request to merge your changes into the main branch.
 
-License
+## License
     Join is licensed under the MIT License.
 
-Documentation
+## Documentation
     Documentation created with Docusaurus
     Find it at http://docs.dogan-celik.com
 
-Backend
+## Backend
     Backend created with Django Rest Framework
     Github https://github.com/Dogan36/join_backend_v2
 
-Contact
+## Contact
     For feedback or questions, please reach out to the developer:
     Dogan Celik
     Email: mail@dogan-celik.com
