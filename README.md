@@ -24,6 +24,8 @@ Join is a Kanban-based project management tool designed for managing tasks and c
 - [Configuration](#configuration)
 - [Contributing](#contributing)
 - [License](#license)
+- [Documentation](#documentation)
+- [Backend](#backend)
 
 ---
 
@@ -32,7 +34,6 @@ Join is a Kanban-based project management tool designed for managing tasks and c
 ### Prerequisites
 
 Make sure you have the following installed:
-- [Node.js](https://nodejs.org/)
 - [Vue.js](https://vuejs.org/)
 
 ### Steps
@@ -45,7 +46,6 @@ Make sure you have the following installed:
 2. Install the required dependencies:
 
     ```bash
-    cd join-kanban
     npm install
 
 3. Start the development server:
@@ -83,6 +83,13 @@ Contributing
 
 License
     Join is licensed under the MIT License.
+
+Documentation
+    Find the documentation at http://docs.dogan-celik.com
+
+Backend
+    Backend created with Django Rest Framework
+    Github https://github.com/Dogan36/join_backend_v2
 
 Contact
     For feedback or questions, please reach out to the developer:
