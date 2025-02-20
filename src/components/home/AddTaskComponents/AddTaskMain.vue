@@ -183,7 +183,7 @@ const createTaskObject = () => {
     due_date: dueDate.value?.dueDate || "",
     prio: prio.value?.currentPrio || "medium", 
     subtasks: subtasksData.value || [],
-    status: currentTask.value.status || "todo", 
+    status: currentTask.value?.status || "todo", 
   };
 };
 
@@ -197,10 +197,10 @@ const createTaskObject = () => {
  * - If the request is successful and the form is in edit mode, updates the existing task in the tasks list.
  * - If an error occurs, logs the error to the console.
  */
-const createTask = async () => {  
+const createTask = async () => {
   try {
     const taskData = createTaskObject();
-    if (!isEditMode.value) {
+        if (!isEditMode.value) {
       const task = await createTaskFetch(taskData);
       tasks.value.push(task);
       currentView.value = "board"; // Add the new task to the list
