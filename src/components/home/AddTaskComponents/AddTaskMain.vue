@@ -183,7 +183,7 @@ const createTaskObject = () => {
     due_date: dueDate.value?.dueDate || "",
     prio: prio.value?.currentPrio || "medium", 
     subtasks: subtasksData.value || [],
-    status: currentTask.value?.status || "todo", 
+    status: currentTask.value?.status || props?.status || "todo", 
   };
 };
 
@@ -200,7 +200,8 @@ const createTaskObject = () => {
 const createTask = async () => {
   try {
     const taskData = createTaskObject();
-        if (!isEditMode.value) {
+    console.log(taskData);
+      if (!isEditMode.value) {
       const task = await createTaskFetch(taskData);
       tasks.value.push(task);
       currentView.value = "board"; // Add the new task to the list
