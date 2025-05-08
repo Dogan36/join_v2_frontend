@@ -1,1 +1,1 @@
-export const API_BASE_URL = "https://join-backend-v2.onrender.com/api/v1";
+export const API_BASE_URL = "https://join-api.dogan-celik.com";
