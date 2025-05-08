@@ -340,11 +340,11 @@ justify-content: center;
   background-image: url('@/assets/img/hook.svg');
 }
 
-.button-v3:first-of-type:hover .penIcon:first-of-type::before {
+.button-v3:first-of-type:hover .pen-icon:first-of-type::before {
   background-image: url('@/assets/img/penWhite.svg');
 }
 
-.button-v3:hover .hookIcon::before {
+.button-v3:hover .hook-icon::before {
   background-image: url('@/assets/img/hookWhite.svg');
 }
 

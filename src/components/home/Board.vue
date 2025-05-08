@@ -460,6 +460,7 @@ const closeOverlay = () => {
   position: relative;
   border-radius: 30px;
   gap: 1.5rem;
+  flex:1
 }
 
 .board-element-content.hovered {

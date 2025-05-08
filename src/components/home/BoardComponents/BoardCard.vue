@@ -1,6 +1,6 @@
 <template>
     <div v-if="props.task" class="board-card">
-        <div class="card-category" :style="{ background: category.color.hex_value, color: getTextColor(category.color.hex_value) ? '#fff' : '#000'  }">{{category.name}}</div>
+        <div class="card-category" :style="{ background: category.color.hex_value, color: getTextColor(category.color.hex_value)  }">{{category.name}}</div>
         <div class="card-content">
             <div class="card-title">{{ title }}</div>
             <div class="card-description">{{ description }}</div>
