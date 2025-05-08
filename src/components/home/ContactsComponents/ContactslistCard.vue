@@ -66,7 +66,7 @@ const props = defineProps({
   flex-direction: row;
   align-items: center;
   padding: 12px;
-  gap: 8%;
+  gap: 2%;
   cursor: pointer;
   border-radius: 10px;
   margin-bottom: 1rem;
@@ -98,6 +98,7 @@ const props = defineProps({
   }
   .info h3 {
     color: #ffffff;
+    margin-bottom: 1rem;
   }
   .avatar {
     background-color: unset;

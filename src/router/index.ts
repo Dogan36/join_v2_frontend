@@ -25,7 +25,6 @@ const routes = [
   },
   { path: '/privacy', component: AboutView },
   { path: '/reset-password/:uid/:token', component: ResetPassword },
-  { path: '/reset-password/:uid/:token', component: ResetPassword },
   { path: '/:pathMatch(.*)*', redirect: '/start' },
 ];
 const router = createRouter({
